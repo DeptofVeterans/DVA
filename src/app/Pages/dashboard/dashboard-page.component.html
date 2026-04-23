@@ -1,0 +1,466 @@
+<main class="page-shell dashboard-shell dashboard-page" *ngIf="currentUser">
+  <section class="page-hero compact-hero" appRevealOnScroll>
+    <div class="hero-copy">
+      <p class="eyebrow">Dashboard</p>
+      <h1>Welcome, {{ currentUser.displayName }}.</h1>
+      <p class="lead">
+        Use your secure dashboard to track requests, upload supporting files, manage department queues, and
+        respond to pickup alerts.
+      </p>
+
+      <div class="button-row dashboard-hero-actions">
+        <button class="button button-primary" type="button" (click)="refreshDashboard()">Refresh dashboard</button>
+        <a class="button button-secondary" routerLink="/records" *ngIf="isVeteran">Submit another request</a>
+        <a class="button button-secondary" routerLink="/profile">Manage profile</a>
+        <a class="button button-secondary" routerLink="/manage-users" *ngIf="canManageUsers">Manage users</a>
+        <a class="button button-secondary" routerLink="/manage-events" *ngIf="canManageEvents">Manage events</a>
+        <a class="button button-secondary" routerLink="/manage-gallery" *ngIf="canManageGallery">Manage gallery</a>
+        <a class="button button-secondary" routerLink="/audit-logs" *ngIf="canViewAudit">Audit logs</a>
+      </div>
+    </div>
+
+    <aside class="hero-side">
+      <div class="summary-card dark-card profile-summary-card" appRevealOnScroll>
+        <app-profile-avatar [user]="currentUser" size="lg"></app-profile-avatar>
+        <p class="card-kicker">Account summary</p>
+        <h2>{{ currentUser.displayName }}</h2>
+        <p class="profile-verified-copy">
+          {{ currentUser.isIdentityVerified ? "Identity verified" : "Identity verification pending" }}
+        </p>
+        <ul class="icon-list">
+          <li>Role: {{ currentUser.roleName }}</li>
+          <li>Account type: {{ currentUser.accountType }}</li>
+          <li>Identity verified: {{ currentUser.isIdentityVerified ? "Yes" : "Pending" }}</li>
+          <li>Departments: {{ departmentSummary }}</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section" *ngIf="shouldShowIdentityVerification" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Identity Verification</p>
+      <h2>{{ isVeteran ? "Verify your identity for protected services." : "Review uploaded identity documents." }}</h2>
+      <p class="section-copy" *ngIf="isVeteran">
+        Upload a government-issued identification image so requests that require verification can continue.
+      </p>
+      <p class="section-copy" *ngIf="isStaff">
+        Review identity submissions before protected requests move further through the service workflow.
+      </p>
+    </div>
+
+    <div class="form-layout" *ngIf="isVeteran">
+      <article class="feature-card" *ngIf="!currentUser.isIdentityVerified" appRevealOnScroll>
+        <p class="card-kicker">Verification status</p>
+        <h3>Identity verification is still required.</h3>
+        <p>
+          Use this section to begin account verification or upload your identification image for a request that
+          is waiting on verification.
+        </p>
+        <div class="button-row compact-row">
+          <button class="button button-primary" type="button" *ngIf="!hasOpenAccountVerification" (click)="startAccountVerification()">
+            Start account verification
+          </button>
+          <span class="tag" *ngIf="hasOpenAccountVerification">Account verification in progress</span>
+        </div>
+      </article>
+
+      <article class="feature-card dark-card" *ngIf="currentUser.isIdentityVerified" appRevealOnScroll>
+        <p class="card-kicker">Verification status</p>
+        <h3>Your identity is verified.</h3>
+        <p>Protected request types can move into review, preparation, and pickup without another account-level check.</p>
+      </article>
+    </div>
+
+    <div class="card-grid two-column" *ngIf="isVeteran && identityVerifications.length">
+      <article class="feature-card" *ngFor="let item of identityVerifications" appRevealOnScroll>
+        <p class="card-kicker">{{ verificationLabel(item) }}</p>
+        <h3>{{ humanizeCode(item.status) }}</h3>
+        <p *ngIf="item.relatedRequestUuid">
+          Related request: {{ item.relatedRequestUuid }}<ng-container *ngIf="item.requestTypeName"> | {{ item.requestTypeName }}</ng-container>
+        </p>
+        <p *ngIf="item.reviewNote">{{ item.reviewNote }}</p>
+        <div class="timeline" *ngIf="item.files.length">
+          <article class="timeline-item" *ngFor="let file of item.files">
+            <strong>{{ file.originalFileName }}</strong>
+            <span>{{ file.uploadedAt | date:'medium' }}</span>
+          </article>
+        </div>
+        <div class="form-grid" *ngIf="item.status !== 'APPROVED'">
+          <label class="field field-wide">
+            <span>Upload identification image</span>
+            <input type="file" (change)="onIdentityFileSelected($event, item.verificationRequestId)">
+          </label>
+          <div class="button-row compact-row field-wide">
+            <button class="button button-secondary" type="button" (click)="uploadIdentityDocument(item)">Upload image</button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="card-grid two-column" *ngIf="isStaff">
+      <article class="feature-card" *ngFor="let item of identityVerificationQueue" appRevealOnScroll>
+        <p class="card-kicker">{{ verificationLabel(item) }}</p>
+        <h3>{{ item.requesterDisplayName }}</h3>
+        <p>
+          {{ humanizeCode(item.status) }}
+          <ng-container *ngIf="item.departmentName"> | {{ item.departmentName }}</ng-container>
+        </p>
+        <p *ngIf="item.relatedRequestUuid">
+          Related request: {{ item.relatedRequestUuid }}<ng-container *ngIf="item.requestTypeName"> | {{ item.requestTypeName }}</ng-container>
+        </p>
+
+        <div class="timeline" *ngIf="item.files.length">
+          <article class="timeline-item" *ngFor="let file of item.files">
+            <div>
+              <strong>{{ file.originalFileName }}</strong>
+              <span>{{ file.uploadedAt | date:'medium' }}</span>
+            </div>
+            <button
+              class="text-link"
+              type="button"
+              (click)="downloadIdentityVerificationFile(item, file.verificationFileId, file.originalFileName)"
+            >
+              Download
+            </button>
+          </article>
+        </div>
+
+        <label class="field field-wide">
+          <span>Review note</span>
+          <textarea
+            rows="3"
+            [(ngModel)]="identityReviewNotes[item.verificationRequestId]"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Add a note if another upload is needed or if staff need to explain the decision."
+          ></textarea>
+        </label>
+
+        <div class="button-row compact-row">
+          <button class="button button-primary" type="button" [disabled]="!item.files.length" (click)="reviewIdentityVerification(item, 'APPROVED')">
+            Approve
+          </button>
+          <button class="button button-ghost" type="button" (click)="reviewIdentityVerification(item, 'REJECTED')">
+            Reject
+          </button>
+        </div>
+      </article>
+
+      <article class="feature-card dark-card" *ngIf="!identityVerificationQueue.length" appRevealOnScroll>
+        <p class="card-kicker">Verification queue</p>
+        <h3>No identity verification requests need review right now.</h3>
+        <p>New account or service-issuance verification uploads will appear here when veterans submit them.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" *ngIf="pickupAlerts.length" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Ready for Pickup</p>
+      <h2>Your request has an item ready for collection.</h2>
+    </div>
+
+    <div class="card-grid two-column">
+      <article class="feature-card dark-card" *ngFor="let alert of pickupAlerts" appRevealOnScroll>
+        <p class="card-kicker">{{ alert.request_type_name || alert.requestTypeName }}</p>
+        <h3 class="request-reference">{{ requestReference(alert.public_uuid || alert.publicUuid) }}</h3>
+        <p class="request-code">{{ displayRequestCode(alert.public_uuid || alert.publicUuid) }}</p>
+        <p>{{ alert.status_name || alert.statusName }}</p>
+        <div class="button-row compact-row">
+          <button class="button button-secondary" type="button" (click)="openRequest(alert)">View more</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">{{ isVeteran ? "My Requests" : "Department Queue" }}</p>
+      <h2>{{ isVeteran ? "Track your submitted requests by service type." : "Review requests in separate service lanes by request type." }}</h2>
+    </div>
+
+    <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+    <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+    <p class="empty-state" *ngIf="loading">Loading requests...</p>
+    <p class="empty-state" *ngIf="!loading && !requests.length">No requests available yet.</p>
+
+    <div class="dashboard-lane-stack" *ngIf="requestLanes.length">
+      <article class="feature-card dashboard-request-lane" *ngFor="let lane of requestLanes" appRevealOnScroll>
+        <div class="dashboard-lane-head">
+          <div>
+            <p class="card-kicker">{{ lane.departmentName }}</p>
+            <h3>{{ lane.requestTypeName }}</h3>
+            <p class="section-copy">{{ requestCountLabel(lane.requests.length) }} in this service lane.</p>
+          </div>
+          <span class="tag">{{ lane.requests.length }}</span>
+        </div>
+
+        <div class="dashboard-lane-track">
+          <button
+            class="portal-card portal-card-button dashboard-request-card"
+            type="button"
+            *ngFor="let request of lane.requests"
+            (click)="openRequest(request)"
+          >
+            <p class="card-kicker">{{ request.status_name || request.statusName }}</p>
+            <h3 class="request-reference">{{ requestReference(request.public_uuid || request.publicUuid) }}</h3>
+            <p class="request-code">{{ displayRequestCode(request.public_uuid || request.publicUuid) }}</p>
+            <p>{{ request.requester_display_name || request.requesterDisplayName || currentUser.displayName }}</p>
+            <p class="dashboard-mini-meta">
+              {{ request.department_name || request.departmentName }}<br>
+              Updated {{ (request.updated_at || request.updatedAt) | date:'medium' }}
+            </p>
+            <div class="pill-row compact-row">
+              <span class="tag">{{ request.status_name || request.statusName }}</span>
+            </div>
+          </button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="selectedRequest || detailLoading" (click)="closeSelectedRequest()">
+    <section
+      class="modal-card dashboard-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dashboard-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div *ngIf="selectedRequest; else loadingRequestState">
+          <p class="card-kicker">Request detail</p>
+          <h2 id="dashboard-request-modal-title">{{ selectedRequest.requestTypeName }} | {{ requestReference(selectedRequest.publicUuid) }}</h2>
+          <p class="request-code">{{ displayRequestCode(selectedRequest.publicUuid) }}</p>
+          <p class="section-copy">
+            {{ selectedRequest.requesterDisplayName || currentUser.displayName }} | {{ selectedRequest.departmentName }} | {{ selectedRequest.statusName }}
+          </p>
+          <p class="section-copy" *ngIf="selectedRequest.requiresIdentityVerification && !selectedRequest.identityVerified">
+            This request is waiting on approved identity verification before protected issuance steps can continue.
+          </p>
+        </div>
+        <ng-template #loadingRequestState>
+          <div>
+            <p class="card-kicker">Request detail</p>
+            <h2 id="dashboard-request-modal-title">Loading request...</h2>
+          </div>
+        </ng-template>
+
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeSelectedRequest()">Close</button>
+      </div>
+
+      <div class="dashboard-request-modal-body" *ngIf="selectedRequest; else loadingRequestBody">
+        <div class="card-grid two-column">
+          <article class="feature-card">
+            <p class="card-kicker">Submitted information</p>
+            <div class="definition-list">
+              <div class="definition-row" *ngFor="let entry of submittedInfoEntries">
+                <span>{{ entry.label }}</span>
+                <strong>{{ entry.value }}</strong>
+              </div>
+            </div>
+            <div class="button-row compact-row" *ngIf="canOpenSelectedIdApplicationPdf">
+              <button class="button button-secondary" type="button" (click)="openSelectedIdApplicationPdf()">
+                Open application PDF
+              </button>
+            </div>
+            <p class="form-helper" *ngIf="canOpenSelectedIdApplicationPdf">
+              Open the completed legal-size application PDF to print or save.
+            </p>
+          </article>
+
+          <article class="feature-card dark-card">
+            <p class="card-kicker">Status history</p>
+            <div class="timeline">
+              <article class="timeline-item" *ngFor="let item of selectedRequest.history">
+                <strong>{{ item['status_name'] || item['statusName'] }}</strong>
+                <span>{{ $any(item['created_at'] || item['createdAt']) | date:'medium' }}</span>
+              </article>
+            </div>
+          </article>
+        </div>
+
+        <div class="card-grid two-column">
+          <article class="feature-card">
+            <p class="card-kicker">Outputs</p>
+            <p class="empty-state" *ngIf="!selectedRequest.outputs.length">No outputs recorded yet.</p>
+            <div class="timeline" *ngIf="selectedRequest.outputs.length">
+              <article class="timeline-item" *ngFor="let output of selectedRequest.outputs">
+                <strong>{{ output['output_name'] }}</strong>
+                <span>{{ output['output_status'] }}<ng-container *ngIf="output['pickup_location']"> | {{ output['pickup_location'] }}</ng-container></span>
+              </article>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <p class="card-kicker">Attachments</p>
+            <p class="empty-state" *ngIf="!selectedRequest.attachments.length">No attachments recorded yet.</p>
+            <div class="timeline" *ngIf="selectedRequest.attachments.length">
+              <article class="timeline-item" *ngFor="let attachment of selectedRequest.attachments">
+                <strong>{{ attachment['attachment_type'] }}</strong>
+                <span>{{ $any(attachment['created_at']) | date:'medium' }}</span>
+                <button class="text-link" type="button" (click)="downloadAttachment(selectedRequest.requestId, $any(attachment['attachment_id']), $any(attachment['attachment_type']))">
+                  Download
+                </button>
+              </article>
+            </div>
+          </article>
+        </div>
+
+        <div class="form-layout" *ngIf="isVeteran">
+          <article class="feature-card">
+            <p class="card-kicker">Supporting uploads</p>
+            <h3>Add supporting documents</h3>
+            <input type="file" (change)="onAttachmentSelected($event)">
+            <div class="button-row compact-row">
+              <button class="button button-secondary" type="button" [disabled]="!attachmentFile" (click)="uploadSupportingDocument()">Upload document</button>
+            </div>
+          </article>
+
+          <article class="feature-card dark-card" *ngIf="selectedRequest.requestTypeCode === 'FUNERAL_SUPPORT_REQUEST'">
+            <p class="card-kicker">Funeral payment receipt</p>
+            <h3>Upload the receipt for review</h3>
+            <input type="file" (change)="onPaymentReceiptSelected($event)">
+            <div class="button-row compact-row">
+              <button class="button button-primary" type="button" [disabled]="!paymentReceiptFile" (click)="uploadFuneralReceipt()">Upload payment receipt</button>
+            </div>
+          </article>
+        </div>
+
+        <div class="form-layout" *ngIf="isStaff">
+          <article class="feature-card">
+            <p class="card-kicker">Status update</p>
+            <form class="form-grid" [formGroup]="statusForm" (ngSubmit)="submitStatusUpdate()">
+              <label class="field field-wide">
+                <span>New status</span>
+                <select formControlName="statusCode">
+                  <option *ngFor="let status of statuses" [value]="status.status_code">{{ status.status_name }}</option>
+                </select>
+              </label>
+              <div class="button-row compact-row field-wide">
+                <button class="button button-secondary" type="submit">Update status</button>
+                <p class="form-status is-success action-status-inline" *ngIf="statusUpdateFeedback">{{ statusUpdateFeedback }}</p>
+                <p class="form-status is-error action-status-inline" *ngIf="statusUpdateError">{{ statusUpdateError }}</p>
+              </div>
+            </form>
+          </article>
+
+          <article class="feature-card dark-card">
+            <p class="card-kicker">Create output</p>
+            <form class="form-grid" [formGroup]="outputForm" (ngSubmit)="submitOutput()">
+              <label class="field">
+                <span>Output code</span>
+                <input type="text" formControlName="outputCode">
+              </label>
+              <label class="field">
+                <span>Output name</span>
+                <input type="text" formControlName="outputName">
+              </label>
+              <label class="field">
+                <span>Output kind</span>
+                <input type="text" formControlName="outputKind">
+              </label>
+              <label class="field">
+                <span>Output status</span>
+                <select formControlName="outputStatus">
+                  <option value="IN_PRODUCTION">In production</option>
+                  <option value="READY_FOR_PICKUP">Ready for pickup</option>
+                </select>
+              </label>
+              <label class="field field-wide">
+                <span>Pickup location</span>
+                <input type="text" formControlName="pickupLocation">
+              </label>
+              <div class="button-row compact-row field-wide">
+                <button class="button button-primary" type="submit">Create output</button>
+                <p class="form-status is-success action-status-inline" *ngIf="outputFeedback">{{ outputFeedback }}</p>
+                <p class="form-status is-error action-status-inline" *ngIf="outputError">{{ outputError }}</p>
+              </div>
+            </form>
+          </article>
+        </div>
+      </div>
+
+      <ng-template #loadingRequestBody>
+        <div class="dashboard-request-modal-body">
+          <p class="empty-state">Loading request...</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+
+  <section class="section" *ngIf="isStaff && paymentReceipts.length" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Payment Receipts</p>
+      <h2>Review funeral payment receipts.</h2>
+    </div>
+
+    <div class="card-grid two-column">
+      <article class="detail-card" *ngFor="let receipt of paymentReceipts" appRevealOnScroll>
+        <p class="card-kicker">{{ requestReference(receipt.request_uuid) }}</p>
+        <p class="request-code">{{ displayRequestCode(receipt.request_uuid) }}</p>
+        <h3>{{ receipt.receipt_status }}</h3>
+        <p>{{ receipt.created_at | date:'medium' }}</p>
+        <div class="button-row compact-row">
+          <button class="button button-secondary" type="button" (click)="downloadAttachment(receipt.request_id, receipt.attachment_id, 'payment-receipt')">Download receipt</button>
+          <button class="button button-primary" type="button" (click)="reviewReceipt(receipt, 'ACCEPTED')">Accept</button>
+          <button class="button button-ghost" type="button" (click)="reviewReceipt(receipt, 'REJECTED')">Reject</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" *ngIf="canApproveStaff && pendingStaff.length" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Pending Staff</p>
+      <h2>Approve or reject staff signups and assign departments.</h2>
+    </div>
+
+    <div class="card-grid two-column">
+      <article class="feature-card" *ngFor="let staff of pendingStaff" appRevealOnScroll>
+        <p class="card-kicker">{{ staff.display_name }}</p>
+        <h3>{{ staff.full_name }}</h3>
+        <p>{{ staff.email }} | {{ staff.rank }} | {{ staff.regimental_number }}</p>
+
+        <div class="form-grid">
+          <label class="field field-wide">
+            <span>Role</span>
+            <select [(ngModel)]="approvalState[staff.user_id].roleCode" [ngModelOptions]="{ standalone: true }">
+              <option *ngFor="let role of staffRoles" [value]="role.role_code">{{ role.role_name }}</option>
+            </select>
+          </label>
+
+          <div class="field field-wide">
+            <span>Departments</span>
+            <div class="checkbox-grid">
+              <label class="checkbox-pill" *ngFor="let department of departments">
+                <input
+                  type="checkbox"
+                  [checked]="approvalState[staff.user_id].departmentIds.includes(department.department_id)"
+                  (change)="toggleDepartment(staff.user_id, department.department_id, $any($event.target).checked)"
+                >
+                <span>{{ department.department_name }}</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="field field-wide">
+            <span>Primary department</span>
+            <select [(ngModel)]="approvalState[staff.user_id].primaryDepartmentId" [ngModelOptions]="{ standalone: true }">
+              <option [ngValue]="null">Select primary department</option>
+              <option *ngFor="let departmentId of approvalState[staff.user_id].departmentIds" [ngValue]="departmentId">
+                {{ departmentNameById(departmentId) }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div class="button-row compact-row">
+          <button class="button button-primary" type="button" (click)="approveStaff(staff)">Approve</button>
+          <button class="button button-ghost" type="button" (click)="rejectStaff(staff)">Reject</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>

@@ -1,0 +1,131 @@
+<main class="page-shell profile-page" *ngIf="currentUser">
+  <section class="profile-hero">
+    <div class="profile-cover"></div>
+
+    <div class="profile-hero-body">
+      <app-profile-avatar [user]="currentUser" [imageUrl]="previewUrl" size="lg"></app-profile-avatar>
+
+      <div class="profile-identity">
+        <p class="eyebrow">Profile</p>
+        <h1>{{ currentUser.displayName }}</h1>
+        <p class="lead">
+          Manage your account details, profile image, and identity-ready presence across the portal.
+        </p>
+
+        <div class="pill-row compact-row">
+          <span class="tag">{{ currentUser.accountType }}</span>
+          <span class="tag">{{ currentUser.roleName }}</span>
+          <span class="tag">{{ currentUser.isIdentityVerified ? "Verified account" : "Verification pending" }}</span>
+        </div>
+      </div>
+
+      <div class="profile-hero-actions">
+        <a class="button button-secondary" routerLink="/dashboard">Back to dashboard</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+    <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+
+    <div class="form-layout profile-layout">
+      <article class="feature-card profile-sidebar-card">
+        <p class="card-kicker">Account Snapshot</p>
+        <div class="definition-list">
+          <div class="definition-row">
+            <span>Display name</span>
+            <strong>{{ currentUser.displayName }}</strong>
+          </div>
+          <div class="definition-row">
+            <span>Identity verification</span>
+            <strong>{{ currentUser.isIdentityVerified ? "Verified" : "Pending" }}</strong>
+          </div>
+          <div class="definition-row">
+            <span>Email verification</span>
+            <strong>{{ currentUser.isEmailVerified ? "Verified" : "Pending" }}</strong>
+          </div>
+          <div class="definition-row">
+            <span>Departments</span>
+            <strong>{{ departmentSummary }}</strong>
+          </div>
+        </div>
+
+        <div class="profile-mini-card">
+          <p class="card-kicker">Profile image</p>
+          <p class="form-helper">
+            Use a square image for the cleanest result. The blue check stays attached for verified users.
+          </p>
+          <p class="form-helper"><strong>{{ selectedFileName }}</strong></p>
+        </div>
+      </article>
+
+      <div class="profile-main-stack">
+        <article class="feature-card">
+          <p class="card-kicker">Edit Details</p>
+          <h2>Update the details shown on your account.</h2>
+
+          <form class="form-grid" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+            <label class="field field-wide">
+              <span>Full name <strong class="required-mark">*</strong></span>
+              <input type="text" formControlName="fullName" placeholder="Enter full name">
+            </label>
+
+            <label class="field">
+              <span>Email <strong class="required-mark">*</strong></span>
+              <input type="email" formControlName="email" placeholder="Enter email address">
+            </label>
+
+            <label class="field">
+              <span>Rank <strong class="required-mark">*</strong></span>
+              <input type="text" formControlName="rank" placeholder="Enter rank">
+            </label>
+
+            <label class="field">
+              <span>Regimental number</span>
+              <input type="text" [value]="currentUser.regimentalNumber" readonly>
+            </label>
+
+            <label class="field">
+              <span>Service branch</span>
+              <input type="text" [value]="currentUser.serviceBranch" readonly>
+            </label>
+
+            <div class="button-row compact-row field-wide">
+              <button class="button button-primary" type="submit" [disabled]="saving">
+                {{ saving ? "Saving..." : "Save profile" }}
+              </button>
+            </div>
+          </form>
+        </article>
+
+        <article class="feature-card profile-upload-card">
+          <div class="profile-upload-head">
+            <div>
+              <p class="card-kicker">Profile Image</p>
+              <h2>Upload a profile image for your account.</h2>
+              <p class="form-helper">
+                Use a clear JPG, PNG, or WebP image. Your selected image previews here before upload.
+              </p>
+            </div>
+
+            <div class="profile-preview-frame">
+              <app-profile-avatar [user]="currentUser" [imageUrl]="previewUrl" size="lg"></app-profile-avatar>
+            </div>
+          </div>
+
+          <label class="field field-wide">
+            <span>Select image</span>
+            <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onFileSelected($event)">
+          </label>
+
+          <div class="button-row compact-row">
+            <button class="button button-secondary" type="button" [disabled]="!selectedFile || uploading" (click)="uploadProfilePhoto()">
+              {{ uploading ? "Uploading..." : "Upload image" }}
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>

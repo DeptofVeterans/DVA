@@ -1,0 +1,82 @@
+.roadmap-page .page-hero {
+  grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
+  align-items: center;
+}
+
+.roadmap-page .hero-copy {
+  background:
+    linear-gradient(135deg, rgba(23, 58, 41, 0.98), rgba(45, 87, 63, 0.94)),
+    radial-gradient(circle at top right, rgba(220, 197, 138, 0.18), transparent 36%);
+  color: #f7f2df;
+}
+
+.roadmap-page .hero-copy h1 {
+  color: #f7f2df;
+  max-width: 16ch;
+  font-size: clamp(1.9rem, 3.9vw, 3.2rem);
+  line-height: 0.95;
+}
+
+.roadmap-page .hero-copy .lead {
+  color: #f7f2df;
+  max-width: 56ch;
+}
+
+.roadmap-page .media-frame {
+  margin: 0;
+  padding: 1rem;
+  border-radius: 38px;
+  transform: rotate(1.2deg);
+  border: 8px solid rgba(255, 252, 245, 0.9);
+  background: rgba(255, 252, 245, 0.98);
+}
+
+.roadmap-page .hero-side {
+  display: flex;
+  align-items: stretch;
+}
+
+.roadmap-page .hero-side .media-frame {
+  width: 100%;
+}
+
+.roadmap-page .media-frame img,
+.roadmap-page .slim-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+}
+
+.roadmap-page .card-grid.two-column .detail-card {
+  position: relative;
+  padding-left: 2.4rem;
+  border-left: 4px solid rgba(178, 138, 45, 0.32);
+}
+
+.roadmap-page .card-grid.two-column .detail-card::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 1.6rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 6px rgba(178, 138, 45, 0.14);
+}
+
+@media (max-width: 1024px) {
+  .roadmap-page .page-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .roadmap-page .hero-copy h1 {
+    max-width: none;
+    font-size: clamp(1.7rem, 9vw, 2.45rem);
+  }
+}

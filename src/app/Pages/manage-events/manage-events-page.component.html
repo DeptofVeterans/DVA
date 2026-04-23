@@ -1,0 +1,101 @@
+<main class="page-shell admin-page manage-events-page" *ngIf="currentUser">
+  <section class="page-hero compact-hero" appRevealOnScroll>
+    <div class="hero-copy">
+      <p class="eyebrow">Manage Events</p>
+      <h1>Publish events and control the site banner.</h1>
+      <p class="lead">
+        Use this page to create upcoming events, turn banner alerts on or off, and manage what veterans see on the portal.
+      </p>
+
+      <div class="button-row dashboard-hero-actions">
+        <a class="button button-secondary" routerLink="/dashboard">Back to dashboard</a>
+        <button class="button button-primary" type="button" (click)="reloadEvents()">Refresh events</button>
+      </div>
+    </div>
+
+    <aside class="hero-side">
+      <div class="summary-card dark-card" appRevealOnScroll>
+        <p class="card-kicker">Event access</p>
+        <ul class="icon-list">
+          <li>Signed in as {{ currentUser.displayName }}</li>
+          <li>Role: {{ currentUser.roleName }}</li>
+          <li>Publish events and decide which item appears in the banner</li>
+          <li>Use the event list below to unpublish, republish, or clear banner items</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section" appRevealOnScroll>
+    <div class="form-layout">
+      <article class="feature-card" appRevealOnScroll>
+        <p class="card-kicker">Create event</p>
+        <form class="form-grid" [formGroup]="eventForm" (ngSubmit)="submitEvent()">
+          <label class="field field-wide">
+            <span>Event title</span>
+            <input type="text" formControlName="title">
+          </label>
+          <label class="field field-wide">
+            <span>Summary</span>
+            <textarea formControlName="summary" rows="4"></textarea>
+          </label>
+          <label class="field">
+            <span>Location</span>
+            <input type="text" formControlName="location">
+          </label>
+          <label class="field">
+            <span>Event date</span>
+            <input type="date" formControlName="eventDate">
+          </label>
+          <label class="field">
+            <span>Details route</span>
+            <input type="text" formControlName="detailsRoute">
+          </label>
+          <label class="field">
+            <span>Call-to-action label</span>
+            <input type="text" formControlName="ctaLabel">
+          </label>
+          <label class="field field-wide">
+            <span>Banner message</span>
+            <input type="text" formControlName="bannerMessage">
+          </label>
+          <label class="checkbox-pill">
+            <input type="checkbox" formControlName="isPublished">
+            <span>Publish immediately</span>
+          </label>
+          <label class="checkbox-pill">
+            <input type="checkbox" formControlName="showInBanner">
+            <span>Show in site banner</span>
+          </label>
+          <div class="button-row compact-row field-wide">
+            <button class="button button-primary" type="submit">Publish event</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="feature-card dark-card" appRevealOnScroll>
+        <p class="card-kicker">Published events</p>
+        <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+        <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+        <p class="empty-state" *ngIf="loading">Loading portal events...</p>
+        <p class="empty-state" *ngIf="!loading && !portalEvents.length">No portal events available yet.</p>
+
+        <div class="timeline" *ngIf="portalEvents.length">
+          <article class="timeline-item" *ngFor="let event of portalEvents">
+            <div>
+              <strong>{{ event.title }}</strong>
+              <span>{{ (event.event_date || event.eventDate) | date:'longDate' }} | {{ event.location }}</span>
+            </div>
+            <div class="button-row compact-row">
+              <a class="text-link" [routerLink]="eventRoute(event)">Open page</a>
+              <button class="button button-secondary" type="button" *ngIf="!(event.show_in_banner || event.showInBanner)" (click)="setBannerEvent(event)">Set banner</button>
+              <button class="button button-secondary" type="button" *ngIf="event.show_in_banner || event.showInBanner" (click)="clearBannerEvent(event)">Clear banner</button>
+              <button class="button button-ghost" type="button" *ngIf="event.is_published || event.isPublished" (click)="setEventPublished(event, false)">Unpublish</button>
+              <button class="button button-primary" type="button" *ngIf="!(event.is_published || event.isPublished)" (click)="setEventPublished(event, true)">Republish</button>
+            </div>
+          </article>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

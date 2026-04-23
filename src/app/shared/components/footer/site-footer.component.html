@@ -1,0 +1,12 @@
+<footer class="site-footer">
+  <div class="footer-brand">
+    <strong>Department of Veterans Affairs Jamaica</strong>
+    <p>Secure digital access to veteran records, requests, follow-up, and service support.</p>
+  </div>
+
+  <div class="footer-links">
+    <a *ngFor="let link of links" [routerLink]="link.route">{{ link.label }}</a>
+  </div>
+
+  <p class="footer-note">Service to those who served. {{ year }}</p>
+</footer>

@@ -1,0 +1,18 @@
+<div
+  class="profile-avatar"
+  [class.profile-avatar-sm]="size === 'sm'"
+  [class.profile-avatar-lg]="size === 'lg'"
+  [attr.aria-label]="user?.displayName || 'Profile image'"
+>
+  <ng-container *ngIf="resolvedImageUrl; else initialsFallback">
+    <img [src]="resolvedImageUrl" [alt]="altText">
+  </ng-container>
+
+  <ng-template #initialsFallback>
+    <span>{{ initials }}</span>
+  </ng-template>
+
+  <span class="profile-avatar-badge" *ngIf="user?.isIdentityVerified" aria-label="Identity verified" title="Identity verified">
+    &#10003;
+  </span>
+</div>

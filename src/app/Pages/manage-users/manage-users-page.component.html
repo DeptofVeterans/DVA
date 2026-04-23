@@ -1,0 +1,147 @@
+<main class="page-shell admin-page manage-users-page" *ngIf="currentUser">
+  <section class="page-hero compact-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">User Management</p>
+      <h1>Manage portal users and account access.</h1>
+      <p class="lead">
+        Update roles, keep staff aligned to the right departments, and block or restore portal access when needed.
+      </p>
+
+      <div class="button-row">
+        <a class="button button-secondary" routerLink="/dashboard">Back to dashboard</a>
+        <button class="button button-primary" type="button" (click)="reloadUsers()">Refresh users</button>
+      </div>
+    </div>
+
+    <aside class="hero-side">
+      <div class="summary-card dark-card">
+        <p class="card-kicker">Access level</p>
+        <ul class="icon-list">
+          <li>Signed in as {{ currentUser.displayName }}</li>
+          <li>Role: {{ currentUser.roleName }}</li>
+          <li>Only Director and Main Admin can open this page</li>
+          <li>Blocked accounts cannot sign in</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <p class="eyebrow">Portal Users</p>
+      <h2>Search, update, and safeguard accounts.</h2>
+      <p class="section-copy">
+        Role changes take effect on the next request. When a staff role is selected, at least one department must stay assigned.
+      </p>
+    </div>
+
+    <article class="feature-card">
+      <div class="form-grid">
+        <label class="field field-wide">
+          <span>Search users</span>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Search by name, email, regimental number, or role"
+          >
+        </label>
+      </div>
+
+      <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+      <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+      <p class="empty-state" *ngIf="loading">Loading users...</p>
+      <p class="empty-state" *ngIf="!loading && !filteredUsers.length">No users matched your search.</p>
+    </article>
+  </section>
+
+  <section class="section" *ngIf="filteredUsers.length">
+    <div class="card-grid user-management-list">
+      <article class="feature-card user-management-card" *ngFor="let user of filteredUsers">
+        <p class="card-kicker">{{ user.role_name }}</p>
+        <h3>{{ user.display_name }}</h3>
+        <p>{{ user.full_name }} | {{ user.email }}</p>
+
+        <div class="pill-row compact-row">
+          <span class="tag">{{ user.account_type }}</span>
+          <span class="tag">{{ user.is_active ? "Active" : "Blocked" }}</span>
+          <span class="tag" *ngIf="user.account_type === 'STAFF'">{{ humanizeCode(user.staff_approval_status) }}</span>
+        </div>
+
+        <p class="form-helper">Rank: {{ user.rank }} | Regimental number: {{ user.regimental_number }}</p>
+        <p class="form-helper">Departments: {{ departmentSummary(user) }}</p>
+        <p class="form-helper">
+          Last login:
+          {{ user.last_login_at ? (user.last_login_at | date:'medium') : "No login recorded yet" }}
+        </p>
+
+        <p class="form-helper" *ngIf="!canEditUser(user)">
+          This account is outside the role changes allowed to your current account.
+        </p>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Role</span>
+            <select
+              [(ngModel)]="userStates[user.user_id].roleCode"
+              [ngModelOptions]="{ standalone: true }"
+              [disabled]="!canEditUser(user)"
+            >
+              <option *ngFor="let role of roleOptionsFor(user)" [value]="role.role_code">
+                {{ role.role_name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="checkbox-pill">
+            <input
+              type="checkbox"
+              [(ngModel)]="userStates[user.user_id].isActive"
+              [ngModelOptions]="{ standalone: true }"
+              [disabled]="!canEditUser(user)"
+            >
+            <span>{{ userStates[user.user_id].isActive ? "User can sign in" : "User is blocked" }}</span>
+          </label>
+
+          <div class="field field-wide" *ngIf="selectedRoleIsStaff(user.user_id)">
+            <span>Departments</span>
+            <div class="checkbox-grid">
+              <label class="checkbox-pill" *ngFor="let department of departments">
+                <input
+                  type="checkbox"
+                  [checked]="userStates[user.user_id].departmentIds.includes(department.department_id)"
+                  [disabled]="!canEditUser(user)"
+                  (change)="toggleDepartment(user.user_id, department.department_id, $any($event.target).checked)"
+                >
+                <span>{{ department.department_name }}</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="field field-wide" *ngIf="selectedRoleIsStaff(user.user_id)">
+            <span>Primary department</span>
+            <select
+              [(ngModel)]="userStates[user.user_id].primaryDepartmentId"
+              [ngModelOptions]="{ standalone: true }"
+              [disabled]="!canEditUser(user)"
+            >
+              <option [ngValue]="null">Select primary department</option>
+              <option *ngFor="let departmentId of userStates[user.user_id].departmentIds" [ngValue]="departmentId">
+                {{ departmentNameById(departmentId) }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div class="button-row compact-row">
+          <button class="button button-primary" type="button" [disabled]="!canEditUser(user)" (click)="saveUser(user)">
+            Save changes
+          </button>
+          <button class="button button-ghost" type="button" [disabled]="!canEditUser(user)" (click)="resetUser(user)">
+            Reset
+          </button>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,78 @@
+<main class="page-shell admin-page audit-logs-page" *ngIf="currentUser">
+  <section class="page-hero compact-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Audit Logs</p>
+      <h1>Review administrative and request activity.</h1>
+      <p class="lead">
+        Track who made each change, what action was taken, and when it happened across the portal.
+      </p>
+
+      <div class="button-row">
+        <a class="button button-secondary" routerLink="/dashboard">Back to dashboard</a>
+        <button class="button button-primary" type="button" (click)="reloadLogs()">Refresh logs</button>
+      </div>
+    </div>
+
+    <aside class="hero-side">
+      <div class="summary-card dark-card">
+        <p class="card-kicker">Audit access</p>
+        <ul class="icon-list">
+          <li>Signed in as {{ currentUser.displayName }}</li>
+          <li>Role: {{ currentUser.roleName }}</li>
+          <li>Each row shows the user responsible for the recorded change</li>
+          <li>Use search to narrow by actor, event, entity, or summary</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section">
+    <article class="feature-card">
+      <div class="form-grid">
+        <label class="field field-wide">
+          <span>Search logs</span>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Search by user, event, entity, or summary"
+          >
+        </label>
+      </div>
+
+      <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+      <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+      <p class="empty-state" *ngIf="loading">Loading audit logs...</p>
+      <p class="empty-state" *ngIf="!loading && !filteredAuditLogs.length">No audit log entries matched your search.</p>
+    </article>
+  </section>
+
+  <section class="section" *ngIf="filteredAuditLogs.length">
+    <article class="feature-card">
+      <div class="table-wrap audit-log-table-wrap">
+        <table class="data-table audit-log-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>User</th>
+              <th>Role</th>
+              <th>Event</th>
+              <th>Entity</th>
+              <th>Summary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredAuditLogs">
+              <td>{{ item.occurred_at | date:'medium' }}</td>
+              <td>{{ actorName(item) }}</td>
+              <td>{{ item.actor_role_name || "System" }}</td>
+              <td>{{ humanizeCode(item.event_code) }}</td>
+              <td>{{ humanizeCode(item.entity_type) }}</td>
+              <td>{{ item.summary }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</main>

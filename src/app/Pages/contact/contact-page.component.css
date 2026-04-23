@@ -1,0 +1,137 @@
+.contact-page .page-hero {
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  align-items: stretch;
+}
+
+.contact-page .contact-hero-copy {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 84% 16%, rgba(239, 209, 124, 0.2), transparent 28%),
+    linear-gradient(145deg, rgba(12, 35, 24, 0.98), rgba(23, 58, 41, 0.96) 52%, rgba(31, 82, 57, 0.9));
+  border-color: rgba(239, 209, 124, 0.18);
+}
+
+.contact-page .contact-hero-copy h1,
+.contact-page .contact-hero-copy .lead {
+  color: #fff8e6;
+}
+
+.contact-page .contact-hero-copy h1 {
+  max-width: 13ch;
+}
+
+.contact-page .contact-hero-copy .eyebrow,
+.contact-page .contact-hero-copy .card-kicker {
+  color: #efd17c;
+}
+
+.contact-page .contact-hero-copy .tag {
+  background: rgba(255, 248, 230, 0.12);
+  color: #fff8e6;
+  border: 1px solid rgba(239, 209, 124, 0.2);
+}
+
+.contact-page .contact-signed-in-note {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: rgba(255, 248, 230, 0.1);
+  border: 1px solid rgba(239, 209, 124, 0.16);
+  color: rgba(255, 248, 230, 0.94);
+}
+
+.contact-page .contact-signed-in-note strong {
+  color: #fff8e6;
+}
+
+.contact-page .contact-hero-side {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-page .contact-summary-card {
+  min-height: 100%;
+}
+
+.contact-page .contact-summary-card .icon-list {
+  margin-top: 1rem;
+}
+
+.contact-page .contact-lane-grid {
+  align-items: stretch;
+}
+
+.contact-page .contact-lane-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-height: 210px;
+  border-radius: 28px 16px 28px 16px;
+  background: linear-gradient(180deg, rgba(255, 253, 245, 0.98), rgba(245, 237, 212, 0.92));
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.contact-page .contact-lane-card.is-active {
+  background:
+    linear-gradient(145deg, rgba(12, 35, 24, 0.98), rgba(23, 58, 41, 0.96) 58%, rgba(31, 82, 57, 0.9));
+  border-color: rgba(239, 209, 124, 0.2);
+  color: #fff8e6;
+}
+
+.contact-page .contact-lane-card.is-active h3,
+.contact-page .contact-lane-card.is-active p {
+  color: #fff8e6;
+}
+
+.contact-page .contact-lane-card.is-active .card-kicker {
+  color: #efd17c;
+}
+
+.contact-page .contact-form-layout {
+  grid-template-columns: minmax(0, 1.08fr) minmax(290px, 0.92fr);
+  align-items: start;
+}
+
+.contact-page .contact-form-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 248, 232, 0.94)),
+    linear-gradient(135deg, rgba(178, 138, 45, 0.05), rgba(23, 58, 41, 0.05));
+}
+
+.contact-page .contact-guidance-card {
+  position: sticky;
+  top: 6.2rem;
+}
+
+.contact-page .contact-guidance-card .tag {
+  background: rgba(255, 248, 230, 0.12);
+  color: #fff8e6;
+  border: 1px solid rgba(239, 209, 124, 0.2);
+}
+
+.contact-page .contact-inline-note {
+  margin: 1rem 0 0;
+  color: var(--text-soft);
+}
+
+@media (max-width: 1024px) {
+  .contact-page .page-hero,
+  .contact-page .contact-form-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-page .contact-guidance-card {
+    position: static;
+  }
+
+  .contact-page .contact-hero-copy h1 {
+    max-width: none;
+  }
+}

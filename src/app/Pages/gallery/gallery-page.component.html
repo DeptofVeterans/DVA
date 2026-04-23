@@ -1,0 +1,93 @@
+<main class="page-shell gallery-page">
+  <section class="page-hero compact-hero">
+    <article class="hero-copy gallery-hero-copy" appRevealOnScroll>
+      <p class="eyebrow">Gallery</p>
+      <h1>See the work, outreach, ceremonies, and support carried out by Veterans Affairs.</h1>
+      <p class="lead">
+        This page holds photos of the activities, engagements, and service moments that show how the department
+        supports veterans, families, and partner organizations.
+      </p>
+
+      <div class="pill-row">
+        <span class="tag">Outreach</span>
+        <span class="tag">Support services</span>
+        <span class="tag">Ceremonial moments</span>
+        <span class="tag">Community engagement</span>
+      </div>
+    </article>
+
+    <aside class="hero-side" appRevealOnScroll>
+      <article class="summary-card dark-card gallery-summary-card">
+        <p class="card-kicker">Photo archive</p>
+        <h3>Images from the department's public-facing work and service activity.</h3>
+        <ul class="icon-list">
+          <li>Fixed outreach photos are now part of the public gallery</li>
+          <li>Published gallery uploads also appear here for public viewing</li>
+          <li>Staff can upload new photos from the gallery management page</li>
+          <li>Featured images can be highlighted more prominently</li>
+        </ul>
+      </article>
+    </aside>
+  </section>
+
+  <section class="section" *ngIf="featuredImage" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Featured image</p>
+      <h2>{{ featuredImage.title }}</h2>
+      <p class="section-copy">{{ featuredImage.caption }}</p>
+    </div>
+
+    <article class="feature-card gallery-feature-card">
+      <a
+        class="gallery-image-link gallery-feature-media gallery-feature-link"
+        [href]="featuredImage.imageUrl"
+        target="_blank"
+        rel="noopener"
+        [attr.aria-label]="'Open full image for ' + featuredImage.title"
+      >
+        <img [src]="featuredImage.imageUrl" [alt]="featuredImage.altText || featuredImage.title">
+        <span class="gallery-open-chip">Open image</span>
+      </a>
+      <div class="gallery-feature-copy">
+        <p class="card-kicker">Veterans Affairs activity</p>
+        <h3>{{ featuredImage.title }}</h3>
+        <p>{{ featuredImage.caption }}</p>
+        <p class="gallery-image-date" *ngIf="featuredImage.activityDate">
+          {{ featuredImage.activityDate | date:'longDate' }}
+        </p>
+      </div>
+    </article>
+  </section>
+
+  <section class="section" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Photo gallery</p>
+      <h2>Outreach photos and published images from Veterans Affairs activity.</h2>
+    </div>
+
+    <p class="empty-state" *ngIf="loading">Loading gallery images...</p>
+    <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+    <p class="empty-state" *ngIf="!loading && !allImages.length">No gallery images have been published yet.</p>
+
+    <div class="gallery-grid" *ngIf="galleryGridImages.length">
+      <article class="feature-card gallery-card" *ngFor="let image of galleryGridImages; trackBy: trackByGalleryImage" appRevealOnScroll>
+        <a
+          class="gallery-image-link gallery-card-media"
+          [href]="image.imageUrl"
+          target="_blank"
+          rel="noopener"
+          [attr.aria-label]="'Open full image for ' + image.title"
+        >
+          <img [src]="image.imageUrl" [alt]="image.altText || image.title">
+          <span class="gallery-open-chip">Open image</span>
+        </a>
+        <div class="gallery-card-copy">
+          <p class="card-kicker">VA activity</p>
+          <h3>{{ image.title }}</h3>
+          <p>{{ image.caption }}</p>
+          <p class="gallery-image-date" *ngIf="image.activityDate">{{ image.activityDate | date:'longDate' }}</p>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

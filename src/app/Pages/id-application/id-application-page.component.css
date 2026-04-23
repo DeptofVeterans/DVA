@@ -1,0 +1,132 @@
+.id-application-page {
+  width: var(--shell-width);
+}
+
+.id-application-page .lead,
+.id-application-page .section-copy,
+.id-application-page .feature-card p,
+.id-application-page .feature-card li {
+  color: #355245;
+}
+
+.id-application-page .feature-card strong {
+  color: var(--heading);
+}
+
+.id-application-page .page-hero .hero-copy {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 244, 232, 0.96)),
+    repeating-linear-gradient(0deg, rgba(42, 82, 62, 0.05), rgba(42, 82, 62, 0.05) 1px, transparent 1px, transparent 24px);
+  border: 2px solid rgba(42, 82, 62, 0.16);
+}
+
+.id-application-page .summary-card {
+  border-radius: 16px;
+}
+
+.id-application-section {
+  position: relative;
+}
+
+.id-application-shell {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 238, 0.96)),
+    linear-gradient(135deg, rgba(178, 138, 45, 0.04), rgba(23, 58, 41, 0.03));
+}
+
+.id-display-panel {
+  position: sticky;
+  top: 6.2rem;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top center, rgba(220, 197, 138, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(23, 58, 41, 0.98), rgba(27, 74, 52, 0.98));
+  overflow: hidden;
+}
+
+.id-display-panel .section-copy {
+  color: rgba(244, 241, 230, 0.86);
+}
+
+.id-display-stage {
+  display: grid;
+  gap: 1rem;
+  margin: 1.2rem 0 1.1rem;
+}
+
+.id-display-placeholder {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  border: 1px dashed rgba(239, 227, 189, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+    linear-gradient(135deg, rgba(220, 197, 138, 0.12), rgba(255, 255, 255, 0.02));
+  color: rgba(255, 249, 236, 0.88);
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1rem;
+}
+
+.id-application-modal .id-application-shell {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  box-shadow: none;
+}
+
+.form-section {
+  padding: 1rem 0 0.7rem;
+  border-top: 1px solid rgba(27, 74, 52, 0.1);
+}
+
+.form-section:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.form-section-title {
+  margin: 0 0 0.85rem;
+  color: var(--gold);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.choice-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 16px;
+  background: rgba(178, 138, 45, 0.09);
+  border: 1px solid rgba(178, 138, 45, 0.14);
+}
+
+.static-field-copy {
+  width: 100%;
+  min-height: 92px;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(27, 74, 52, 0.18);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(249, 245, 231, 0.94), rgba(255, 255, 255, 0.96)),
+    linear-gradient(135deg, rgba(178, 138, 45, 0.04), rgba(23, 58, 41, 0.03));
+  color: var(--text);
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 1024px) {
+  .id-application-page {
+    width: var(--shell-width);
+  }
+
+  .id-display-panel {
+    position: static;
+  }
+}

@@ -1,0 +1,363 @@
+<main class="page-shell portal-page" *ngIf="page" [ngClass]="pageThemeClass">
+  <section class="page-hero" [class.compact-hero]="page.key === 'welfare' || page.key === 'id-guidance'" appRevealOnScroll>
+    <div class="hero-copy">
+      <div class="page-hero-mark" aria-hidden="true">{{ pageMark }}</div>
+      <p class="eyebrow">{{ page.eyebrow }}</p>
+      <h1>{{ page.title }}</h1>
+      <p class="lead">{{ page.lead }}</p>
+
+      <div class="button-row">
+        <a class="button button-primary" routerLink="/dashboard">Open dashboard</a>
+        <a class="button button-secondary" *ngIf="page.key !== 'id-guidance' && !auth.isAuthenticated" routerLink="/auth">Sign in to submit</a>
+        <a class="button button-secondary" *ngIf="page.key === 'id-guidance'" routerLink="/id-application">Open ID application</a>
+        <button class="button button-ghost" type="button" *ngIf="isIdGuidancePage" (click)="generateIdGuidancePdf()">Generate PDF guidance</button>
+      </div>
+
+      <div class="pill-row">
+        <span class="tag" *ngFor="let tag of page.tags">{{ tag }}</span>
+      </div>
+    </div>
+
+    <aside class="hero-side" [class.portal-employment-side]="isEmploymentPage">
+      <div class="summary-card page-summary-card" appRevealOnScroll>
+        <p class="card-kicker">Highlights</p>
+        <ul class="icon-list">
+          <li *ngFor="let item of page.highlights">{{ item }}</li>
+        </ul>
+      </div>
+
+      <article class="feature-card image-slot-card" *ngIf="showImageHolder && !isEmploymentPage" appRevealOnScroll>
+        <h3>{{ imageHolderTitle }}</h3>
+        <div class="image-slot-frame" *ngIf="!pageMediaItems.length">
+          <div class="image-slot-visual" aria-hidden="true"></div>
+          <div class="image-slot-copy">
+            <strong>Approved service visual area.</strong>
+            <span>{{ imageHolderCopy }}</span>
+          </div>
+        </div>
+
+        <div class="image-slot-frame image-slot-frame-has-media" *ngIf="pageMediaItems.length">
+          <div class="image-slot-media-tiles">
+            <a
+              class="image-slot-media-link"
+              *ngFor="let item of pageMediaItems"
+              [href]="item.imageUrl"
+              target="_blank"
+              rel="noopener"
+              [attr.aria-label]="'Open full image for ' + item.title"
+            >
+              <img [src]="item.imageUrl" [alt]="item.alt">
+              <span class="image-slot-open-chip">Open image</span>
+            </a>
+          </div>
+
+          <div class="image-slot-copy image-slot-copy-static">
+            <strong>Approved funeral support imagery.</strong>
+            <span>{{ imageHolderCopy }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="feature-card employment-jobs-card" *ngIf="isEmploymentPage" appRevealOnScroll>
+        <p class="card-kicker">Open jobs for veterans</p>
+        <h3>Current opportunities</h3>
+        <p class="section-copy">Review active job openings, organization details, qualifications, and how to apply.</p>
+
+        <p class="empty-state" *ngIf="jobsLoading">Loading open jobs...</p>
+        <p class="empty-state" *ngIf="!jobsLoading && jobsError">{{ jobsError }}</p>
+        <p class="empty-state" *ngIf="!jobsLoading && !jobsError && !jobListings.length">No open jobs have been posted yet.</p>
+
+        <div class="employment-jobs-stack" *ngIf="jobListings.length">
+          <article class="employment-job-item" *ngFor="let job of jobListings">
+            <p class="card-kicker">{{ jobOrganization(job) }}</p>
+            <h4>{{ jobTitle(job) }}</h4>
+            <p>{{ jobDescription(job) }}</p>
+            <p class="job-meta"><strong>Posted:</strong> {{ jobPostedAt(job) | date:'mediumDate' }}</p>
+            <p class="job-meta" *ngIf="jobQualifications(job)"><strong>Qualifications:</strong> {{ jobQualifications(job) }}</p>
+            <p class="job-meta"><strong>How to apply:</strong> {{ jobHowToApply(job) }}</p>
+            <button
+              class="button button-secondary employment-job-close"
+              type="button"
+              *ngIf="canManageEmploymentJobs"
+              [disabled]="closingJobId === (job.jobId || job.employment_job_listing_id)"
+              (click)="closeEmploymentJob(job)"
+            >
+              {{ closingJobId === (job.jobId || job.employment_job_listing_id) ? 'Closing...' : 'Close job' }}
+            </button>
+          </article>
+        </div>
+      </article>
+
+      <article class="feature-card employment-job-form-card" *ngIf="isEmploymentPage && canManageEmploymentJobs" appRevealOnScroll>
+        <p class="card-kicker">Post a job</p>
+        <h3>Add an opening for veterans</h3>
+        <p class="section-copy">Use this panel to publish a job title, organization, description, qualifications, and how to apply.</p>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Job title</span>
+            <input
+              type="text"
+              [ngModel]="jobDraft.jobTitle"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="jobDraft.jobTitle = $event"
+              placeholder="Enter job title"
+            >
+          </label>
+
+          <label class="field">
+            <span>Organization name</span>
+            <input
+              type="text"
+              [ngModel]="jobDraft.organizationName"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="jobDraft.organizationName = $event"
+              placeholder="Enter organization name"
+            >
+          </label>
+
+          <label class="field field-wide">
+            <span>Job description</span>
+            <textarea
+              rows="4"
+              [ngModel]="jobDraft.jobDescription"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="jobDraft.jobDescription = $event"
+              placeholder="Describe the role, duties, and what the veteran should know"
+            ></textarea>
+          </label>
+
+          <label class="field field-wide">
+            <span>Qualifications if needed</span>
+            <textarea
+              rows="3"
+              [ngModel]="jobDraft.qualificationsText"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="jobDraft.qualificationsText = $event"
+              placeholder="List any required qualifications, training, or experience"
+            ></textarea>
+          </label>
+
+          <label class="field field-wide">
+            <span>How to apply</span>
+            <textarea
+              rows="3"
+              [ngModel]="jobDraft.howToApply"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="jobDraft.howToApply = $event"
+              placeholder="Explain how the veteran should apply or who to contact"
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="button-row compact-row">
+          <button class="button button-primary" type="button" [disabled]="postingJob" (click)="createEmploymentJob()">
+            {{ postingJob ? 'Posting...' : 'Post job' }}
+          </button>
+        </div>
+
+        <p class="form-status is-success" *ngIf="jobsFeedback">{{ jobsFeedback }}</p>
+        <p class="form-status is-error" *ngIf="jobsError && !jobsLoading">{{ jobsError }}</p>
+      </article>
+    </aside>
+  </section>
+
+  <section class="section" *ngIf="page.serviceCards?.length" appRevealOnScroll>
+    <div class="card-grid two-column service-card-grid" [ngClass]="serviceCardGridClass">
+      <article
+        class="feature-card"
+        *ngFor="let card of page.serviceCards; let i = index"
+        appRevealOnScroll
+        [class.dark-card]="card.kicker === 'Family support' || card.kicker === 'Support'"
+        [class.primary-service-card]="i === 0"
+        [class.accent-service-card]="i === 0 && !!page.requestForm"
+      >
+        <p class="card-kicker">{{ card.kicker }}</p>
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.description }}</p>
+        <div class="button-row compact-row" *ngIf="i === 0 && page.requestForm">
+          <button class="button button-primary" type="button" (click)="openRequestModal()">{{ requestLauncherLabel }}</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" *ngIf="isRecordsPage" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Searchable Guide</p>
+      <h2>Filter the records and certificate topics prepared by this role.</h2>
+    </div>
+
+    <div class="feature-card">
+      <label class="field field-wide">
+        <span>Search guidance topics</span>
+        <input
+          type="search"
+          [ngModel]="recordsQuery"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="applyRecordsSearch($event)"
+          placeholder="Try confirmation of employment, certificate of service, blue book, commendation, or service records"
+        >
+      </label>
+      <p class="search-status"><strong>{{ visibleRecordCardsCount }}</strong> topics currently visible</p>
+    </div>
+  </section>
+
+  <section class="section" *ngFor="let section of sections" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">{{ section.eyebrow }}</p>
+      <h2>{{ section.title }}</h2>
+      <p class="section-copy" *ngIf="section.copy">{{ section.copy }}</p>
+    </div>
+
+    <div class="card-grid" [ngClass]="section.layout || 'three-column'" *ngIf="section.cards?.length">
+      <article
+        *ngFor="let card of section.cards"
+        appRevealOnScroll
+        [class.feature-card]="card.checklist?.length"
+        [class.detail-card]="!card.checklist?.length"
+        [class.dark-card]="card.dark"
+      >
+        <p class="card-kicker">{{ card.kicker }}</p>
+        <h3>{{ card.title }}</h3>
+        <p *ngIf="card.description">{{ card.description }}</p>
+        <ul class="checklist" *ngIf="card.checklist?.length">
+          <li *ngFor="let item of card.checklist">{{ item }}</li>
+        </ul>
+        <p class="emphasis-copy" *ngIf="card.emphasis">{{ card.emphasis }}</p>
+        <a class="text-link" *ngIf="card.linkRoute" [routerLink]="card.linkRoute">{{ card.linkLabel || "Open" }}</a>
+      </article>
+    </div>
+
+    <div class="card-grid two-column" [class.table-card-stack]="isInsurancePage" *ngIf="section.tables?.length">
+      <article class="feature-card" *ngFor="let table of section.tables" [class.dark-card]="table.dark" appRevealOnScroll>
+        <p class="card-kicker">{{ table.title }}</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th *ngFor="let column of table.columns">{{ column }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of table.rows" [class.section-row]="isSectionRow(row)">
+                <td *ngFor="let cell of row">{{ cell }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note" *ngIf="table.note">{{ table.note }}</p>
+      </article>
+    </div>
+
+    <article class="feature-card" *ngIf="section.policyItems?.length" appRevealOnScroll>
+      <ol class="policy-list">
+        <li *ngFor="let item of section.policyItems">
+          <strong>{{ item.title }}:</strong> {{ item.body }}
+        </li>
+      </ol>
+    </article>
+  </section>
+
+  <p class="empty-state" *ngIf="hasNoRecordMatches">No guidance topics match that search. Try broader keywords.</p>
+
+  <section class="section" *ngIf="page.tables?.length" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Reference Table</p>
+      <h2>Additional coverage and limits</h2>
+    </div>
+
+    <div class="card-grid two-column" [class.table-card-stack]="isInsurancePage">
+      <article class="feature-card" *ngFor="let table of page.tables" appRevealOnScroll>
+        <p class="card-kicker">{{ table.title }}</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th *ngFor="let column of table.columns">{{ column }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of table.rows" [class.section-row]="isSectionRow(row)">
+                <td *ngFor="let cell of row">{{ cell }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" *ngIf="discountPartnerForm" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Organizations Offering Discounts</p>
+      <h2>Register a veteran discount offer for review.</h2>
+      <p class="section-copy">
+        Organizations can use this route to submit an offer while veterans continue to use the benefits page
+        for pensions and benefit support.
+      </p>
+    </div>
+
+    <div class="form-layout">
+      <app-request-form [config]="discountPartnerForm"></app-request-form>
+
+      <article class="feature-card dark-card" appRevealOnScroll>
+        <p class="card-kicker">Partner directory</p>
+        <h2>Keep savings opportunities easy for veterans to find.</h2>
+        <ul class="checklist">
+          <li>Health and wellness discounts for verified veterans.</li>
+          <li>Transportation, mobility, and practical living offers.</li>
+          <li>Retail, household, and service-provider savings.</li>
+          <li>Training and education discounts that support resettlement and employment goals.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="cta-band" *ngIf="page.ctaTitle || page.ctaBody" appRevealOnScroll>
+    <div>
+      <p class="eyebrow">Next Step</p>
+      <h2>{{ page.ctaTitle || 'Continue with the next service step.' }}</h2>
+      <p *ngIf="page.ctaBody">{{ page.ctaBody }}</p>
+    </div>
+    <div class="button-row">
+      <a class="button button-primary" routerLink="/dashboard">Open dashboard</a>
+      <a class="button button-secondary" *ngIf="page.key !== 'id-guidance' && !auth.isAuthenticated" routerLink="/auth">Sign in</a>
+      <a class="button button-secondary" *ngIf="page.key === 'id-guidance'" routerLink="/id-application">Open application</a>
+      <button class="button button-ghost" type="button" *ngIf="isIdGuidancePage" (click)="generateIdGuidancePdf()">Generate PDF guidance</button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showRequestModal && page.requestForm" (click)="closeRequestModal()">
+    <section
+      class="modal-card portal-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="portal-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Request form</p>
+          <h2 id="portal-request-modal-title">{{ page.requestForm.title }}</h2>
+          <p class="section-copy">{{ page.requestForm.description }}</p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeRequestModal()">Close</button>
+      </div>
+
+      <div class="form-layout request-modal-layout">
+        <app-request-form [config]="page.requestForm"></app-request-form>
+
+        <article class="feature-card page-summary-card request-modal-side">
+          <p class="card-kicker">What happens next</p>
+          <h2>Track status changes, pickups, and next steps in your dashboard.</h2>
+          <ul class="checklist">
+            <li>Use your private dashboard to follow status changes and ready-for-pickup alerts.</li>
+            <li>Staff actions are restricted by department while oversight roles can manage broader queues.</li>
+            <li>Supporting uploads and funeral receipts stay inside the secure request workflow.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </div>
+</main>

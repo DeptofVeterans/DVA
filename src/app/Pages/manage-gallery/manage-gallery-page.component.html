@@ -1,0 +1,126 @@
+<main class="page-shell admin-page manage-gallery-page" *ngIf="currentUser">
+  <section class="page-hero compact-hero" appRevealOnScroll>
+    <div class="hero-copy">
+      <p class="eyebrow">Manage Gallery</p>
+      <h1>Upload and manage Veterans Affairs gallery images.</h1>
+      <p class="lead">
+        Use this page to add new public gallery photos, control which ones are published, and choose featured imagery.
+      </p>
+
+      <div class="button-row dashboard-hero-actions">
+        <a class="button button-secondary" routerLink="/dashboard">Back to dashboard</a>
+        <button class="button button-primary" type="button" (click)="reloadGallery()">Refresh gallery</button>
+      </div>
+    </div>
+
+    <aside class="hero-side">
+      <div class="summary-card dark-card" appRevealOnScroll>
+        <p class="card-kicker">Gallery access</p>
+        <ul class="icon-list">
+          <li>Signed in as {{ currentUser.displayName }}</li>
+          <li>Role: {{ currentUser.roleName }}</li>
+          <li>Upload JPG, PNG, or WebP images for the public gallery</li>
+          <li>Publish, unpublish, or feature images from the list below</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section" appRevealOnScroll>
+    <div class="form-layout manage-gallery-layout">
+      <article class="feature-card" appRevealOnScroll>
+        <p class="card-kicker">Upload image</p>
+        <form class="form-grid" [formGroup]="galleryForm" (ngSubmit)="submitGalleryImage()">
+          <label class="field field-wide">
+            <span>Photo file</span>
+            <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onGalleryFileSelected($event)">
+          </label>
+
+          <label class="field field-wide">
+            <span>Title</span>
+            <input type="text" formControlName="title">
+          </label>
+
+          <label class="field field-wide">
+            <span>Alt text</span>
+            <input type="text" formControlName="altText">
+          </label>
+
+          <label class="field field-wide">
+            <span>Caption</span>
+            <textarea rows="4" formControlName="caption"></textarea>
+          </label>
+
+          <label class="field">
+            <span>Activity date</span>
+            <input type="date" formControlName="activityDate">
+          </label>
+
+          <div class="field">
+            <span>Visibility</span>
+            <div class="checkbox-grid">
+              <label class="checkbox-pill">
+                <input type="checkbox" formControlName="isPublished">
+                <span>Publish immediately</span>
+              </label>
+              <label class="checkbox-pill">
+                <input type="checkbox" formControlName="isFeatured">
+                <span>Mark as featured</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="button-row compact-row field-wide">
+            <button class="button button-primary" type="submit">Upload image</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="feature-card dark-card" appRevealOnScroll>
+        <p class="card-kicker">Gallery status</p>
+        <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+        <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+        <p>
+          Published images appear on the public gallery page. Unpublished images stay hidden from visitors but remain
+          visible here for staff and admin review.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Current images</p>
+      <h2>Manage the gallery images already uploaded.</h2>
+    </div>
+
+    <p class="empty-state" *ngIf="loading">Loading gallery images...</p>
+    <p class="empty-state" *ngIf="!loading && !galleryImages.length">No gallery images uploaded yet.</p>
+
+    <div class="gallery-manage-grid" *ngIf="galleryImages.length">
+      <article class="feature-card gallery-manage-card" *ngFor="let image of galleryImages; trackBy: trackByGalleryImage" appRevealOnScroll>
+        <div class="gallery-manage-media">
+          <img [src]="image.imageUrl" [alt]="image.altText || image.title">
+        </div>
+        <div class="gallery-manage-copy">
+          <p class="card-kicker">{{ image.isFeatured ? 'Featured image' : 'Gallery image' }}</p>
+          <h3>{{ image.title }}</h3>
+          <p>{{ image.caption }}</p>
+          <p class="gallery-image-date" *ngIf="image.activityDate">{{ image.activityDate | date:'longDate' }}</p>
+
+          <div class="pill-row compact-row">
+            <span class="tag">{{ image.isPublished ? "Published" : "Hidden" }}</span>
+            <span class="tag" *ngIf="image.isFeatured">Featured</span>
+          </div>
+
+          <div class="button-row compact-row gallery-manage-actions">
+            <button class="button button-secondary" type="button" *ngIf="!image.isPublished" (click)="setPublished(image, true)">Publish</button>
+            <button class="button button-ghost" type="button" *ngIf="image.isPublished" (click)="setPublished(image, false)">Unpublish</button>
+            <button class="button button-secondary" type="button" *ngIf="!image.isFeatured" (click)="setFeatured(image, true)">Feature</button>
+            <button class="button button-ghost" type="button" *ngIf="image.isFeatured" (click)="setFeatured(image, false)">Unfeature</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

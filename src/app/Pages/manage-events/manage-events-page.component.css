@@ -1,0 +1,31 @@
+.admin-page .page-hero {
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+}
+
+.admin-page .hero-copy {
+  background:
+    linear-gradient(135deg, rgba(20, 39, 32, 0.98), rgba(31, 58, 48, 0.95)),
+    repeating-linear-gradient(135deg, rgba(220, 197, 138, 0.08), rgba(220, 197, 138, 0.08) 1px, transparent 1px, transparent 16px);
+  color: #f7f2df;
+}
+
+.admin-page .hero-copy h1,
+.admin-page .hero-copy .lead {
+  color: #f7f2df;
+}
+
+.manage-events-page .form-layout {
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+}
+
+.manage-events-page .timeline-item {
+  align-items: center;
+  border-left: 4px solid rgba(178, 138, 45, 0.44);
+}
+
+@media (max-width: 1024px) {
+  .admin-page .page-hero,
+  .manage-events-page .form-layout {
+    grid-template-columns: 1fr;
+  }
+}

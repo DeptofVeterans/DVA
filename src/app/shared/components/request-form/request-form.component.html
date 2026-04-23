@@ -1,0 +1,46 @@
+<article class="request-form-card" *ngIf="config">
+  <div class="section-heading compact">
+    <h2>{{ config.title }}</h2>
+    <p class="section-copy">{{ config.description }}</p>
+  </div>
+
+  <form [formGroup]="form" class="form-grid" (ngSubmit)="submit()">
+    <ng-container *ngFor="let field of config.fields; trackBy: trackByKey">
+      <label class="field" [class.field-wide]="field.type === 'textarea'">
+        <span>{{ field.label }} <strong *ngIf="field.required" class="required-mark">*</strong></span>
+
+        <input
+          *ngIf="field.type === 'text' || field.type === 'email' || field.type === 'tel' || field.type === 'date'"
+          [type]="field.type"
+          [formControlName]="field.key"
+          [placeholder]="field.placeholder || ''"
+        >
+
+        <select *ngIf="field.type === 'select'" [formControlName]="field.key">
+          <option value="">Select one</option>
+          <option *ngFor="let option of field.options || []" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+
+        <textarea
+          *ngIf="field.type === 'textarea'"
+          [formControlName]="field.key"
+          [rows]="field.rows || 4"
+          [placeholder]="field.placeholder || ''"
+        ></textarea>
+
+        <small class="field-error" *ngIf="hasError(field.key)">This field is required.</small>
+      </label>
+    </ng-container>
+
+    <div class="button-row form-actions field-wide">
+      <button class="button button-primary" type="submit" [disabled]="submitting">
+        {{ submitting ? 'Submitting...' : config.buttonLabel }}
+      </button>
+      <a class="button button-secondary" routerLink="/dashboard" *ngIf="auth.isAuthenticated">Open dashboard</a>
+      <p class="form-status is-success action-status-inline" *ngIf="feedback">{{ feedback }}</p>
+      <p class="form-status is-error action-status-inline" *ngIf="error">{{ error }}</p>
+    </div>
+  </form>
+</article>

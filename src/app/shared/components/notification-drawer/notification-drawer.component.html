@@ -1,0 +1,55 @@
+<div class="drawer-backdrop" *ngIf="open" (click)="closed.emit()"></div>
+
+<aside class="notification-drawer" [class.is-open]="open" aria-label="Notifications">
+  <div class="drawer-head">
+    <div>
+      <h2>Alerts</h2>
+    </div>
+    <button class="button button-ghost" type="button" (click)="closed.emit()">Close</button>
+  </div>
+
+  <div class="drawer-body" *ngIf="auth.isAuthenticated; else signInNotice">
+    <div class="button-row compact-row">
+      <button class="button button-secondary" type="button" (click)="loadNotifications()">Refresh</button>
+    </div>
+
+    <div class="segmented-control notification-filter-control">
+      <button class="segment" type="button" [class.is-active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">All</button>
+      <button class="segment" type="button" [class.is-active]="activeFilter === 'UNREAD'" (click)="setFilter('UNREAD')">Unread</button>
+      <button class="segment" type="button" [class.is-active]="activeFilter === 'READ'" (click)="setFilter('READ')">Read</button>
+    </div>
+
+    <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+    <p class="empty-state" *ngIf="loading">Loading notifications...</p>
+    <p class="empty-state" *ngIf="!loading && !filteredNotifications.length">No alerts in this view yet.</p>
+
+    <div class="notification-stack" *ngIf="filteredNotifications.length">
+      <article
+        class="notification-card"
+        *ngFor="let notification of filteredNotifications"
+        [class.is-unread]="!notification.isRead"
+      >
+        <div class="notification-meta">
+          <span>{{ humanizeNotificationType(notification.notificationType) }}</span>
+          <span>{{ notification.createdAt | date:'medium' }}</span>
+        </div>
+        <h3>{{ notification.title }}</h3>
+        <p>{{ notification.message }}</p>
+        <div class="button-row compact-row notification-actions">
+          <button class="button button-secondary" type="button" *ngIf="notification.requestId" (click)="viewRequest(notification)">
+            View more
+          </button>
+          <button class="text-link" type="button" *ngIf="!notification.isRead" (click)="markAsRead(notification)">
+            Mark as read
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <ng-template #signInNotice>
+    <div class="drawer-body">
+      <p class="empty-state">Sign in to receive pickup alerts, request updates, and staff notices.</p>
+    </div>
+  </ng-template>
+</aside>

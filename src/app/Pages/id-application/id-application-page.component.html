@@ -1,0 +1,249 @@
+<main class="page-shell id-application-page">
+  <section class="page-hero" appRevealOnScroll>
+    <div class="hero-copy">
+      <p class="eyebrow">Veteran ID Application</p>
+      <h1>Apply for your Veteran's ID Card.</h1>
+      <p class="lead">
+        Complete the Veterans Identification Access and Medical Card application and use the print-ready PDF
+        action when you need a saved or printable copy.
+      </p>
+
+      <div class="button-row">
+        <button class="button button-primary" type="button" (click)="openApplicationModal()">Start application</button>
+        <a class="button button-secondary" routerLink="/id-guidance">Read ID guidance</a>
+      </div>
+    </div>
+
+    <aside class="hero-side">
+      <div class="summary-card dark-card">
+        <p class="card-kicker">Before you begin</p>
+        <ul class="icon-list">
+          <li>Have your service details, contact details, and identification choice ready.</li>
+          <li>Use the PDF action when you need a print-ready version for review or records.</li>
+          <li>Official-use-only areas stay blank so staff can complete them during processing.</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section id-application-section" appRevealOnScroll>
+    <div class="split-layout">
+      <article class="feature-card">
+        <p class="card-kicker">Application access</p>
+        <h2>Open the confirmed Veteran ID form in a focused popup.</h2>
+        <p class="section-copy">
+          Use the start button to open the full application without stretching the page layout. The popup keeps the
+          form, PDF action, and submission controls in one focused space.
+        </p>
+        <ul class="checklist">
+          <li>The page keeps its standard portal margin and spacing.</li>
+          <li>The declaration stays fixed and non-editable.</li>
+          <li>The PDF action remains available inside the application popup.</li>
+        </ul>
+        <div class="button-row compact-row">
+          <button class="button button-primary" type="button" (click)="openApplicationModal()">Start application</button>
+          <a class="button button-secondary" routerLink="/id-guidance">Read guidance</a>
+        </div>
+      </article>
+
+      <article class="feature-card dark-card id-display-panel">
+        <p class="card-kicker">Veteran ID visual lane</p>
+        <h3>Keep the page ready for approved card visuals and display panels.</h3>
+        <p class="section-copy">
+          The application stays wider on the left while this green display space remains available for Veteran ID front,
+          back, or supporting image panels.
+        </p>
+        <div class="id-display-stage">
+          <div class="id-display-placeholder">
+            <span>Veteran ID front</span>
+          </div>
+          <div class="id-display-placeholder">
+            <span>Veteran ID back</span>
+          </div>
+        </div>
+        <div class="button-row compact-row">
+          <a class="button button-ghost" routerLink="/id-guidance">Read full ID guidance</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showApplicationModal" (click)="closeApplicationModal()">
+    <section
+      class="modal-card id-application-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="id-application-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Veteran ID application</p>
+          <h2 id="id-application-modal-title">Veterans Identification Access and Medical Card application</h2>
+          <p class="application-note">Complete the form and use the PDF action to generate the legal-size application PDF.</p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeApplicationModal()">Close</button>
+      </div>
+
+      <article class="form-shell id-application-shell">
+        <form [formGroup]="form" class="application-form" (ngSubmit)="submit()">
+          <div class="form-section">
+            <p class="form-section-title">Section A - Type of application</p>
+            <div class="choice-grid choice-grid-4">
+              <label class="choice-pill" *ngFor="let type of applicationTypes">
+                <input type="radio" formControlName="application_type" [value]="type">
+                <span>{{ type }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <p class="form-section-title">Section B - Personal information</p>
+            <div class="form-grid">
+              <label class="field">
+                <span>Surname <strong class="required-mark">*</strong></span>
+                <input type="text" formControlName="surname" placeholder="Enter surname">
+                <small class="field-error" *ngIf="hasError('surname')">Surname is required.</small>
+              </label>
+
+              <label class="field">
+                <span>Rank</span>
+                <input type="text" formControlName="rank" placeholder="Enter rank">
+              </label>
+
+              <label class="field field-wide">
+                <span>Christian or forenames <strong class="required-mark">*</strong></span>
+                <input type="text" formControlName="full_name" placeholder="Enter first and middle names">
+                <small class="field-error" *ngIf="hasError('full_name')">Forenames are required.</small>
+              </label>
+
+              <div class="field">
+                <span>Gender <strong class="required-mark">*</strong></span>
+                <div class="choice-grid choice-grid-2">
+                  <label class="choice-pill" *ngFor="let gender of genders">
+                    <input type="radio" formControlName="gender" [value]="gender">
+                    <span>{{ gender }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <label class="field">
+                <span>Date of birth <strong class="required-mark">*</strong></span>
+                <input type="date" formControlName="date_of_birth">
+                <small class="field-error" *ngIf="hasError('date_of_birth')">Date of birth is required.</small>
+              </label>
+
+              <label class="field">
+                <span>Date of enlistment</span>
+                <input type="date" formControlName="enlistment_date">
+              </label>
+
+              <label class="field">
+                <span>Date of discharge</span>
+                <input type="date" formControlName="discharge_date">
+              </label>
+
+              <label class="field">
+                <span>Total service</span>
+                <input type="text" formControlName="total_service" placeholder="Example: 22 years">
+              </label>
+
+              <label class="field">
+                <span>Reason for termination</span>
+                <input type="text" formControlName="termination_reason" placeholder="Enter reason for termination">
+              </label>
+
+              <label class="field">
+                <span>Regimental number</span>
+                <input type="text" formControlName="service_number" placeholder="Enter regimental number">
+              </label>
+
+              <label class="field">
+                <span>TRN or other reference</span>
+                <input type="text" formControlName="reference_number" placeholder="Enter reference number">
+              </label>
+
+              <label class="field">
+                <span>Blood group</span>
+                <select formControlName="blood_group">
+                  <option value="">Select one</option>
+                  <option *ngFor="let bloodGroup of bloodGroups" [value]="bloodGroup">{{ bloodGroup }}</option>
+                </select>
+              </label>
+
+              <div class="field">
+                <span>Type of identification <strong class="required-mark">*</strong></span>
+                <div class="choice-grid choice-grid-3">
+                  <label class="choice-pill" *ngFor="let idType of identificationTypes">
+                    <input type="radio" formControlName="identification_type" [value]="idType">
+                    <span>{{ idType }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <label class="field">
+                <span>Telephone number <strong class="required-mark">*</strong></span>
+                <input type="tel" formControlName="phone" placeholder="Enter contact number">
+                <small class="field-error" *ngIf="hasError('phone')">Phone number is required.</small>
+              </label>
+
+              <label class="field">
+                <span>Email</span>
+                <input type="email" formControlName="email" placeholder="Enter email address">
+              </label>
+
+              <label class="field field-wide">
+                <span>Home address <strong class="required-mark">*</strong></span>
+                <textarea formControlName="home_address" rows="3" placeholder="Enter home address"></textarea>
+                <small class="field-error" *ngIf="hasError('home_address')">Home address is required.</small>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <p class="form-section-title">Section C - Declaration and signature of applicant</p>
+            <div class="form-grid">
+              <label class="field field-wide">
+                <span>Declaration</span>
+                <div class="static-field-copy" aria-label="Declaration text">
+                  {{ form.getRawValue().declaration }}
+                </div>
+              </label>
+
+              <label class="field">
+                <span>Applicant signature or typed name <strong class="required-mark">*</strong></span>
+                <input type="text" formControlName="signature_name" placeholder="Enter applicant signature name">
+                <small class="field-error" *ngIf="hasError('signature_name')">Signature name is required.</small>
+              </label>
+
+              <label class="field">
+                <span>Date <strong class="required-mark">*</strong></span>
+                <input type="date" formControlName="application_date">
+                <small class="field-error" *ngIf="hasError('application_date')">Application date is required.</small>
+              </label>
+
+              <label class="field field-wide">
+                <span>Additional notes</span>
+                <textarea formControlName="notes" rows="3" placeholder="Add details about prior card issues, missing records, or supporting context."></textarea>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section official-use-note">
+            <p class="form-section-title">Section D - Official use only</p>
+            <p>Payment method, certifying official signature, approval, and internal dates stay blank so staff can complete them during review.</p>
+          </div>
+
+          <div class="button-row form-actions">
+            <button class="button button-secondary" type="button" (click)="generatePdf()">Generate PDF application</button>
+            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Submitting..." : "Submit ID request" }}</button>
+            <p class="form-status is-success action-status-inline" *ngIf="feedback">{{ feedback }}</p>
+            <p class="form-status is-error action-status-inline" *ngIf="error">{{ error }}</p>
+          </div>
+
+          <p class="form-helper">The PDF action now generates a real PDF file view, so the browser print headers and footers are not added around the form.</p>
+        </form>
+      </article>
+    </section>
+  </div>
+</main>

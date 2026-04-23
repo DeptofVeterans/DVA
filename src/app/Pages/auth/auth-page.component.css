@@ -1,0 +1,35 @@
+.auth-page .section {
+  min-height: 68vh;
+  display: grid;
+  align-items: center;
+}
+
+.auth-page .auth-access-copy {
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(220, 197, 138, 0.18), transparent 32%),
+    linear-gradient(150deg, rgba(17, 43, 30, 0.98), rgba(23, 58, 41, 0.96));
+}
+
+.auth-page .auth-access-copy h1,
+.auth-page .auth-access-copy .lead {
+  color: #fff7df;
+}
+
+.auth-page .auth-access-copy .eyebrow,
+.auth-page .auth-access-copy .card-kicker {
+  color: #efd17c;
+}
+
+.auth-page .auth-access-copy .tag {
+  background: rgba(255, 247, 223, 0.12);
+  color: #fff7df;
+  border: 1px solid rgba(239, 209, 124, 0.2);
+}
+
+.auth-page .auth-form-card {
+  border-radius: 34px;
+}

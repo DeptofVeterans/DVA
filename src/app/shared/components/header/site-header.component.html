@@ -1,0 +1,83 @@
+<header class="site-header" [class.mobile-menu-open]="navOpen">
+  <a class="brand" routerLink="/" aria-label="Veterans Affairs Jamaica portal home" (click)="closeNav()">
+    <span class="brand-mark brand-mark-logo" aria-hidden="true">
+      <img class="brand-logo-image" src="assets/logo-salute-copy.png" alt="">
+    </span>
+    <span class="brand-copy">
+      <strong>Veterans Affairs</strong>
+      <span>Jamaica Portal</span>
+    </span>
+  </a>
+
+  <button
+    class="nav-toggle"
+    [class.is-open]="navOpen"
+    type="button"
+    [attr.aria-expanded]="navOpen"
+    aria-controls="mobile-site-nav"
+    (click)="toggleNav()"
+  >
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="sr-only">Toggle navigation</span>
+  </button>
+
+  <nav class="site-nav desktop-site-nav" aria-label="Primary">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.route"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: item.exact !== false }"
+      (click)="closeNav()"
+    >
+      {{ item.label }}
+    </a>
+  </nav>
+
+  <div class="header-actions desktop-header-actions">
+    <button class="button button-ghost button-alert" type="button" (click)="toggleNotificationsRequested.emit()">
+      <span>{{ notificationsOpen ? "Close alerts" : "Alerts" }}</span>
+      <span class="alert-counter" *ngIf="unreadAlerts > 0" [attr.aria-label]="unreadAlerts + ' unread alerts'">
+        {{ unreadAlertsLabel }}
+      </span>
+    </button>
+
+    <a class="button button-secondary" routerLink="/dashboard" *ngIf="currentUser" (click)="closeNav()">Dashboard</a>
+    <a class="button button-ghost profile-chip" routerLink="/profile" *ngIf="currentUser" (click)="closeNav()" aria-label="Open profile">
+      <app-profile-avatar [user]="currentUser" size="sm"></app-profile-avatar>
+    </a>
+    <a class="button button-primary" routerLink="/auth" *ngIf="!currentUser" (click)="closeNav()">Sign in</a>
+    <button class="button button-primary" type="button" *ngIf="currentUser" (click)="logoutRequested.emit()">Sign out</button>
+  </div>
+
+  <aside class="mobile-nav-panel" *ngIf="navOpen" [attr.aria-hidden]="!navOpen">
+    <nav id="mobile-site-nav" class="mobile-site-nav" aria-label="Mobile primary">
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.route"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: item.exact !== false }"
+        (click)="closeNav()"
+      >
+        {{ item.label }}
+      </a>
+    </nav>
+
+    <div class="mobile-header-actions">
+      <button class="button button-ghost button-alert" type="button" (click)="toggleNotificationsRequested.emit(); closeNav()">
+        <span>{{ notificationsOpen ? "Close alerts" : "Alerts" }}</span>
+        <span class="alert-counter" *ngIf="unreadAlerts > 0" [attr.aria-label]="unreadAlerts + ' unread alerts'">
+          {{ unreadAlertsLabel }}
+        </span>
+      </button>
+
+      <a class="button button-secondary" routerLink="/dashboard" *ngIf="currentUser" (click)="closeNav()">Dashboard</a>
+      <a class="button button-ghost profile-chip mobile-profile-chip" routerLink="/profile" *ngIf="currentUser" (click)="closeNav()" aria-label="Open profile">
+        <app-profile-avatar [user]="currentUser" size="sm"></app-profile-avatar>
+      </a>
+      <a class="button button-primary" routerLink="/auth" *ngIf="!currentUser" (click)="closeNav()">Sign in</a>
+      <button class="button button-primary" type="button" *ngIf="currentUser" (click)="logoutRequested.emit(); closeNav()">Sign out</button>
+    </div>
+  </aside>
+</header>

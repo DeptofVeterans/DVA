@@ -1,0 +1,206 @@
+.home-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(560px, 70vh, 760px);
+  padding: clamp(1.25rem, 4vw, 2.4rem);
+  border-radius: clamp(28px, 4vw, 42px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 86% 18%, rgba(231, 200, 94, 0.26), transparent 30%),
+    radial-gradient(circle at 15% 88%, rgba(255, 255, 255, 0.13), transparent 34%),
+    linear-gradient(135deg, rgba(23, 58, 41, 0.99), rgba(22, 72, 49, 0.96) 48%, rgba(12, 31, 22, 0.99));
+  border: 1px solid rgba(220, 197, 138, 0.24);
+  box-shadow: 0 26px 56px rgba(10, 22, 16, 0.24);
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(10, 25, 18, 0.94) 0%, rgba(23, 58, 41, 0.82) 42%, rgba(23, 58, 41, 0.5) 68%, rgba(10, 25, 18, 0.28) 100%),
+    radial-gradient(circle at 72% 18%, rgba(231, 200, 94, 0.2), transparent 30%);
+}
+
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 250, 236, 0.1);
+  pointer-events: none;
+}
+
+.home-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.34;
+  filter: saturate(0.95) contrast(1.05);
+}
+
+.home-hero-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.home-hero h1 {
+  color: #fff9ec;
+  font-size: clamp(2.8rem, 7vw, 5.8rem);
+  letter-spacing: -0.04em;
+}
+
+.home-hero .lead {
+  color: rgba(255, 249, 236, 0.86);
+  max-width: 64ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-hero .eyebrow,
+.home-hero .card-kicker {
+  color: #efd17c;
+}
+
+.home-service-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 1.1rem 0 1.2rem;
+}
+
+.home-service-strip .tag {
+  background: rgba(255, 249, 236, 0.12);
+  color: #fff9ec;
+  border: 1px solid rgba(255, 249, 236, 0.14);
+}
+
+.home-hero-actions {
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.home-hero .button-secondary {
+  background: rgba(255, 249, 236, 0.1);
+  border-color: rgba(239, 209, 124, 0.28);
+  color: #fff9ec;
+}
+
+.home-apply-panel {
+  margin-top: 0.9rem;
+  padding: 1rem;
+  width: min(100%, 920px);
+  border-radius: 24px;
+  background: rgba(255, 249, 236, 0.11);
+  border: 1px solid rgba(239, 209, 124, 0.22);
+  backdrop-filter: blur(12px);
+}
+
+.home-apply-panel .application-actions-row {
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.home-apply-panel .application-actions-row .button,
+.application-actions-row .button {
+  min-width: auto;
+  min-height: 38px;
+  padding: 0.58rem 0.9rem;
+  font-size: 0.86rem;
+}
+
+.home-page .section:first-of-type {
+  position: relative;
+  padding: 2rem;
+  margin-top: 1.4rem;
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(255, 252, 241, 0.9), rgba(242, 233, 205, 0.76)),
+    radial-gradient(circle at top right, rgba(178, 138, 45, 0.18), transparent 35%);
+  border: 1px solid rgba(178, 138, 45, 0.16);
+}
+
+.home-page .events-stack {
+  gap: 0.7rem;
+}
+
+.home-page .event-item {
+  background: rgba(255, 255, 255, 0.9);
+  border-left: 5px solid var(--gold);
+}
+
+.home-page .department-grid {
+  grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+}
+
+.home-page .department-grid .detail-card {
+  min-height: 210px;
+  border-radius: 30px 18px 30px 18px;
+}
+
+.events-stack {
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 1.25rem;
+}
+
+.event-item {
+  padding: 1.15rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(27, 74, 52, 0.1);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.event-item--featured {
+  border-color: rgba(178, 138, 45, 0.34);
+  box-shadow: inset 0 0 0 1px rgba(178, 138, 45, 0.14);
+}
+
+.event-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.event-item h3 {
+  margin-bottom: 0.35rem;
+}
+
+.event-item p {
+  margin: 0.25rem 0 0;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin-top: 0.85rem;
+  color: var(--text-soft);
+  font-size: 0.94rem;
+}
+
+.event-meta strong {
+  color: var(--heading);
+}
+
+@media (max-width: 1024px) {
+  .home-hero {
+    min-height: auto;
+  }
+}

@@ -1,0 +1,35 @@
+.request-form-card {
+  padding: 1.6rem;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 240, 0.95)),
+    linear-gradient(135deg, rgba(178, 138, 45, 0.04), rgba(23, 58, 41, 0.03));
+  border: 1px solid rgba(27, 74, 52, 0.1);
+  box-shadow: 0 20px 45px rgba(16, 18, 17, 0.12);
+}
+
+.request-form-card .section-heading {
+  margin-bottom: 1.1rem;
+}
+
+.request-form-card .section-copy {
+  color: #3d5448;
+}
+
+.request-form-card .field span {
+  color: #173a29;
+  font-weight: 700;
+}
+
+.request-form-card .form-actions {
+  align-items: stretch;
+}
+
+.required-mark {
+  color: #ad8a2a;
+}
+
+.field-error {
+  color: #8d2e1f;
+  font-size: 0.82rem;
+}

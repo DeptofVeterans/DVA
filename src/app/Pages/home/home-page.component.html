@@ -1,0 +1,147 @@
+<main class="page-shell home-page">
+  <section class="home-hero" appRevealOnScroll>
+    <img class="home-hero-bg" src="assets/hero2.0.jpeg" alt="" aria-hidden="true">
+    <div class="home-hero-copy">
+      <p class="eyebrow">Veteran Services</p>
+      <h1>Thank you for your service.</h1>
+      <p class="lead">
+        Move from records and certificates into pension and gratuity services, insurance guidance, Veteran ID
+        application, welfare support, and resettlement assistance through the correct service area.
+      </p>
+
+      <!-- <div class="home-service-strip" aria-label="Available service areas">
+        <span class="tag" *ngFor="let service of servicePills">{{ service }}</span>
+      </div> -->
+
+      <div class="button-row home-hero-actions">
+        <a class="button button-primary" routerLink="/roadmap">Open roadmap</a>
+        <a class="button button-secondary" *ngIf="!auth.isAuthenticated" routerLink="/auth">Sign in</a>
+        <a class="button button-secondary" *ngIf="auth.isAuthenticated" routerLink="/dashboard">Open dashboard</a>
+      </div>
+
+      <div class="home-apply-panel">
+        <p class="card-kicker">Apply now</p>
+        <div class="button-row application-actions-row">
+          <a
+            class="button button-secondary"
+            *ngFor="let action of applicationActions"
+            [routerLink]="action.route"
+            [fragment]="action.fragment"
+            [queryParams]="action.queryParams"
+          >
+            {{ action.label }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Upcoming Events</p>
+      <h2>Stay up to date with upcoming events and service alerts.</h2>
+      <p class="section-copy">
+        Upcoming activities, briefings, and reminders are published here so veterans, families, and partners
+        can stay informed.
+      </p>
+    </div>
+
+    <div class="split-layout">
+      <article class="feature-card">
+        <p class="card-kicker">Live event feed</p>
+        <h2>Upcoming events for veterans, families, and partners</h2>
+        <p class="empty-state" *ngIf="eventsError">{{ eventsError }}</p>
+        <p class="empty-state" *ngIf="!eventsError && !events.length">No upcoming events are published right now.</p>
+
+        <div class="events-stack" *ngIf="events.length">
+          <article class="event-item" *ngFor="let event of events" [class.event-item--featured]="isBannerEvent(event)">
+            <div class="event-head">
+              <div>
+                <p class="card-kicker">Upcoming Event</p>
+                <h3>{{ event.title }}</h3>
+              </div>
+              <span class="tag" *ngIf="isBannerEvent(event)">Live banner</span>
+            </div>
+
+            <p>{{ event.summary }}</p>
+            <div class="event-meta">
+              <span><strong>Date:</strong> {{ eventDate(event) | date:'longDate' }}</span>
+              <span><strong>Location:</strong> {{ event.location }}</span>
+            </div>
+            <a class="text-link" [routerLink]="eventRoute(event)">{{ eventLabel(event) }}</a>
+          </article>
+        </div>
+      </article>
+
+      <article class="feature-card dark-card">
+        <p class="card-kicker">Stay informed</p>
+        <h2>Use events and alerts to follow important updates.</h2>
+        <ul class="checklist">
+          <li>Upcoming events highlight briefings, support days, and public service activities.</li>
+          <li>The alert banner under the header carries time-sensitive notices when an event needs extra visibility.</li>
+          <li>Event links can direct veterans to the most relevant service page for follow-up.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- <section class="section">
+    <div class="split-layout">
+      <article class="feature-card dark-card">
+        <p class="card-kicker">Online Services</p>
+        <h2>Move from information into secure action.</h2>
+        <p>
+          Use the service pathway, service pages, and private dashboard to move directly from guidance into
+          a request, upload, approval, or pickup update.
+        </p>
+        <div class="pill-row">
+          <span class="tag">Records</span>
+          <span class="tag">Pensions</span>
+          <span class="tag">Insurance</span>
+          <span class="tag">Funerals</span>
+          <span class="tag">ID</span>
+          <span class="tag">Employment</span>
+          <span class="tag">Welfare</span>
+        </div>
+      </article>
+
+      <article class="feature-card">
+        <p class="card-kicker">Portal Security</p>
+        <ul class="checklist">
+          <li>Veterans only see their own requests, statuses, and outputs after sign-in.</li>
+          <li>Staff queues are restricted by department, while approved senior roles can see broader oversight views.</li>
+          <li>Passwords are hashed and sensitive user data is stored securely for backend encryption.</li>
+          <li>Audit logs track approvals, request changes, uploads, and output creation.</li>
+        </ul>
+      </article>
+    </div>
+  </section> -->
+
+  <section class="section" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Roles and Services</p>
+      <h2>Service areas that support veterans and families.</h2>
+    </div>
+
+    <div class="department-grid">
+      <article class="detail-card" *ngFor="let card of roleGroups">
+        <p class="card-kicker">{{ card.kicker }}</p>
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.description }}</p>
+        <a class="text-link" [routerLink]="card.route">Open service lane</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="cta-band" appRevealOnScroll>
+    <div>
+      <p class="eyebrow">Ready to begin?</p>
+      <h2>Start with the roadmap, then move into the exact records or service request you need.</h2>
+    </div>
+    <div class="button-row">
+      <a class="button button-primary" routerLink="/roadmap">Open retirement roadmap</a>
+      <a class="button button-secondary" *ngIf="!auth.isAuthenticated" routerLink="/auth">Sign in to dashboard</a>
+      <a class="button button-secondary" *ngIf="auth.isAuthenticated" routerLink="/dashboard">Open dashboard</a>
+    </div>
+  </section>
+</main>

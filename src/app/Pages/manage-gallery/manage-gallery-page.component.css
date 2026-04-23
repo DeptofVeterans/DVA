@@ -1,0 +1,45 @@
+.manage-gallery-page .manage-gallery-layout {
+  grid-template-columns: minmax(0, 0.98fr) minmax(300px, 0.82fr);
+}
+
+.manage-gallery-page .gallery-manage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.manage-gallery-page .gallery-manage-card {
+  overflow: hidden;
+  padding: 0;
+}
+
+.manage-gallery-page .gallery-manage-media {
+  min-height: 240px;
+  overflow: hidden;
+  background: rgba(16, 32, 22, 0.08);
+}
+
+.manage-gallery-page .gallery-manage-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.manage-gallery-page .gallery-manage-copy {
+  padding: 1.2rem;
+}
+
+.manage-gallery-page .gallery-image-date {
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+
+.manage-gallery-page .gallery-manage-actions {
+  margin-top: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+  .manage-gallery-page .manage-gallery-layout {
+    grid-template-columns: 1fr;
+  }
+}
