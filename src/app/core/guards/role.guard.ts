@@ -17,7 +17,7 @@ export class RoleGuard implements CanActivate {
     if (!allowedRoles.length) {
       return this.auth.isAuthenticated
         ? true
-        : this.router.createUrlTree(["/auth"], { queryParams: { mode: "login" } });
+        : this.router.createUrlTree(["/signin"], { queryParams: { mode: "login" } });
     }
 
     if (this.auth.currentUser) {
@@ -31,12 +31,12 @@ export class RoleGuard implements CanActivate {
       );
     }
 
-    return this.router.createUrlTree(["/auth"], { queryParams: { mode: "login" } });
+    return this.router.createUrlTree(["/signin"], { queryParams: { mode: "login" } });
   }
 
   private resolveAccess(user: CurrentUser | null, allowedRoles: string[]): boolean | UrlTree {
     if (!user) {
-      return this.router.createUrlTree(["/auth"], { queryParams: { mode: "login" } });
+      return this.router.createUrlTree(["/signin"], { queryParams: { mode: "login" } });
     }
 
     return allowedRoles.includes(user.roleCode)

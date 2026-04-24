@@ -23,13 +23,13 @@ export class RoadmapPageComponent {
       kicker: "Pension and Gratuity",
       title: "Eligibility for pension and gratuity",
       description: "Apply six months before ROD. Officers and enlisted ranks qualify at different reckonable service thresholds.",
-      route: "/benefits"
+      route: "/pensions"
     },
     {
       kicker: "Ex-Gratia",
       title: "Eligibility for Ex-Gratia",
       description: "Twelve years continuous service in the Jamaica National Reserve is needed for Ex-Gratia payment, and the application is made at ROD.",
-      route: "/benefits"
+      route: "/pensions"
     },
     {
       kicker: "Insurance",
@@ -41,7 +41,7 @@ export class RoadmapPageComponent {
       kicker: "Veteran's ID Card",
       title: "Apply for the Veteran's ID Card at the DVA",
       description: "The Veteran's ID Card is issued after the date of ROD and requires at least three years honourable service at termination.",
-      route: "/id-application"
+      route: "/id"
     }
   ];
 

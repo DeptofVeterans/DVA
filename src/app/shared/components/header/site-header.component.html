@@ -47,7 +47,7 @@
     <a class="button button-ghost profile-chip" routerLink="/profile" *ngIf="currentUser" (click)="closeNav()" aria-label="Open profile">
       <app-profile-avatar [user]="currentUser" size="sm"></app-profile-avatar>
     </a>
-    <a class="button button-primary" routerLink="/auth" *ngIf="!currentUser" (click)="closeNav()">Sign in</a>
+    <a class="button button-primary" routerLink="/signin" *ngIf="!currentUser" (click)="closeNav()">Sign in</a>
     <button class="button button-primary" type="button" *ngIf="currentUser" (click)="logoutRequested.emit()">Sign out</button>
   </div>
 
@@ -76,7 +76,7 @@
       <a class="button button-ghost profile-chip mobile-profile-chip" routerLink="/profile" *ngIf="currentUser" (click)="closeNav()" aria-label="Open profile">
         <app-profile-avatar [user]="currentUser" size="sm"></app-profile-avatar>
       </a>
-      <a class="button button-primary" routerLink="/auth" *ngIf="!currentUser" (click)="closeNav()">Sign in</a>
+      <a class="button button-primary" routerLink="/signin" *ngIf="!currentUser" (click)="closeNav()">Sign in</a>
       <button class="button button-primary" type="button" *ngIf="currentUser" (click)="logoutRequested.emit(); closeNav()">Sign out</button>
     </div>
   </aside>

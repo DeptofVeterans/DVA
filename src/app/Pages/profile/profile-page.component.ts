@@ -43,7 +43,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       this.auth.loadCurrentUser().subscribe({
         next: (user) => {
           if (!user) {
-            this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+            this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
           }
         }
       });

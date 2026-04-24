@@ -43,12 +43,12 @@ export class ManageEventsPageComponent implements OnInit {
       this.auth.loadCurrentUser().subscribe({
         next: (user) => {
           if (!user) {
-            this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+            this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
           }
         }
       });
     } else {
-      this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+      this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
     }
 
     this.auth.user$.subscribe((user) => {
@@ -74,6 +74,18 @@ export class ManageEventsPageComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  get totalEvents(): number {
+    return this.portalEvents.length;
+  }
+
+  get publishedEvents(): number {
+    return this.portalEvents.filter((event) => Boolean(event.is_published || event.isPublished)).length;
+  }
+
+  get bannerEvents(): number {
+    return this.portalEvents.filter((event) => Boolean(event.show_in_banner || event.showInBanner)).length;
   }
 
   submitEvent(): void {

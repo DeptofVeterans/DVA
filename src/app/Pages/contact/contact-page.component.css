@@ -1,50 +1,50 @@
 .contact-page .page-hero {
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
   align-items: stretch;
 }
 
 .contact-page .contact-hero-copy {
-  min-height: 420px;
+  min-height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background:
-    radial-gradient(circle at 84% 16%, rgba(239, 209, 124, 0.2), transparent 28%),
-    linear-gradient(145deg, rgba(12, 35, 24, 0.98), rgba(23, 58, 41, 0.96) 52%, rgba(31, 82, 57, 0.9));
-  border-color: rgba(239, 209, 124, 0.18);
+    radial-gradient(circle at 86% 18%, rgba(239, 209, 124, 0.16), transparent 26%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(247, 243, 232, 0.95));
+  border-color: rgba(17, 47, 34, 0.08);
 }
 
 .contact-page .contact-hero-copy h1,
 .contact-page .contact-hero-copy .lead {
-  color: #fff8e6;
+  color: var(--heading);
 }
 
 .contact-page .contact-hero-copy h1 {
-  max-width: 13ch;
+  max-width: 12ch;
 }
 
 .contact-page .contact-hero-copy .eyebrow,
 .contact-page .contact-hero-copy .card-kicker {
-  color: #efd17c;
+  color: var(--gold);
 }
 
 .contact-page .contact-hero-copy .tag {
-  background: rgba(255, 248, 230, 0.12);
-  color: #fff8e6;
-  border: 1px solid rgba(239, 209, 124, 0.2);
+  background: rgba(184, 141, 44, 0.12);
+  color: var(--heading);
+  border: 1px solid rgba(17, 47, 34, 0.08);
 }
 
 .contact-page .contact-signed-in-note {
   margin-top: 1rem;
   padding: 0.9rem 1rem;
   border-radius: 18px;
-  background: rgba(255, 248, 230, 0.1);
-  border: 1px solid rgba(239, 209, 124, 0.16);
-  color: rgba(255, 248, 230, 0.94);
+  background: rgba(184, 141, 44, 0.08);
+  border: 1px solid rgba(17, 47, 34, 0.08);
+  color: var(--text);
 }
 
 .contact-page .contact-signed-in-note strong {
-  color: #fff8e6;
+  color: var(--heading);
 }
 
 .contact-page .contact-hero-side {
@@ -69,8 +69,8 @@
   flex-direction: column;
   gap: 0.45rem;
   min-height: 210px;
-  border-radius: 28px 16px 28px 16px;
-  background: linear-gradient(180deg, rgba(255, 253, 245, 0.98), rgba(245, 237, 212, 0.92));
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 243, 232, 0.92));
   transition:
     transform 0.18s ease,
     background-color 0.18s ease,
@@ -79,9 +79,8 @@
 }
 
 .contact-page .contact-lane-card.is-active {
-  background:
-    linear-gradient(145deg, rgba(12, 35, 24, 0.98), rgba(23, 58, 41, 0.96) 58%, rgba(31, 82, 57, 0.9));
-  border-color: rgba(239, 209, 124, 0.2);
+  background: linear-gradient(145deg, rgba(18, 47, 33, 0.98), rgba(27, 69, 48, 0.95));
+  border-color: rgba(17, 47, 34, 0.08);
   color: #fff8e6;
 }
 
@@ -100,9 +99,7 @@
 }
 
 .contact-page .contact-form-card {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 248, 232, 0.94)),
-    linear-gradient(135deg, rgba(178, 138, 45, 0.05), rgba(23, 58, 41, 0.05));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 245, 236, 0.95));
 }
 
 .contact-page .contact-guidance-card {

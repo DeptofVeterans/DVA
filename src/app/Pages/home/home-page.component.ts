@@ -56,9 +56,9 @@ export class HomePageComponent implements OnInit {
   ];
 
   readonly applicationActions: HomeAction[] = [
-    { label: "Apply for Veteran ID", route: "/id-application", queryParams: { openForm: 1 } },
+    { label: "Apply for Veteran ID", route: "/id", queryParams: { openForm: 1 } },
     { label: "Request Records", route: "/records", queryParams: { openForm: 1 } },
-    { label: "Apply for Benefits", route: "/benefits", queryParams: { openForm: 1 } },
+    { label: "Apply for Benefits", route: "/pensions", queryParams: { openForm: 1 } },
     { label: "Request Insurance Support", route: "/insurance", queryParams: { openForm: 1 } },
     { label: "Request Funeral Support", route: "/funerals", queryParams: { openForm: 1 } },
     { label: "Book Employment Support", route: "/employment", queryParams: { openForm: 1 } },
@@ -76,7 +76,7 @@ export class HomePageComponent implements OnInit {
       kicker: "Pension and Other Benefits",
       title: "Pensions, gratuities, ex-gratia, and related benefits",
       description: "This lane follows the roadmap into pension, gratuity, ex-gratia, disability, and death benefits.",
-      route: "/benefits"
+      route: "/pensions"
     },
     {
       kicker: "Resettlement and Employment",

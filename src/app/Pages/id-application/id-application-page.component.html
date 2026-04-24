@@ -54,12 +54,34 @@
           back, or supporting image panels.
         </p>
         <div class="id-display-stage">
-          <div class="id-display-placeholder">
-            <span>Veteran ID front</span>
-          </div>
-          <div class="id-display-placeholder">
-            <span>Veteran ID back</span>
-          </div>
+          <article class="id-preview-card id-preview-card-front">
+            <div class="id-preview-top">
+              <img class="id-preview-logo" src="/assets/logo-board-clean.png" alt="Department of Veterans Affairs Jamaica">
+              <div class="id-preview-stripes" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="id-preview-body">
+              <p class="id-preview-label">Veteran ID front</p>
+              <h4>{{ previewFullName }}</h4>
+              <p class="id-preview-meta">{{ previewRank }} • {{ previewServiceNumber }}</p>
+              <span class="id-preview-chip">{{ previewApplicationType }}</span>
+            </div>
+          </article>
+
+          <article class="id-preview-card id-preview-card-back">
+            <div class="id-preview-body">
+              <p class="id-preview-label">Veteran ID back</p>
+              <h4>Application route</h4>
+              <ul class="id-preview-notes">
+                <li>{{ previewIdentificationType }} selected for identification support.</li>
+                <li>Final card issue remains subject to department review and approval.</li>
+                <li>Printable application and guidance stay available from this page.</li>
+              </ul>
+            </div>
+          </article>
         </div>
         <div class="button-row compact-row">
           <a class="button button-ghost" routerLink="/id-guidance">Read full ID guidance</a>

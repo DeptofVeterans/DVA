@@ -190,14 +190,37 @@ export class IdApplicationPageComponent implements OnInit {
     return Boolean(control && control.invalid && (control.dirty || control.touched));
   }
 
+  get previewFullName(): string {
+    const forenames = String(this.form.get("full_name")?.value || "").trim();
+    const surname = String(this.form.get("surname")?.value || "").trim();
+    const combined = `${forenames} ${surname}`.trim();
+    return combined || "Veteran Name";
+  }
+
+  get previewRank(): string {
+    return String(this.form.get("rank")?.value || "").trim() || "Rank";
+  }
+
+  get previewServiceNumber(): string {
+    return String(this.form.get("service_number")?.value || "").trim() || "Service No.";
+  }
+
+  get previewApplicationType(): string {
+    return String(this.form.get("application_type")?.value || "New");
+  }
+
+  get previewIdentificationType(): string {
+    return String(this.form.get("identification_type")?.value || "Driver's License");
+  }
+
   private redirectToAuthForApplication(): void {
     const redirectTo = this.router.serializeUrl(
-      this.router.createUrlTree(["/id-application"], {
+      this.router.createUrlTree(["/id"], {
         queryParams: { openForm: 1 }
       })
     );
 
-    this.router.navigate(["/auth"], {
+    this.router.navigate(["/signin"], {
       queryParams: {
         mode: "login",
         redirectTo

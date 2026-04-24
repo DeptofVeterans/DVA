@@ -27,6 +27,34 @@
   </section>
 
   <section class="section">
+    <div class="workspace-metrics">
+      <article class="workspace-metric">
+        <p class="card-kicker">Total users</p>
+        <strong>{{ totalUsers }}</strong>
+        <span>All portal accounts currently loaded.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Active</p>
+        <strong>{{ activeUsers }}</strong>
+        <span>Accounts that can currently sign in.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Staff</p>
+        <strong>{{ staffUsers }}</strong>
+        <span>Staff accounts managed by role and department.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Veterans</p>
+        <strong>{{ veteranUsers }}</strong>
+        <span>Veteran accounts using the service portal.</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="section-heading">
       <p class="eyebrow">Portal Users</p>
       <h2>Search, update, and safeguard accounts.</h2>
@@ -35,7 +63,7 @@
       </p>
     </div>
 
-    <article class="feature-card">
+    <article class="feature-card workspace-search-card">
       <div class="form-grid">
         <label class="field field-wide">
           <span>Search users</span>
@@ -56,81 +84,88 @@
   </section>
 
   <section class="section" *ngIf="filteredUsers.length">
-    <div class="card-grid user-management-list">
-      <article class="feature-card user-management-card" *ngFor="let user of filteredUsers">
-        <p class="card-kicker">{{ user.role_name }}</p>
-        <h3>{{ user.display_name }}</h3>
-        <p>{{ user.full_name }} | {{ user.email }}</p>
-
-        <div class="pill-row compact-row">
-          <span class="tag">{{ user.account_type }}</span>
-          <span class="tag">{{ user.is_active ? "Active" : "Blocked" }}</span>
-          <span class="tag" *ngIf="user.account_type === 'STAFF'">{{ humanizeCode(user.staff_approval_status) }}</span>
-        </div>
-
-        <p class="form-helper">Rank: {{ user.rank }} | Regimental number: {{ user.regimental_number }}</p>
-        <p class="form-helper">Departments: {{ departmentSummary(user) }}</p>
-        <p class="form-helper">
-          Last login:
-          {{ user.last_login_at ? (user.last_login_at | date:'medium') : "No login recorded yet" }}
-        </p>
-
-        <p class="form-helper" *ngIf="!canEditUser(user)">
-          This account is outside the role changes allowed to your current account.
-        </p>
-
-        <div class="form-grid">
-          <label class="field">
-            <span>Role</span>
-            <select
-              [(ngModel)]="userStates[user.user_id].roleCode"
-              [ngModelOptions]="{ standalone: true }"
-              [disabled]="!canEditUser(user)"
-            >
-              <option *ngFor="let role of roleOptionsFor(user)" [value]="role.role_code">
-                {{ role.role_name }}
-              </option>
-            </select>
-          </label>
-
-          <label class="checkbox-pill">
-            <input
-              type="checkbox"
-              [(ngModel)]="userStates[user.user_id].isActive"
-              [ngModelOptions]="{ standalone: true }"
-              [disabled]="!canEditUser(user)"
-            >
-            <span>{{ userStates[user.user_id].isActive ? "User can sign in" : "User is blocked" }}</span>
-          </label>
-
-          <div class="field field-wide" *ngIf="selectedRoleIsStaff(user.user_id)">
-            <span>Departments</span>
-            <div class="checkbox-grid">
-              <label class="checkbox-pill" *ngFor="let department of departments">
-                <input
-                  type="checkbox"
-                  [checked]="userStates[user.user_id].departmentIds.includes(department.department_id)"
-                  [disabled]="!canEditUser(user)"
-                  (change)="toggleDepartment(user.user_id, department.department_id, $any($event.target).checked)"
-                >
-                <span>{{ department.department_name }}</span>
-              </label>
-            </div>
+    <div class="workspace-list-stack">
+      <article class="feature-card workspace-row-card manage-user-row" *ngFor="let user of filteredUsers">
+        <div class="workspace-row-top">
+          <div>
+            <p class="card-kicker">{{ user.role_name }}</p>
+            <h3>{{ user.display_name }}</h3>
+            <p class="workspace-row-meta">{{ user.full_name }} | {{ user.email }}</p>
           </div>
 
-          <label class="field field-wide" *ngIf="selectedRoleIsStaff(user.user_id)">
-            <span>Primary department</span>
-            <select
-              [(ngModel)]="userStates[user.user_id].primaryDepartmentId"
-              [ngModelOptions]="{ standalone: true }"
-              [disabled]="!canEditUser(user)"
-            >
-              <option [ngValue]="null">Select primary department</option>
-              <option *ngFor="let departmentId of userStates[user.user_id].departmentIds" [ngValue]="departmentId">
-                {{ departmentNameById(departmentId) }}
-              </option>
-            </select>
-          </label>
+          <div class="pill-row compact-row">
+            <span class="tag">{{ user.account_type }}</span>
+            <span class="tag">{{ user.is_active ? "Active" : "Blocked" }}</span>
+            <span class="tag" *ngIf="user.account_type === 'STAFF'">{{ humanizeCode(user.staff_approval_status) }}</span>
+          </div>
+        </div>
+
+        <div class="workspace-row-grid">
+          <div class="workspace-note-panel">
+            <p class="form-helper">Rank: {{ user.rank }} | Regimental number: {{ user.regimental_number }}</p>
+            <p class="form-helper">Departments: {{ departmentSummary(user) }}</p>
+            <p class="form-helper">
+              Last login:
+              {{ user.last_login_at ? (user.last_login_at | date:'medium') : "No login recorded yet" }}
+            </p>
+            <p class="form-helper" *ngIf="!canEditUser(user)">
+              This account is outside the role changes allowed to your current account.
+            </p>
+          </div>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>Role</span>
+              <select
+                [(ngModel)]="userStates[user.user_id].roleCode"
+                [ngModelOptions]="{ standalone: true }"
+                [disabled]="!canEditUser(user)"
+              >
+                <option *ngFor="let role of roleOptionsFor(user)" [value]="role.role_code">
+                  {{ role.role_name }}
+                </option>
+              </select>
+            </label>
+
+            <label class="checkbox-pill">
+              <input
+                type="checkbox"
+                [(ngModel)]="userStates[user.user_id].isActive"
+                [ngModelOptions]="{ standalone: true }"
+                [disabled]="!canEditUser(user)"
+              >
+              <span>{{ userStates[user.user_id].isActive ? "User can sign in" : "User is blocked" }}</span>
+            </label>
+
+            <div class="field field-wide" *ngIf="selectedRoleIsStaff(user.user_id)">
+              <span>Departments</span>
+              <div class="checkbox-grid">
+                <label class="checkbox-pill" *ngFor="let department of departments">
+                  <input
+                    type="checkbox"
+                    [checked]="userStates[user.user_id].departmentIds.includes(department.department_id)"
+                    [disabled]="!canEditUser(user)"
+                    (change)="toggleDepartment(user.user_id, department.department_id, $any($event.target).checked)"
+                  >
+                  <span>{{ department.department_name }}</span>
+                </label>
+              </div>
+            </div>
+
+            <label class="field field-wide" *ngIf="selectedRoleIsStaff(user.user_id)">
+              <span>Primary department</span>
+              <select
+                [(ngModel)]="userStates[user.user_id].primaryDepartmentId"
+                [ngModelOptions]="{ standalone: true }"
+                [disabled]="!canEditUser(user)"
+              >
+                <option [ngValue]="null">Select primary department</option>
+                <option *ngFor="let departmentId of userStates[user.user_id].departmentIds" [ngValue]="departmentId">
+                  {{ departmentNameById(departmentId) }}
+                </option>
+              </select>
+            </label>
+          </div>
         </div>
 
         <div class="button-row compact-row">

@@ -30,12 +30,12 @@ export class AuditLogsPageComponent implements OnInit {
       this.auth.loadCurrentUser().subscribe({
         next: (user) => {
           if (!user) {
-            this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+            this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
           }
         }
       });
     } else {
-      this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+      this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
     }
 
     this.auth.user$.subscribe((user) => {
@@ -63,6 +63,14 @@ export class AuditLogsPageComponent implements OnInit {
         .toLowerCase()
         .includes(query)
     );
+  }
+
+  get visibleActorCount(): number {
+    return new Set(this.filteredAuditLogs.map((item) => this.actorName(item))).size;
+  }
+
+  get visibleEventTypeCount(): number {
+    return new Set(this.filteredAuditLogs.map((item) => item.event_code)).size;
   }
 
   reloadLogs(): void {

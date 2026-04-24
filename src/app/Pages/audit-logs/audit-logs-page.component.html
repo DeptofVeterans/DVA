@@ -27,7 +27,29 @@
   </section>
 
   <section class="section">
-    <article class="feature-card">
+    <div class="workspace-metrics">
+      <article class="workspace-metric">
+        <p class="card-kicker">Visible entries</p>
+        <strong>{{ filteredAuditLogs.length }}</strong>
+        <span>Audit rows matching the current search.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Actors</p>
+        <strong>{{ visibleActorCount }}</strong>
+        <span>Distinct users represented in the visible results.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Event types</p>
+        <strong>{{ visibleEventTypeCount }}</strong>
+        <span>Unique actions represented in the visible results.</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <article class="feature-card workspace-search-card">
       <div class="form-grid">
         <label class="field field-wide">
           <span>Search logs</span>
@@ -48,7 +70,7 @@
   </section>
 
   <section class="section" *ngIf="filteredAuditLogs.length">
-    <article class="feature-card">
+    <article class="feature-card workspace-table-card">
       <div class="table-wrap audit-log-table-wrap">
         <table class="data-table audit-log-table">
           <thead>

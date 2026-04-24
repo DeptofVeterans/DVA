@@ -5,18 +5,28 @@ import { Component } from "@angular/core";
   templateUrl: "./site-footer.component.html"
 })
 export class SiteFooterComponent {
-  readonly links = [
-    { label: "Roadmap", route: "/roadmap" },
+  readonly serviceLinks = [
     { label: "Records", route: "/records" },
-    { label: "Pensions", route: "/benefits" },
+    { label: "Pensions", route: "/pensions" },
     { label: "Insurance", route: "/insurance" },
     { label: "Funerals", route: "/funerals" },
-    { label: "ID Application", route: "/id-application" },
-    { label: "ID Guidance", route: "/id-guidance" },
     { label: "Employment", route: "/employment" },
-    { label: "Welfare", route: "/welfare" },
+    { label: "Welfare", route: "/welfare" }
+  ];
+
+  readonly portalLinks = [
+    { label: "Roadmap", route: "/roadmap" },
+    { label: "Veteran ID", route: "/id" },
     { label: "Gallery", route: "/gallery" },
-    { label: "Contact", route: "/contact" }
+    { label: "Contact", route: "/contact" },
+    { label: "Sign in", route: "/signin" },
+    { label: "Dashboard", route: "/dashboard" }
+  ];
+
+  readonly supportNotes = [
+    "Secure digital access to requests, alerts, and follow-up",
+    "Department-based staff workflows and approval routing",
+    "Support for records, pensions, insurance, funerals, ID, employment, and welfare services"
   ];
 
   readonly year = new Date().getFullYear();

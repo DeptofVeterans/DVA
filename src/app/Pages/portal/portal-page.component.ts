@@ -36,6 +36,11 @@ interface PortalMediaItem {
   alt: string;
 }
 
+interface PortalQuickLink {
+  label: string;
+  route: string;
+}
+
 interface PortalSection {
   eyebrow: string;
   title: string;
@@ -44,6 +49,27 @@ interface PortalSection {
   cards?: PortalCard[];
   tables?: PortalTable[];
   policyItems?: PortalPolicyItem[];
+}
+
+interface PortalFocusCard {
+  label: string;
+  value: string;
+  detail: string;
+  tone?: "accent" | "dark";
+}
+
+interface PortalProcessStep {
+  label: string;
+  title: string;
+  detail: string;
+}
+
+interface PortalArtDirectionConfig {
+  eyebrow: string;
+  title: string;
+  copy?: string;
+  focusCards: PortalFocusCard[];
+  processSteps: PortalProcessStep[];
 }
 
 const SUPPLEMENTS: Record<string, PortalSection[]> = {
@@ -522,27 +548,211 @@ const SUPPLEMENTS: Record<string, PortalSection[]> = {
   ]
 };
 
-const PORTAL_MEDIA: Record<string, PortalMediaItem[]> = {
-  funerals: [
-    {
-      title: "Burial support setting",
-      caption: "A view connected to burial preparation and the final rites process.",
-      imageUrl: "/assets/images/funerals/Funeral1.png",
-      alt: "Burial site with floral wreaths"
-    },
-    {
-      title: "Memorial headstone example",
-      caption: "A sample memorial stone related to the tombing and headstone process.",
-      imageUrl: "/assets/images/funerals/Funeral2tombstone.png",
-      alt: "Memorial tombstone example"
-    },
-    {
-      title: "Funeral floral arrangement",
-      caption: "Funeral floral support and remembrance arrangement.",
-      imageUrl: "/assets/images/funerals/funeral_flowers.jpeg",
-      alt: "Funeral flower arrangement"
-    }
-  ]
+const PORTAL_MEDIA: Record<string, PortalMediaItem[]> = {};
+
+const PAGE_ART_DIRECTION: Record<string, PortalArtDirectionConfig> = {
+  records: {
+    eyebrow: "Request Assembly",
+    title: "Build the request with the exact document name before it reaches the records team.",
+    copy: "This lane works best when the document name, organization details, and contact points are matched correctly at the start.",
+    focusCards: [
+      {
+        label: "Correct letter",
+        value: "Confirmation of Employment",
+        detail: "Use the exact title and include service number, organization to be addressed to, name, email, and phone number.",
+        tone: "accent"
+      },
+      {
+        label: "Certificate path",
+        value: "Officer or Blue Book",
+        detail: "Choose the certificate route that matches the service record before submitting the request."
+      },
+      {
+        label: "Secure follow-up",
+        value: "Status + pickup alerts",
+        detail: "After submission, the request stays visible in the dashboard with updates from the department."
+      }
+    ],
+    processSteps: [
+      { label: "01", title: "Name the exact document", detail: "Start with the specific certificate, record, or employment letter title." },
+      { label: "02", title: "Match the supporting details", detail: "Use the organization name, contact details, and service number that belong to that document type." },
+      { label: "03", title: "Track the request securely", detail: "Use the dashboard for updates, staff follow-up, and ready-for-pickup alerts." }
+    ]
+  },
+  benefits: {
+    eyebrow: "Retirement Timing",
+    title: "Use the retirement pathway so each benefit request lands in the right part of the process.",
+    copy: "Pensions and related benefits are strongest when they move with the roadmap instead of being treated like isolated requests.",
+    focusCards: [
+      {
+        label: "Before ROD",
+        value: "Pension + Gratuity",
+        detail: "Use the pension and gratuity lane before retirement on duty so service records and timelines stay aligned.",
+        tone: "accent"
+      },
+      {
+        label: "At ROD",
+        value: "Ex-Gratia",
+        detail: "Ex-Gratia should move at the point of retirement on duty with the correct service history in place."
+      },
+      {
+        label: "Support cases",
+        value: "Disability + Death Benefits",
+        detail: "High-support cases can still be tracked in the same secure workflow with welfare coordination where needed.",
+        tone: "dark"
+      }
+    ],
+    processSteps: [
+      { label: "01", title: "Confirm the record trail", detail: "Use records and certificates first when the benefit depends on service confirmation." },
+      { label: "02", title: "Choose the right benefit lane", detail: "Match pension, gratuity, ex-gratia, disability, or death benefit to the correct route." },
+      { label: "03", title: "Track review and outcome", detail: "Status updates continue in the portal while staff route the case through the department." }
+    ]
+  },
+  insurance: {
+    eyebrow: "Coverage Navigation",
+    title: "Move from plan guidance into practical support without losing the details of the policy.",
+    copy: "This page is both a reference centre and a service lane, so coverage notes, premium tables, and support follow-up stay connected.",
+    focusCards: [
+      {
+        label: "Core plan",
+        value: "Group Health Guidance",
+        detail: "Use the main health plan notes for dependants, cards, authorization, and claims preparation.",
+        tone: "accent"
+      },
+      {
+        label: "Supplemental options",
+        value: "Rates on page",
+        detail: "Critical illness, life, parental health, dental and optical, and family-life rates remain visible for review."
+      },
+      {
+        label: "Support requests",
+        value: "Claims + enrolment follow-up",
+        detail: "Questions about claims, authorization, and enrolment stay inside the secure support flow.",
+        tone: "dark"
+      }
+    ],
+    processSteps: [
+      { label: "01", title: "Review the right plan area", detail: "Start with the health, supplemental, or family plan section that matches your question." },
+      { label: "02", title: "Compare options and limits", detail: "Use the tables to confirm caps, rates, dependants, and exclusions before submitting." },
+      { label: "03", title: "Send the support request", detail: "Use the form for claims, enrolment follow-up, and insurance guidance questions." }
+    ]
+  },
+  funerals: {
+    eyebrow: "Family Coordination",
+    title: "Keep burial, tombing, payment, and family support moving together during a difficult process.",
+    copy: "The funeral lane is designed to reduce handoffs by keeping service guidance, costs, and proof-of-payment follow-up in one place.",
+    focusCards: [
+      {
+        label: "Burial arrangements",
+        value: "Briggs Park guidance",
+        detail: "Use the burial notes for half-vault cost, time windows, and Last Post support.",
+        tone: "accent"
+      },
+      {
+        label: "Tombing",
+        value: "Two-stage process",
+        detail: "Administrative costs and headstone purchase are separated so families can follow the process more clearly."
+      },
+      {
+        label: "Receipt follow-up",
+        value: "Proof-of-payment letter",
+        detail: "The submitted home address supports proof-of-payment letter generation after receipt review.",
+        tone: "dark"
+      }
+    ],
+    processSteps: [
+      { label: "01", title: "Submit the family request", detail: "Start the case with the veteran details, family contact, and the support needed." },
+      { label: "02", title: "Use the right payment route", detail: "Follow the listed payment path and submit proof where the process requires it." },
+      { label: "03", title: "Track staff coordination", detail: "Burial, tombing, church, and letter follow-up can be monitored through the portal." }
+    ]
+  },
+  employment: {
+    eyebrow: "Career Transition",
+    title: "Treat the move into civilian employment like a guided transition, not a single job application.",
+    copy: "The employment lane combines preparation, opportunities, and staff follow-up so veterans can move from readiness into placement.",
+    focusCards: [
+      {
+        label: "Career preparation",
+        value: "Resume + interview support",
+        detail: "Use the intake form when you need resume creation, interview preparation, or planning support.",
+        tone: "accent"
+      },
+      {
+        label: "Opportunity board",
+        value: "Job bank + placement",
+        detail: "Open positions can be posted directly on the page and kept active for veterans to review."
+      },
+      {
+        label: "Department action",
+        value: "Resettlement follow-up",
+        detail: "Department staff can coordinate appointments, placement, and next steps from the same queue.",
+        tone: "dark"
+      }
+    ],
+    processSteps: [
+      { label: "01", title: "Book transition support", detail: "Choose the appointment style, date, and support lane that fits your next step." },
+      { label: "02", title: "Prepare for the opportunity", detail: "Use resume, interview, and job-bank support together instead of separately." },
+      { label: "03", title: "Track openings and follow-up", detail: "Jobs, placement, and staff response stay visible in the dashboard." }
+    ]
+  },
+  welfare: {
+    eyebrow: "Support Network",
+    title: "This lane is built for people, families, and support circles, not just a single applicant type.",
+    copy: "Welfare, outreach, and follow-up work best when the portal makes it clear who can ask for help and how the request will be routed.",
+    focusCards: [
+      {
+        label: "Who can ask",
+        value: "Veterans, families, caregivers",
+        detail: "The welfare route remains open to dependants, family members, caregivers, and representatives where support is needed.",
+        tone: "accent"
+      },
+      {
+        label: "Care lanes",
+        value: "Medical, transport, outreach",
+        detail: "Medical reviews, welfare support, funeral coordination, and outreach requests can all be directed here."
+      },
+      {
+        label: "Follow-up",
+        value: "Callback + home-visit routing",
+        detail: "The department can route callbacks and practical follow-up without exposing the request outside the right queue.",
+        tone: "dark"
+      }
+    ],
+    processSteps: [
+      { label: "01", title: "Describe the need clearly", detail: "Use the case type and support lane so the request reaches the right part of the department." },
+      { label: "02", title: "Route the case securely", detail: "Welfare and outreach items stay inside the protected request flow and dashboard." },
+      { label: "03", title: "Receive department follow-up", detail: "Veterans and families can track callbacks, updates, and next steps in the portal." }
+    ]
+  },
+  "id-guidance": {
+    eyebrow: "Formal Guidance",
+    title: "Treat the ID card as a controlled eligibility document with its own rules, access notes, and renewal conditions.",
+    copy: "The guidance page is designed to be read like an official reference sheet before the user opens the confirmed application form.",
+    focusCards: [
+      {
+        label: "Eligibility",
+        value: "Minimum service applies",
+        detail: "The guidance states the required service threshold before the card can be issued.",
+        tone: "accent"
+      },
+      {
+        label: "Card rules",
+        value: "Blue and red strip meaning",
+        detail: "Access conditions differ by the card stripe and should be understood before use."
+      },
+      {
+        label: "Renewal",
+        value: "Ten-year expiry cycle",
+        detail: "The card expires after ten years and must be renewed according to the guidance.",
+        tone: "dark"
+      }
+    ],
+    processSteps: [
+      { label: "01", title: "Read the guidance first", detail: "Review eligibility, prohibited use, and stripe rules before starting the form." },
+      { label: "02", title: "Open the confirmed application", detail: "Move into the application only after the guidance confirms the right path." },
+      { label: "03", title: "Generate the printable copy", detail: "Use the portal tools to print or save the legal-size guidance and application outputs." }
+    ]
+  }
 };
 
 @Component({
@@ -669,6 +879,100 @@ export class PortalPageComponent implements OnInit {
     }
   }
 
+  get servicePathwayTitle(): string {
+    switch (this.page?.key) {
+      case "records":
+        return "Use the right document name, then move into the next service step.";
+      case "benefits":
+        return "Connect records, retirement timing, and follow-up benefit support.";
+      case "insurance":
+        return "Move from coverage guidance into premium review and support follow-up.";
+      case "funerals":
+        return "Use this lane for burial guidance, tombing, and family coordination.";
+      case "employment":
+        return "Move from transition support into job opportunities and placement follow-up.";
+      case "welfare":
+        return "Use welfare support for consultations, transport, outreach, and family assistance.";
+      case "id-guidance":
+        return "Review the card rules first, then move into the application process.";
+      default:
+        return "Use the portal pathway that matches the service you need.";
+    }
+  }
+
+  get serviceQuickLinks(): PortalQuickLink[] {
+    switch (this.page?.key) {
+      case "records":
+        return [
+          { label: "Open roadmap", route: "/roadmap" },
+          { label: "Go to pensions", route: "/pensions" },
+          { label: "Contact center", route: "/contact" }
+        ];
+      case "benefits":
+        return [
+          { label: "Open roadmap", route: "/roadmap" },
+          { label: "Review insurance", route: "/insurance" },
+          { label: "Open dashboard", route: "/dashboard" }
+        ];
+      case "insurance":
+        return [
+          { label: "Review pensions", route: "/pensions" },
+          { label: "Contact center", route: "/contact" },
+          { label: "Open dashboard", route: "/dashboard" }
+        ];
+      case "funerals":
+        return [
+          { label: "Contact center", route: "/contact" },
+          { label: "Open welfare", route: "/welfare" },
+          { label: "Open dashboard", route: "/dashboard" }
+        ];
+      case "employment":
+        return [
+          { label: "Open dashboard", route: "/dashboard" },
+          { label: "View records", route: "/records" },
+          { label: "Contact center", route: "/contact" }
+        ];
+      case "welfare":
+        return [
+          { label: "Open dashboard", route: "/dashboard" },
+          { label: "Open ID", route: "/id" },
+          { label: "Contact center", route: "/contact" }
+        ];
+      case "id-guidance":
+        return [
+          { label: "Open application", route: "/id" },
+          { label: "Open roadmap", route: "/roadmap" },
+          { label: "Contact center", route: "/contact" }
+        ];
+      default:
+        return [];
+    }
+  }
+
+  get artDirection(): PortalArtDirectionConfig | undefined {
+    return PAGE_ART_DIRECTION[this.page?.key || ""];
+  }
+
+  get focusEyebrow(): string {
+    return this.artDirection?.eyebrow || "Service pathway";
+  }
+
+  get focusTitle(): string {
+    return this.artDirection?.title || "Use the service lane that matches the request.";
+  }
+
+  get focusCopy(): string {
+    return this.artDirection?.copy || "";
+  }
+
+  get focusCards(): PortalFocusCard[] {
+    return this.artDirection?.focusCards || [];
+  }
+
+  get focusSteps(): PortalProcessStep[] {
+    return this.artDirection?.processSteps || [];
+  }
+
   get pageMark(): string {
     switch (this.page?.key) {
       case "records":
@@ -691,7 +995,7 @@ export class PortalPageComponent implements OnInit {
   }
 
   get showImageHolder(): boolean {
-    return this.page?.key !== "id-guidance";
+    return this.page?.key !== "id-guidance" && this.pageMediaItems.length > 0;
   }
 
   get pageMediaItems(): PortalMediaItem[] {
@@ -701,17 +1005,17 @@ export class PortalPageComponent implements OnInit {
   get imageHolderTitle(): string {
     switch (this.page?.key) {
       case "records":
-        return "Records and document visual";
+        return "Records and document reference";
       case "benefits":
-        return "Benefits service visual";
+        return "Retirement and benefits reference";
       case "insurance":
-        return "Insurance service visual";
+        return "Insurance reference imagery";
       case "funerals":
         return "Funeral support visual";
       case "employment":
-        return "Employment service visual";
+        return "Employment service panel";
       case "welfare":
-        return "Welfare support visual";
+        return "Welfare and outreach imagery";
       default:
         return "Service visual";
     }
@@ -720,19 +1024,19 @@ export class PortalPageComponent implements OnInit {
   get imageHolderCopy(): string {
     switch (this.page?.key) {
       case "records":
-        return "This area can hold archive imagery, certificate artwork, or document previews.";
+        return "Named document guidance and department records references stay visible here.";
       case "benefits":
-        return "This area can hold benefit notices, pension process visuals, or approved public graphics.";
+        return "Use the retirement pathway and benefits references to keep the request aligned with the correct service stage.";
       case "insurance":
-        return "This area can hold insurance cards, coverage visuals, premium guides, or health-plan graphics.";
+        return "Coverage guides and approved rate sheets help keep insurance questions grounded in the published reference material.";
       case "funerals":
         return "Click to open final rites, memorial, and funeral support imagery.";
       case "employment":
-        return "This area can hold job posters, employer graphics, or resettlement programme visuals.";
+        return "Open jobs, appointment support, and resettlement follow-up stay on this side of the page.";
       case "welfare":
-        return "This area can hold outreach posters, assistance notices, or family-support visuals.";
+        return "Outreach imagery helps show the community-facing side of the welfare and assistance lane.";
       default:
-        return "This area can hold approved service images, campaign visuals, or supporting posters.";
+        return "Approved service imagery and supporting references appear here.";
     }
   }
 
@@ -971,7 +1275,7 @@ export class PortalPageComponent implements OnInit {
       })
     );
 
-    this.router.navigate(["/auth"], {
+    this.router.navigate(["/signin"], {
       queryParams: {
         mode: "login",
         redirectTo

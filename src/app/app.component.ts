@@ -88,7 +88,7 @@ export class AppComponent implements OnInit {
 
   toggleNotifications(): void {
     if (!this.auth.isAuthenticated) {
-      this.router.navigate(['/auth'], { queryParams: { mode: 'login' } });
+      this.router.navigate(['/signin'], { queryParams: { mode: 'login' } });
       return;
     }
 

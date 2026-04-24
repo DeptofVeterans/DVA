@@ -1,29 +1,41 @@
 <main class="page-shell home-page">
   <section class="home-hero" appRevealOnScroll>
     <img class="home-hero-bg" src="assets/hero2.0.jpeg" alt="" aria-hidden="true">
-    <div class="home-hero-copy">
-      <p class="eyebrow">Veteran Services</p>
-      <h1>Thank you for your service.</h1>
-      <p class="lead">
-        Move from records and certificates into pension and gratuity services, insurance guidance, Veteran ID
-        application, welfare support, and resettlement assistance through the correct service area.
-      </p>
+    <div class="home-hero-overlay" aria-hidden="true"></div>
 
-      <!-- <div class="home-service-strip" aria-label="Available service areas">
-        <span class="tag" *ngFor="let service of servicePills">{{ service }}</span>
-      </div> -->
+    <div class="home-hero-grid">
+      <article class="home-hero-copy">
+        <p class="eyebrow">Veteran Services Portal</p>
+        <h1>Secure veteran services, clearer pathways, and faster online follow-up.</h1>
+        <p class="lead">
+          Move from records and certificates into pensions, insurance, Veteran ID application,
+          funeral support, employment services, and welfare assistance through one connected portal.
+        </p>
 
-      <div class="button-row home-hero-actions">
-        <a class="button button-primary" routerLink="/roadmap">Open roadmap</a>
-        <a class="button button-secondary" *ngIf="!auth.isAuthenticated" routerLink="/auth">Sign in</a>
-        <a class="button button-secondary" *ngIf="auth.isAuthenticated" routerLink="/dashboard">Open dashboard</a>
-      </div>
+        <div class="button-row home-hero-actions">
+          <a class="button button-primary" routerLink="/roadmap">View service roadmap</a>
+          <a class="button button-secondary" *ngIf="!auth.isAuthenticated" routerLink="/signin">Sign in</a>
+          <a class="button button-secondary" *ngIf="auth.isAuthenticated" routerLink="/dashboard">Open dashboard</a>
+        </div>
 
-      <div class="home-apply-panel">
-        <p class="card-kicker">Apply now</p>
-        <div class="button-row application-actions-row">
+        <div class="pill-row home-pill-row">
+          <span class="tag">Secure requests</span>
+          <span class="tag">Department routing</span>
+          <span class="tag">Pickup alerts</span>
+          <span class="tag">Veteran support</span>
+        </div>
+      </article>
+
+      <aside class="home-hero-panel">
+        <p class="card-kicker">Start an application</p>
+        <h2>Open the service form you need right now.</h2>
+        <p class="home-panel-copy">
+          These links take veterans directly into the relevant form flow so they do not need to search through the full site first.
+        </p>
+
+        <div class="home-apply-list">
           <a
-            class="button button-secondary"
+            class="button button-secondary home-apply-button"
             *ngFor="let action of applicationActions"
             [routerLink]="action.route"
             [fragment]="action.fragment"
@@ -32,24 +44,38 @@
             {{ action.label }}
           </a>
         </div>
-      </div>
+      </aside>
     </div>
   </section>
 
-  <section class="section" appRevealOnScroll>
-    <div class="section-heading">
-      <p class="eyebrow">Upcoming Events</p>
-      <h2>Stay up to date with upcoming events and service alerts.</h2>
+  <section class="section home-services-section" appRevealOnScroll>
+    <div class="section-heading compact">
+      <p class="eyebrow">Service Areas</p>
+      <h2>Choose the service lane that matches the support you need.</h2>
       <p class="section-copy">
-        Upcoming activities, briefings, and reminders are published here so veterans, families, and partners
-        can stay informed.
+        The portal is organized around the department roles already confirmed for records, pensions,
+        welfare, employment, outreach, and veteran family support.
       </p>
     </div>
 
-    <div class="split-layout">
-      <article class="feature-card">
-        <p class="card-kicker">Live event feed</p>
-        <h2>Upcoming events for veterans, families, and partners</h2>
+    <div class="home-service-grid">
+      <article class="detail-card home-service-card" *ngFor="let card of roleGroups" appRevealOnScroll>
+        <p class="card-kicker">{{ card.kicker }}</p>
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.description }}</p>
+        <a class="text-link" [routerLink]="card.route">Open service lane</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section home-events-section" appRevealOnScroll>
+    <div class="split-layout home-events-layout">
+      <article class="feature-card home-events-card">
+        <div class="section-heading compact">
+          <p class="eyebrow">Upcoming Events</p>
+          <h2>Stay updated on briefings, outreach days, and service notices.</h2>
+        </div>
+
         <p class="empty-state" *ngIf="eventsError">{{ eventsError }}</p>
         <p class="empty-state" *ngIf="!eventsError && !events.length">No upcoming events are published right now.</p>
 
@@ -73,75 +99,55 @@
         </div>
       </article>
 
-      <article class="feature-card dark-card">
-        <p class="card-kicker">Stay informed</p>
-        <h2>Use events and alerts to follow important updates.</h2>
-        <ul class="checklist">
-          <li>Upcoming events highlight briefings, support days, and public service activities.</li>
-          <li>The alert banner under the header carries time-sensitive notices when an event needs extra visibility.</li>
-          <li>Event links can direct veterans to the most relevant service page for follow-up.</li>
+      <article class="summary-card dark-card home-support-panel">
+        <p class="card-kicker">Why this portal works</p>
+        <h2>Modern access with controlled handling of veteran information.</h2>
+        <ul class="icon-list">
+          <li>Veterans can submit requests without losing track of next steps.</li>
+          <li>Staff queues remain restricted by department and role.</li>
+          <li>Status changes, outputs, and alerts are delivered inside the portal.</li>
+          <li>Identity verification and supporting uploads stay tied to the request workflow.</li>
         </ul>
       </article>
     </div>
   </section>
 
-  <!-- <section class="section">
-    <div class="split-layout">
-      <article class="feature-card dark-card">
-        <p class="card-kicker">Online Services</p>
-        <h2>Move from information into secure action.</h2>
-        <p>
-          Use the service pathway, service pages, and private dashboard to move directly from guidance into
-          a request, upload, approval, or pickup update.
-        </p>
-        <div class="pill-row">
-          <span class="tag">Records</span>
-          <span class="tag">Pensions</span>
-          <span class="tag">Insurance</span>
-          <span class="tag">Funerals</span>
-          <span class="tag">ID</span>
-          <span class="tag">Employment</span>
-          <span class="tag">Welfare</span>
-        </div>
-      </article>
-
-      <article class="feature-card">
-        <p class="card-kicker">Portal Security</p>
-        <ul class="checklist">
-          <li>Veterans only see their own requests, statuses, and outputs after sign-in.</li>
-          <li>Staff queues are restricted by department, while approved senior roles can see broader oversight views.</li>
-          <li>Passwords are hashed and sensitive user data is stored securely for backend encryption.</li>
-          <li>Audit logs track approvals, request changes, uploads, and output creation.</li>
-        </ul>
-      </article>
-    </div>
-  </section> -->
-
-  <section class="section" appRevealOnScroll>
-    <div class="section-heading">
-      <p class="eyebrow">Roles and Services</p>
-      <h2>Service areas that support veterans and families.</h2>
+  <section class="section home-assurance-section" appRevealOnScroll>
+    <div class="section-heading compact">
+      <p class="eyebrow">Portal Standards</p>
+      <h2>Built for secure delivery, service continuity, and veteran trust.</h2>
     </div>
 
-    <div class="department-grid">
-      <article class="detail-card" *ngFor="let card of roleGroups">
-        <p class="card-kicker">{{ card.kicker }}</p>
-        <h3>{{ card.title }}</h3>
-        <p>{{ card.description }}</p>
-        <a class="text-link" [routerLink]="card.route">Open service lane</a>
+    <div class="card-grid three-column home-assurance-grid">
+      <article class="feature-card assurance-card" appRevealOnScroll>
+        <p class="card-kicker">Secure Access</p>
+        <h3>Protected sign-in and request ownership</h3>
+        <p>Veterans can only see their own requests while staff access is controlled by department and rank.</p>
+      </article>
+
+      <article class="feature-card assurance-card" appRevealOnScroll>
+        <p class="card-kicker">Service Follow-up</p>
+        <h3>Track status changes without repeated calls</h3>
+        <p>Pickup alerts, review notes, and request progress remain visible from the dashboard.</p>
+      </article>
+
+      <article class="feature-card assurance-card" appRevealOnScroll>
+        <p class="card-kicker">Real Department Routing</p>
+        <h3>Requests move to the right service lane</h3>
+        <p>The portal supports records, pensions, insurance, funerals, welfare, employment, and outreach workflows.</p>
       </article>
     </div>
   </section>
 
-  <section class="cta-band" appRevealOnScroll>
+  <section class="cta-band home-cta" appRevealOnScroll>
     <div>
-      <p class="eyebrow">Ready to begin?</p>
-      <h2>Start with the roadmap, then move into the exact records or service request you need.</h2>
+      <p class="eyebrow">Next Step</p>
+      <h2>Start with the roadmap or go straight into the service form you need.</h2>
+      <p class="section-copy">Use the public site for guidance, then move into the secure portal when tracking and follow-up are needed.</p>
     </div>
     <div class="button-row">
-      <a class="button button-primary" routerLink="/roadmap">Open retirement roadmap</a>
-      <a class="button button-secondary" *ngIf="!auth.isAuthenticated" routerLink="/auth">Sign in to dashboard</a>
-      <a class="button button-secondary" *ngIf="auth.isAuthenticated" routerLink="/dashboard">Open dashboard</a>
+      <a class="button button-primary" routerLink="/roadmap">Open roadmap</a>
+      <a class="button button-secondary" routerLink="/pensions">View pensions</a>
     </div>
   </section>
 </main>

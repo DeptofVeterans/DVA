@@ -4,8 +4,8 @@
 
 .dashboard-page .hero-copy {
   background:
-    linear-gradient(135deg, rgba(255, 252, 245, 0.96), rgba(239, 231, 206, 0.92)),
-    repeating-linear-gradient(90deg, rgba(23, 58, 41, 0.04), rgba(23, 58, 41, 0.04) 1px, transparent 1px, transparent 58px);
+    radial-gradient(circle at top right, rgba(184, 141, 44, 0.12), transparent 24%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 243, 232, 0.94));
 }
 
 .dashboard-lane-stack {
@@ -28,9 +28,9 @@
 }
 
 .dashboard-page .dashboard-request-lane {
-  border-radius: 18px;
-  border-top: 5px solid rgba(23, 58, 41, 0.9);
-  background: rgba(255, 252, 245, 0.98);
+  border-radius: 24px;
+  border-top: 4px solid rgba(23, 58, 41, 0.92);
+  background: rgba(255, 255, 255, 0.98);
 }
 
 .dashboard-lane-head {
@@ -51,9 +51,9 @@
 }
 
 .dashboard-page .dashboard-lane-track {
-  background: rgba(23, 58, 41, 0.04);
-  border-radius: 18px;
-  padding: 0.85rem;
+  background: rgba(17, 47, 34, 0.04);
+  border-radius: 20px;
+  padding: 0.95rem;
 }
 
 .dashboard-request-card {

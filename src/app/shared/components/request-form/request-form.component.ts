@@ -51,7 +51,7 @@ export class RequestFormComponent implements OnChanges {
 
     if (!this.auth.isAuthenticated) {
       this.error = "Sign in to submit this request.";
-      this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+      this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
       return;
     }
 

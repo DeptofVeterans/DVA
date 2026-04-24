@@ -44,12 +44,12 @@ export class ManageUsersPageComponent implements OnInit {
       this.auth.loadCurrentUser().subscribe({
         next: (user) => {
           if (!user) {
-            this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+            this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
           }
         }
       });
     } else {
-      this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+      this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
     }
 
     this.auth.user$.subscribe((user) => {
@@ -83,6 +83,22 @@ export class ManageUsersPageComponent implements OnInit {
 
   get departments(): Department[] {
     return this.lookup?.departments || [];
+  }
+
+  get totalUsers(): number {
+    return this.users.length;
+  }
+
+  get activeUsers(): number {
+    return this.users.filter((user) => Boolean(user.is_active)).length;
+  }
+
+  get staffUsers(): number {
+    return this.users.filter((user) => user.account_type === "STAFF").length;
+  }
+
+  get veteranUsers(): number {
+    return this.users.filter((user) => user.account_type === "VETERAN").length;
   }
 
   departmentSummary(user: ManagedUserSummary): string {

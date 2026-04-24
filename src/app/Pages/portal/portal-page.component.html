@@ -7,9 +7,10 @@
       <p class="lead">{{ page.lead }}</p>
 
       <div class="button-row">
-        <a class="button button-primary" routerLink="/dashboard">Open dashboard</a>
-        <a class="button button-secondary" *ngIf="page.key !== 'id-guidance' && !auth.isAuthenticated" routerLink="/auth">Sign in to submit</a>
-        <a class="button button-secondary" *ngIf="page.key === 'id-guidance'" routerLink="/id-application">Open ID application</a>
+        <button class="button button-primary" type="button" *ngIf="page.requestForm" (click)="openRequestModal()">{{ requestLauncherLabel }}</button>
+        <a class="button button-primary" *ngIf="page.key === 'id-guidance'" routerLink="/id">Open ID application</a>
+        <a class="button button-secondary" routerLink="/dashboard">Open dashboard</a>
+        <a class="button button-ghost" *ngIf="page.key !== 'id-guidance' && !auth.isAuthenticated" routerLink="/signin">Sign in to submit</a>
         <button class="button button-ghost" type="button" *ngIf="isIdGuidancePage" (click)="generateIdGuidancePdf()">Generate PDF guidance</button>
       </div>
 
@@ -20,10 +21,11 @@
 
     <aside class="hero-side" [class.portal-employment-side]="isEmploymentPage">
       <div class="summary-card page-summary-card" appRevealOnScroll>
-        <p class="card-kicker">Highlights</p>
-        <ul class="icon-list">
-          <li *ngFor="let item of page.highlights">{{ item }}</li>
-        </ul>
+        <p class="card-kicker">Service pathway</p>
+        <h3>{{ servicePathwayTitle }}</h3>
+        <div class="portal-path-links" *ngIf="serviceQuickLinks.length">
+          <a class="portal-path-link" *ngFor="let link of serviceQuickLinks" [routerLink]="link.route">{{ link.label }}</a>
+        </div>
       </div>
 
       <article class="feature-card image-slot-card" *ngIf="showImageHolder && !isEmploymentPage" appRevealOnScroll>
@@ -31,7 +33,7 @@
         <div class="image-slot-frame" *ngIf="!pageMediaItems.length">
           <div class="image-slot-visual" aria-hidden="true"></div>
           <div class="image-slot-copy">
-            <strong>Approved service visual area.</strong>
+            <strong>{{ imageHolderTitle }}.</strong>
             <span>{{ imageHolderCopy }}</span>
           </div>
         </div>
@@ -52,7 +54,7 @@
           </div>
 
           <div class="image-slot-copy image-slot-copy-static">
-            <strong>Approved funeral support imagery.</strong>
+            <strong>{{ imageHolderTitle }}.</strong>
             <span>{{ imageHolderCopy }}</span>
           </div>
         </div>
@@ -160,6 +162,51 @@
         <p class="form-status is-error" *ngIf="jobsError && !jobsLoading">{{ jobsError }}</p>
       </article>
     </aside>
+  </section>
+
+  <section class="section portal-focus-stage" *ngIf="focusCards.length || focusSteps.length" appRevealOnScroll>
+    <div class="portal-focus-layout">
+      <div class="section-heading portal-focus-heading compact">
+        <p class="eyebrow">{{ focusEyebrow }}</p>
+        <h2>{{ focusTitle }}</h2>
+        <p class="section-copy" *ngIf="focusCopy">{{ focusCopy }}</p>
+      </div>
+
+      <div class="portal-focus-panels">
+        <div class="portal-focus-card-stack" *ngIf="focusCards.length">
+          <article
+            class="portal-focus-card"
+            *ngFor="let card of focusCards"
+            [class.is-accent]="card.tone === 'accent'"
+            [class.is-dark]="card.tone === 'dark'"
+            appRevealOnScroll
+          >
+            <p class="portal-focus-label">{{ card.label }}</p>
+            <h3>{{ card.value }}</h3>
+            <p>{{ card.detail }}</p>
+          </article>
+        </div>
+
+        <div class="portal-process-line" *ngIf="focusSteps.length">
+          <article class="portal-process-step" *ngFor="let step of focusSteps" appRevealOnScroll>
+            <span class="portal-process-count">{{ step.label }}</span>
+            <div>
+              <h3>{{ step.title }}</h3>
+              <p>{{ step.detail }}</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section portal-utility-strip" *ngIf="page.highlights?.length" appRevealOnScroll>
+    <div class="portal-overview-rail">
+      <p class="card-kicker">Lane coverage</p>
+      <div class="portal-overview-pills">
+        <span class="portal-overview-pill" *ngFor="let item of page.highlights">{{ item }}</span>
+      </div>
+    </div>
   </section>
 
   <section class="section" *ngIf="page.serviceCards?.length" appRevealOnScroll>
@@ -322,8 +369,8 @@
     </div>
     <div class="button-row">
       <a class="button button-primary" routerLink="/dashboard">Open dashboard</a>
-      <a class="button button-secondary" *ngIf="page.key !== 'id-guidance' && !auth.isAuthenticated" routerLink="/auth">Sign in</a>
-      <a class="button button-secondary" *ngIf="page.key === 'id-guidance'" routerLink="/id-application">Open application</a>
+      <a class="button button-secondary" *ngIf="page.key !== 'id-guidance' && !auth.isAuthenticated" routerLink="/signin">Sign in</a>
+      <a class="button button-secondary" *ngIf="page.key === 'id-guidance'" routerLink="/id">Open application</a>
       <button class="button button-ghost" type="button" *ngIf="isIdGuidancePage" (click)="generateIdGuidancePdf()">Generate PDF guidance</button>
     </div>
   </section>

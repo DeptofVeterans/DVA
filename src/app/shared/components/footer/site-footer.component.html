@@ -1,12 +1,39 @@
 <footer class="site-footer">
-  <div class="footer-brand">
-    <strong>Department of Veterans Affairs Jamaica</strong>
-    <p>Secure digital access to veteran records, requests, follow-up, and service support.</p>
+  <div class="site-footer-grid">
+    <section class="footer-brand">
+      <p class="eyebrow">Veterans Affairs Jamaica</p>
+      <strong>Department of Veterans Affairs Jamaica Portal</strong>
+      <p class="footer-copy">
+        A modern service portal for records, pensions, funeral support, insurance guidance,
+        employment services, welfare coordination, and secure veteran follow-up.
+      </p>
+      <p class="footer-copy footer-copy-compact">Service to those who served.</p>
+    </section>
+
+    <section class="footer-column">
+      <h3>Services</h3>
+      <div class="footer-links">
+        <a *ngFor="let link of serviceLinks" [routerLink]="link.route">{{ link.label }}</a>
+      </div>
+    </section>
+
+    <section class="footer-column">
+      <h3>Portal</h3>
+      <div class="footer-links">
+        <a *ngFor="let link of portalLinks" [routerLink]="link.route">{{ link.label }}</a>
+      </div>
+    </section>
+
+    <section class="footer-column footer-column-wide">
+      <h3>What this portal supports</h3>
+      <ul class="footer-support-list">
+        <li *ngFor="let note of supportNotes">{{ note }}</li>
+      </ul>
+    </section>
   </div>
 
-  <div class="footer-links">
-    <a *ngFor="let link of links" [routerLink]="link.route">{{ link.label }}</a>
+  <div class="footer-bottom-bar">
+    <p class="footer-note">&#169; {{ year }} Department of Veterans Affairs Jamaica</p>
+    <p class="footer-note">Protected workflow for veterans, staff, and administrative users.</p>
   </div>
-
-  <p class="footer-note">Service to those who served. {{ year }}</p>
 </footer>

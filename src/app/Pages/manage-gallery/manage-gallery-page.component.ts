@@ -41,12 +41,12 @@ export class ManageGalleryPageComponent implements OnInit {
       this.auth.loadCurrentUser().subscribe({
         next: (user) => {
           if (!user) {
-            this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+            this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
           }
         }
       });
     } else {
-      this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+      this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
     }
 
     this.auth.user$.subscribe((user) => {
@@ -78,6 +78,18 @@ export class ManageGalleryPageComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  get totalImages(): number {
+    return this.galleryImages.length;
+  }
+
+  get publishedImages(): number {
+    return this.galleryImages.filter((image) => Boolean(image.isPublished || image.is_published)).length;
+  }
+
+  get featuredImages(): number {
+    return this.galleryImages.filter((image) => Boolean(image.isFeatured || image.is_featured)).length;
   }
 
   submitGalleryImage(): void {

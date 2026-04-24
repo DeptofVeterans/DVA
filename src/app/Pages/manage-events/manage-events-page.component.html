@@ -26,9 +26,31 @@
     </aside>
   </section>
 
+  <section class="section">
+    <div class="workspace-metrics">
+      <article class="workspace-metric">
+        <p class="card-kicker">Total events</p>
+        <strong>{{ totalEvents }}</strong>
+        <span>Events currently available in the management list.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Published</p>
+        <strong>{{ publishedEvents }}</strong>
+        <span>Items visible across the public site.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Banner alerts</p>
+        <strong>{{ bannerEvents }}</strong>
+        <span>Events currently controlling the site banner.</span>
+      </article>
+    </div>
+  </section>
+
   <section class="section" appRevealOnScroll>
-    <div class="form-layout">
-      <article class="feature-card" appRevealOnScroll>
+    <div class="form-layout manage-events-layout">
+      <article class="feature-card workspace-search-card" appRevealOnScroll>
         <p class="card-kicker">Create event</p>
         <form class="form-grid" [formGroup]="eventForm" (ngSubmit)="submitEvent()">
           <label class="field field-wide">
@@ -73,27 +95,56 @@
         </form>
       </article>
 
-      <article class="feature-card dark-card" appRevealOnScroll>
-        <p class="card-kicker">Published events</p>
+      <article class="summary-card dark-card" appRevealOnScroll>
+        <p class="card-kicker">Publishing notes</p>
+        <ul class="icon-list">
+          <li>Use clear titles and public-facing summaries.</li>
+          <li>Banner items should be reserved for the most important notice.</li>
+          <li>Unpublished events stay off the public site but remain manageable here.</li>
+        </ul>
+
         <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
         <p class="form-status is-error" *ngIf="error">{{ error }}</p>
         <p class="empty-state" *ngIf="loading">Loading portal events...</p>
         <p class="empty-state" *ngIf="!loading && !portalEvents.length">No portal events available yet.</p>
+      </article>
+    </div>
+  </section>
 
-        <div class="timeline" *ngIf="portalEvents.length">
-          <article class="timeline-item" *ngFor="let event of portalEvents">
-            <div>
-              <strong>{{ event.title }}</strong>
-              <span>{{ (event.event_date || event.eventDate) | date:'longDate' }} | {{ event.location }}</span>
-            </div>
-            <div class="button-row compact-row">
-              <a class="text-link" [routerLink]="eventRoute(event)">Open page</a>
-              <button class="button button-secondary" type="button" *ngIf="!(event.show_in_banner || event.showInBanner)" (click)="setBannerEvent(event)">Set banner</button>
-              <button class="button button-secondary" type="button" *ngIf="event.show_in_banner || event.showInBanner" (click)="clearBannerEvent(event)">Clear banner</button>
-              <button class="button button-ghost" type="button" *ngIf="event.is_published || event.isPublished" (click)="setEventPublished(event, false)">Unpublish</button>
-              <button class="button button-primary" type="button" *ngIf="!(event.is_published || event.isPublished)" (click)="setEventPublished(event, true)">Republish</button>
-            </div>
-          </article>
+  <section class="section" *ngIf="portalEvents.length" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Current events</p>
+      <h2>Update banner visibility and publication state.</h2>
+    </div>
+
+    <div class="workspace-list-stack">
+      <article class="feature-card workspace-row-card event-row-card" *ngFor="let event of portalEvents">
+        <div class="workspace-row-top">
+          <div>
+            <p class="card-kicker">Portal event</p>
+            <h3>{{ event.title }}</h3>
+            <p class="workspace-row-meta">{{ (event.event_date || event.eventDate) | date:'longDate' }} | {{ event.location }}</p>
+          </div>
+
+          <div class="pill-row compact-row">
+            <span class="tag">{{ (event.is_published || event.isPublished) ? "Published" : "Hidden" }}</span>
+            <span class="tag" *ngIf="event.show_in_banner || event.showInBanner">Banner</span>
+          </div>
+        </div>
+
+        <div class="workspace-row-grid">
+          <div class="workspace-note-panel">
+            <p>{{ event.summary }}</p>
+            <p class="form-helper">Route: {{ eventRoute(event) }}</p>
+          </div>
+
+          <div class="button-row compact-row event-actions-panel">
+            <a class="text-link" [routerLink]="eventRoute(event)">Open page</a>
+            <button class="button button-secondary" type="button" *ngIf="!(event.show_in_banner || event.showInBanner)" (click)="setBannerEvent(event)">Set banner</button>
+            <button class="button button-secondary" type="button" *ngIf="event.show_in_banner || event.showInBanner" (click)="clearBannerEvent(event)">Clear banner</button>
+            <button class="button button-ghost" type="button" *ngIf="event.is_published || event.isPublished" (click)="setEventPublished(event, false)">Unpublish</button>
+            <button class="button button-primary" type="button" *ngIf="!(event.is_published || event.isPublished)" (click)="setEventPublished(event, true)">Republish</button>
+          </div>
         </div>
       </article>
     </div>

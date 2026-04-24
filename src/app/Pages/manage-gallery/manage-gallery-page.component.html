@@ -26,9 +26,31 @@
     </aside>
   </section>
 
+  <section class="section">
+    <div class="workspace-metrics">
+      <article class="workspace-metric">
+        <p class="card-kicker">Total images</p>
+        <strong>{{ totalImages }}</strong>
+        <span>Images currently in the managed gallery.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Published</p>
+        <strong>{{ publishedImages }}</strong>
+        <span>Images visible on the public gallery page.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Featured</p>
+        <strong>{{ featuredImages }}</strong>
+        <span>Images highlighted at the top of the gallery.</span>
+      </article>
+    </div>
+  </section>
+
   <section class="section" appRevealOnScroll>
     <div class="form-layout manage-gallery-layout">
-      <article class="feature-card" appRevealOnScroll>
+      <article class="feature-card workspace-search-card" appRevealOnScroll>
         <p class="card-kicker">Upload image</p>
         <form class="form-grid" [formGroup]="galleryForm" (ngSubmit)="submitGalleryImage()">
           <label class="field field-wide">
@@ -76,14 +98,15 @@
         </form>
       </article>
 
-      <article class="feature-card dark-card" appRevealOnScroll>
+      <article class="summary-card dark-card" appRevealOnScroll>
         <p class="card-kicker">Gallery status</p>
-        <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
-        <p class="form-status is-error" *ngIf="error">{{ error }}</p>
         <p>
           Published images appear on the public gallery page. Unpublished images stay hidden from visitors but remain
           visible here for staff and admin review.
         </p>
+        <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+        <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+        <p class="empty-state" *ngIf="loading">Loading gallery images...</p>
       </article>
     </div>
   </section>
@@ -94,30 +117,35 @@
       <h2>Manage the gallery images already uploaded.</h2>
     </div>
 
-    <p class="empty-state" *ngIf="loading">Loading gallery images...</p>
     <p class="empty-state" *ngIf="!loading && !galleryImages.length">No gallery images uploaded yet.</p>
 
     <div class="gallery-manage-grid" *ngIf="galleryImages.length">
       <article class="feature-card gallery-manage-card" *ngFor="let image of galleryImages; trackBy: trackByGalleryImage" appRevealOnScroll>
-        <div class="gallery-manage-media">
+        <a class="gallery-manage-media" [href]="image.imageUrl" target="_blank" rel="noopener">
           <img [src]="image.imageUrl" [alt]="image.altText || image.title">
-        </div>
+        </a>
         <div class="gallery-manage-copy">
-          <p class="card-kicker">{{ image.isFeatured ? 'Featured image' : 'Gallery image' }}</p>
-          <h3>{{ image.title }}</h3>
+          <div class="workspace-row-top">
+            <div>
+              <p class="card-kicker">{{ (image.isFeatured || image.is_featured) ? 'Featured image' : 'Gallery image' }}</p>
+              <h3>{{ image.title }}</h3>
+            </div>
+
+            <div class="pill-row compact-row">
+              <span class="tag">{{ (image.isPublished || image.is_published) ? "Published" : "Hidden" }}</span>
+              <span class="tag" *ngIf="image.isFeatured || image.is_featured">Featured</span>
+            </div>
+          </div>
+
           <p>{{ image.caption }}</p>
           <p class="gallery-image-date" *ngIf="image.activityDate">{{ image.activityDate | date:'longDate' }}</p>
 
-          <div class="pill-row compact-row">
-            <span class="tag">{{ image.isPublished ? "Published" : "Hidden" }}</span>
-            <span class="tag" *ngIf="image.isFeatured">Featured</span>
-          </div>
-
           <div class="button-row compact-row gallery-manage-actions">
-            <button class="button button-secondary" type="button" *ngIf="!image.isPublished" (click)="setPublished(image, true)">Publish</button>
-            <button class="button button-ghost" type="button" *ngIf="image.isPublished" (click)="setPublished(image, false)">Unpublish</button>
-            <button class="button button-secondary" type="button" *ngIf="!image.isFeatured" (click)="setFeatured(image, true)">Feature</button>
-            <button class="button button-ghost" type="button" *ngIf="image.isFeatured" (click)="setFeatured(image, false)">Unfeature</button>
+            <a class="text-link" [href]="image.imageUrl" target="_blank" rel="noopener">Open image</a>
+            <button class="button button-secondary" type="button" *ngIf="!(image.isPublished || image.is_published)" (click)="setPublished(image, true)">Publish</button>
+            <button class="button button-ghost" type="button" *ngIf="image.isPublished || image.is_published" (click)="setPublished(image, false)">Unpublish</button>
+            <button class="button button-secondary" type="button" *ngIf="!(image.isFeatured || image.is_featured)" (click)="setFeatured(image, true)">Feature</button>
+            <button class="button button-ghost" type="button" *ngIf="image.isFeatured || image.is_featured" (click)="setFeatured(image, false)">Unfeature</button>
           </div>
         </div>
       </article>

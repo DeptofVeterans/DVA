@@ -52,18 +52,18 @@
 .portal-page .section-heading h1,
 .portal-page .section-heading h2,
 .portal-page .section-heading h3 {
-  color: #fff7df;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.36);
+  color: var(--page-heading);
+  text-shadow: none;
 }
 
 .portal-page .section-heading .section-copy {
-  color: rgba(255, 249, 236, 0.92);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.34);
+  color: var(--page-copy);
+  text-shadow: none;
 }
 
 .portal-page .section-heading .eyebrow {
-  color: #efc957;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.34);
+  color: var(--page-accent);
+  text-shadow: none;
 }
 
 .portal-page .lead,
@@ -389,6 +389,171 @@
   white-space: normal;
 }
 
+.portal-focus-stage {
+  position: relative;
+}
+
+.portal-focus-layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.portal-focus-heading {
+  margin-bottom: 0;
+  max-width: 900px;
+}
+
+.portal-focus-panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.portal-focus-card-stack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.portal-focus-card {
+  position: relative;
+  min-height: 100%;
+  padding: 1.35rem;
+  border-radius: 24px;
+  border: 1px solid var(--page-card-border);
+  background: var(--page-card-bg);
+  box-shadow: 0 16px 34px rgba(17, 47, 34, 0.08);
+  overflow: hidden;
+}
+
+.portal-focus-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.25rem 0;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.46), transparent);
+}
+
+.portal-focus-card.is-accent {
+  background: linear-gradient(145deg, rgba(255, 251, 241, 0.98), rgba(241, 232, 202, 0.95));
+}
+
+.portal-focus-card.is-dark {
+  background: var(--page-summary-bg);
+  border-color: transparent;
+}
+
+.portal-focus-label {
+  margin: 0 0 0.6rem;
+  color: var(--page-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.portal-focus-card h3 {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  line-height: 1.08;
+}
+
+.portal-focus-card p:last-child {
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+.portal-focus-card.is-dark .portal-focus-label,
+.portal-focus-card.is-dark h3,
+.portal-focus-card.is-dark p {
+  color: rgba(255, 248, 232, 0.94);
+}
+
+.portal-process-line {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 28px;
+  border: 1px solid var(--page-card-border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 242, 230, 0.78)),
+    radial-gradient(circle at top right, rgba(178, 138, 45, 0.12), transparent 34%);
+}
+
+.portal-process-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  align-items: start;
+  padding: 0.95rem 0;
+}
+
+.portal-process-step + .portal-process-step {
+  border-top: 1px solid rgba(27, 74, 52, 0.12);
+}
+
+.portal-process-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.6rem;
+  min-height: 2.6rem;
+  padding: 0.35rem;
+  border-radius: 999px;
+  background: rgba(178, 138, 45, 0.14);
+  color: var(--page-heading);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.portal-process-step h3 {
+  margin: 0 0 0.32rem;
+  font-size: 1.05rem;
+}
+
+.portal-process-step p {
+  margin: 0;
+  color: var(--page-copy);
+  line-height: 1.58;
+}
+
+.portal-page .portal-utility-strip {
+  padding-top: 0.65rem;
+}
+
+.portal-overview-rail {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 0 0.15rem;
+  border-top: 1px solid rgba(27, 74, 52, 0.12);
+}
+
+.portal-overview-rail .card-kicker {
+  margin: 0;
+}
+
+.portal-overview-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.portal-overview-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.72rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 252, 244, 0.94);
+  border: 1px solid var(--page-card-border);
+  color: var(--page-heading);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .page-theme-records {
   --page-accent: #8d7340;
   --page-heading: #344a40;
@@ -424,6 +589,47 @@
     linear-gradient(90deg, rgba(141, 115, 64, 0.22) 0 22%, transparent 22%),
     repeating-linear-gradient(0deg, rgba(52, 74, 64, 0.08), rgba(52, 74, 64, 0.08) 1px, transparent 1px, transparent 20px),
     linear-gradient(180deg, rgba(255, 253, 246, 0.9), rgba(238, 228, 205, 0.9));
+}
+
+.page-theme-records .portal-focus-card-stack {
+  grid-template-columns: minmax(0, 1.1fr) repeat(2, minmax(210px, 0.95fr));
+}
+
+.page-theme-records .portal-focus-card {
+  border-radius: 14px 14px 28px 14px;
+  box-shadow: 0 18px 36px rgba(56, 45, 28, 0.1);
+}
+
+.page-theme-records .portal-focus-card::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  width: 86px;
+  height: 10px;
+  border-radius: 0 0 10px 10px;
+  background: rgba(141, 115, 64, 0.3);
+}
+
+.page-theme-records .portal-focus-card.is-accent {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 242, 0.98), rgba(244, 234, 210, 0.96)),
+    repeating-linear-gradient(0deg, rgba(141, 115, 64, 0.07), rgba(141, 115, 64, 0.07) 1px, transparent 1px, transparent 24px);
+}
+
+.page-theme-records .portal-process-line {
+  border-radius: 16px 30px 16px 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 246, 0.98), rgba(242, 236, 220, 0.92)),
+    repeating-linear-gradient(0deg, rgba(52, 74, 64, 0.06), rgba(52, 74, 64, 0.06) 1px, transparent 1px, transparent 24px);
+}
+
+.page-theme-records .portal-overview-rail {
+  border-top-color: rgba(141, 115, 64, 0.18);
+}
+
+.page-theme-records .portal-overview-pill {
+  background: rgba(255, 251, 243, 0.98);
 }
 
 .page-theme-benefits {
@@ -483,6 +689,69 @@
     linear-gradient(135deg, rgba(255, 252, 230, 0.92), rgba(230, 205, 139, 0.22));
 }
 
+.page-theme-benefits .hero-copy h1 {
+  max-width: 14ch;
+  margin-inline: auto;
+}
+
+.page-theme-benefits .portal-focus-heading {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.page-theme-benefits .portal-focus-panels {
+  grid-template-columns: 1fr;
+}
+
+.page-theme-benefits .portal-focus-card-stack {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.page-theme-benefits .portal-focus-card {
+  text-align: center;
+  border-color: rgba(178, 138, 45, 0.2);
+}
+
+.page-theme-benefits .portal-focus-card:nth-child(odd) {
+  border-radius: 999px 30px 30px 999px;
+}
+
+.page-theme-benefits .portal-focus-card:nth-child(even) {
+  border-radius: 30px 999px 999px 30px;
+}
+
+.page-theme-benefits .portal-process-line {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 1rem 1.2rem;
+  border-radius: 38px;
+  background:
+    radial-gradient(circle at top center, rgba(220, 197, 138, 0.22), transparent 28%),
+    linear-gradient(180deg, rgba(255, 253, 244, 0.98), rgba(248, 235, 205, 0.92));
+}
+
+.page-theme-benefits .portal-process-step {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+  padding: 0.8rem;
+}
+
+.page-theme-benefits .portal-process-step + .portal-process-step {
+  border-top: 0;
+  border-left: 1px solid rgba(178, 138, 45, 0.18);
+}
+
+.page-theme-benefits .portal-process-count {
+  min-width: 3rem;
+  min-height: 3rem;
+  background: rgba(178, 138, 45, 0.16);
+}
+
+.page-theme-benefits .portal-overview-rail {
+  justify-items: center;
+  text-align: center;
+}
+
 .page-theme-insurance {
   --page-accent: #216f5c;
   --page-heading: #184c42;
@@ -538,6 +807,45 @@
     linear-gradient(90deg, rgba(47, 139, 116, 0.24), rgba(47, 139, 116, 0.04)),
     repeating-linear-gradient(90deg, rgba(47, 139, 116, 0.13), rgba(47, 139, 116, 0.13) 1px, transparent 1px, transparent 32px),
     repeating-linear-gradient(0deg, rgba(47, 139, 116, 0.1), rgba(47, 139, 116, 0.1) 1px, transparent 1px, transparent 32px);
+}
+
+.page-theme-insurance .portal-focus-panels {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.page-theme-insurance .portal-focus-card-stack {
+  grid-template-columns: 1fr;
+}
+
+.page-theme-insurance .portal-focus-card {
+  border-radius: 18px;
+  border-top: 5px solid rgba(47, 139, 116, 0.38);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(236, 248, 243, 0.94)),
+    linear-gradient(90deg, rgba(47, 139, 116, 0.08), transparent);
+}
+
+.page-theme-insurance .portal-focus-card.is-dark {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.page-theme-insurance .portal-process-line {
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(230, 246, 240, 0.92)),
+    radial-gradient(circle at top right, rgba(47, 139, 116, 0.14), transparent 32%);
+}
+
+.page-theme-insurance .portal-process-count {
+  background: rgba(47, 139, 116, 0.16);
+}
+
+.page-theme-insurance .portal-overview-rail {
+  border-top-color: rgba(47, 139, 116, 0.16);
+}
+
+.page-theme-insurance .portal-overview-pill {
+  background: rgba(240, 250, 246, 0.98);
 }
 
 .page-theme-funerals {
@@ -959,6 +1267,35 @@
   border-radius: 10px 28px 10px 28px;
 }
 
+.page-theme-funerals .portal-focus-heading {
+  max-width: 920px;
+}
+
+.page-theme-funerals .portal-focus-card {
+  border-radius: 24px 12px 24px 12px;
+}
+
+.page-theme-funerals .portal-focus-card.is-accent {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 241, 0.98), rgba(240, 233, 212, 0.96)),
+    radial-gradient(circle at top right, rgba(184, 143, 47, 0.14), transparent 34%);
+}
+
+.page-theme-funerals .portal-process-line {
+  background:
+    linear-gradient(180deg, rgba(255, 253, 246, 0.96), rgba(233, 227, 208, 0.92)),
+    radial-gradient(circle at top right, rgba(184, 143, 47, 0.12), transparent 32%);
+  border-radius: 14px 32px 14px 32px;
+}
+
+.page-theme-funerals .portal-overview-rail {
+  border-top-color: rgba(184, 143, 47, 0.24);
+}
+
+.page-theme-funerals .portal-overview-pill {
+  background: rgba(255, 251, 240, 0.96);
+}
+
 .page-theme-employment {
   --page-accent: #2f6c4a;
   --page-heading: #173e2b;
@@ -999,6 +1336,54 @@
 .page-theme-employment .employment-job-item {
   border-left: 5px solid rgba(47, 108, 74, 0.52);
   background: rgba(244, 251, 245, 0.94);
+}
+
+.page-theme-employment .portal-focus-heading {
+  max-width: 780px;
+}
+
+.page-theme-employment .portal-focus-panels {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+}
+
+.page-theme-employment .portal-focus-card-stack {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.page-theme-employment .portal-focus-card {
+  border-radius: 24px 24px 12px 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(238, 247, 240, 0.94)),
+    linear-gradient(135deg, rgba(60, 138, 96, 0.08), transparent);
+}
+
+.page-theme-employment .portal-focus-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(47, 108, 74, 0.56), transparent);
+}
+
+.page-theme-employment .portal-focus-card.is-dark {
+  background:
+    linear-gradient(160deg, rgba(18, 44, 29, 0.98), rgba(17, 38, 25, 0.98)),
+    radial-gradient(circle at top right, rgba(220, 197, 138, 0.16), transparent 34%);
+}
+
+.page-theme-employment .portal-process-line {
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(229, 241, 232, 0.92)),
+    repeating-linear-gradient(90deg, rgba(60, 138, 96, 0.07), rgba(60, 138, 96, 0.07) 1px, transparent 1px, transparent 28px);
+}
+
+.page-theme-employment .portal-process-count {
+  background: rgba(47, 108, 74, 0.16);
+}
+
+.page-theme-employment .portal-overview-pill {
+  background: rgba(244, 251, 245, 0.98);
 }
 
 .page-theme-welfare {
@@ -1055,6 +1440,42 @@
     linear-gradient(135deg, rgba(241, 248, 235, 0.94), rgba(214, 232, 201, 0.72));
 }
 
+.page-theme-welfare .portal-focus-panels {
+  grid-template-columns: minmax(0, 1.04fr) minmax(280px, 0.96fr);
+}
+
+.page-theme-welfare .portal-focus-card {
+  border-radius: 26px 18px 26px 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 248, 235, 0.94)),
+    radial-gradient(circle at top right, rgba(106, 153, 81, 0.15), transparent 32%);
+}
+
+.page-theme-welfare .portal-focus-card.is-accent {
+  background:
+    linear-gradient(180deg, rgba(248, 254, 243, 0.98), rgba(226, 239, 218, 0.96)),
+    radial-gradient(circle at top right, rgba(178, 138, 45, 0.12), transparent 30%);
+}
+
+.page-theme-welfare .portal-focus-card.is-dark {
+  background: linear-gradient(160deg, rgba(45, 83, 36, 0.98), rgba(24, 49, 24, 0.98));
+}
+
+.page-theme-welfare .portal-process-line {
+  border-radius: 30px 18px 30px 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(232, 243, 228, 0.92)),
+    radial-gradient(circle at top right, rgba(106, 153, 81, 0.14), transparent 34%);
+}
+
+.page-theme-welfare .portal-process-count {
+  background: rgba(106, 153, 81, 0.16);
+}
+
+.page-theme-welfare .portal-overview-pill {
+  background: rgba(244, 249, 240, 0.98);
+}
+
 .page-theme-id-guidance {
   --page-accent: #6e5d37;
   --page-heading: #2c4135;
@@ -1083,6 +1504,52 @@
 .page-theme-id-guidance .policy-list li {
   break-inside: avoid;
   margin-bottom: 0.9rem;
+}
+
+.page-theme-id-guidance .page-hero {
+  grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+}
+
+.page-theme-id-guidance .portal-focus-panels {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.88fr);
+}
+
+.page-theme-id-guidance .portal-focus-card {
+  border-radius: 12px;
+  border-style: solid;
+  box-shadow: 0 18px 32px rgba(44, 65, 53, 0.08);
+}
+
+.page-theme-id-guidance .portal-focus-card.is-accent {
+  background:
+    repeating-linear-gradient(0deg, rgba(137, 114, 70, 0.05), rgba(137, 114, 70, 0.05) 1px, transparent 1px, transparent 22px),
+    linear-gradient(180deg, rgba(255, 253, 246, 0.98), rgba(245, 239, 224, 0.96));
+}
+
+.page-theme-id-guidance .portal-focus-card.is-dark {
+  background:
+    linear-gradient(160deg, rgba(55, 70, 60, 0.98), rgba(33, 42, 36, 0.98)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 22px);
+}
+
+.page-theme-id-guidance .portal-process-line {
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(0deg, rgba(137, 114, 70, 0.04), rgba(137, 114, 70, 0.04) 1px, transparent 1px, transparent 24px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 238, 224, 0.92));
+}
+
+.page-theme-id-guidance .portal-process-count {
+  border: 1px solid rgba(137, 114, 70, 0.14);
+  background: rgba(137, 114, 70, 0.14);
+}
+
+.page-theme-id-guidance .portal-overview-rail {
+  border-top-color: rgba(137, 114, 70, 0.14);
+}
+
+.page-theme-id-guidance .portal-overview-pill {
+  background: rgba(252, 249, 241, 0.98);
 }
 
 @media (max-width: 1024px) {
@@ -1117,6 +1584,27 @@
     min-height: auto;
     border-radius: 28px;
     padding: 1.4rem;
+  }
+
+  .portal-focus-panels,
+  .page-theme-id-guidance .page-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-focus-card-stack,
+  .page-theme-records .portal-focus-card-stack,
+  .page-theme-benefits .portal-focus-card-stack,
+  .page-theme-employment .portal-focus-card-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .page-theme-benefits .portal-process-line {
+    grid-template-columns: 1fr;
+  }
+
+  .page-theme-benefits .portal-process-step + .portal-process-step {
+    border-left: 0;
+    border-top: 1px solid rgba(178, 138, 45, 0.18);
   }
 
   .image-slot-media-tiles {

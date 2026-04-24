@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 && this.session.getToken()) {
           this.session.clearSession();
-          this.router.navigate(["/auth"], { queryParams: { mode: "login" } });
+          this.router.navigate(["/signin"], { queryParams: { mode: "login" } });
         }
 
         return throwError(() => error);

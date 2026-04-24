@@ -25,6 +25,34 @@
     </div>
   </section>
 
+  <section class="section profile-stats-section">
+    <div class="workspace-metrics">
+      <article class="workspace-metric">
+        <p class="card-kicker">Role</p>
+        <strong>{{ currentUser.roleName }}</strong>
+        <span>{{ currentUser.accountType }} account in the portal.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Identity</p>
+        <strong>{{ currentUser.isIdentityVerified ? "Verified" : "Pending" }}</strong>
+        <span>Account-level verification status for protected services.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Email</p>
+        <strong>{{ currentUser.isEmailVerified ? "Verified" : "Pending" }}</strong>
+        <span>Email verification state on the current account.</span>
+      </article>
+
+      <article class="workspace-metric">
+        <p class="card-kicker">Departments</p>
+        <strong>{{ currentUser.departments.length || 0 }}</strong>
+        <span>{{ departmentSummary }}</span>
+      </article>
+    </div>
+  </section>
+
   <section class="section">
     <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
     <p class="form-status is-error" *ngIf="error">{{ error }}</p>
