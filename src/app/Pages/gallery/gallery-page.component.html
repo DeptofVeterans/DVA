@@ -1,93 +1,128 @@
 <main class="page-shell gallery-page">
-  <section class="page-hero compact-hero">
-    <article class="hero-copy gallery-hero-copy" appRevealOnScroll>
-      <p class="eyebrow">Gallery</p>
-      <h1>See the work, outreach, ceremonies, and support carried out by Veterans Affairs.</h1>
-      <p class="lead">
-        This page holds photos of the activities, engagements, and service moments that show how the department
-        supports veterans, families, and partner organizations.
+  <section class="gallery-hero" appRevealOnScroll>
+    <div class="gallery-hero__copy">
+      <p class="card-kicker">Media gallery</p>
+      <h1>Photo archive of outreach, support activity, ceremonies, and Veterans Affairs work.</h1>
+      <p class="gallery-hero__lead">
+        Explore public photos from welfare outreach, ceremonies, support services, and published gallery uploads that help show the department's work in action.
       </p>
-
-      <div class="pill-row">
-        <span class="tag">Outreach</span>
-        <span class="tag">Support services</span>
-        <span class="tag">Ceremonial moments</span>
-        <span class="tag">Community engagement</span>
-      </div>
-    </article>
-
-    <aside class="hero-side" appRevealOnScroll>
-      <article class="summary-card dark-card gallery-summary-card">
-        <p class="card-kicker">Photo archive</p>
-        <h3>Images from the department's public-facing work and service activity.</h3>
-        <ul class="icon-list">
-          <li>Fixed outreach photos are now part of the public gallery</li>
-          <li>Published gallery uploads also appear here for public viewing</li>
-          <li>Staff can upload new photos from the gallery management page</li>
-          <li>Featured images can be highlighted more prominently</li>
-        </ul>
-      </article>
-    </aside>
-  </section>
-
-  <section class="section" *ngIf="featuredImage" appRevealOnScroll>
-    <div class="section-heading">
-      <p class="eyebrow">Featured image</p>
-      <h2>{{ featuredImage.title }}</h2>
-      <p class="section-copy">{{ featuredImage.caption }}</p>
     </div>
+  </section>
 
-    <article class="feature-card gallery-feature-card">
-      <a
-        class="gallery-image-link gallery-feature-media gallery-feature-link"
-        [href]="featuredImage.imageUrl"
-        target="_blank"
-        rel="noopener"
-        [attr.aria-label]="'Open full image for ' + featuredImage.title"
+  <section class="gallery-filter-bar" appRevealOnScroll>
+    <div class="gallery-filter-list">
+      <button
+        class="gallery-filter-chip"
+        type="button"
+        *ngFor="let filter of filters"
+        [class.is-active]="filter.id === activeFilter"
+        (click)="setFilter(filter.id)"
       >
-        <img [src]="featuredImage.imageUrl" [alt]="featuredImage.altText || featuredImage.title">
+        {{ filter.label }}
+        <span>{{ filterCount(filter.id) }}</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="gallery-feature-layout" *ngIf="leadImage" appRevealOnScroll>
+    <article class="gallery-feature-card">
+      <button
+        class="gallery-feature-media"
+        type="button"
+        (click)="openImage(leadImage)"
+        [attr.aria-label]="'Open full image for ' + leadImage.title"
+      >
+        <img [src]="leadImage.imageUrl" [alt]="leadImage.altText || leadImage.title">
         <span class="gallery-open-chip">Open image</span>
-      </a>
-      <div class="gallery-feature-copy">
-        <p class="card-kicker">Veterans Affairs activity</p>
-        <h3>{{ featuredImage.title }}</h3>
-        <p>{{ featuredImage.caption }}</p>
-        <p class="gallery-image-date" *ngIf="featuredImage.activityDate">
-          {{ featuredImage.activityDate | date:'longDate' }}
-        </p>
+      </button>
+    </article>
+
+    <article class="gallery-feature-copy">
+      <p class="card-kicker">Featured image</p>
+      <h2>{{ leadImage.title }}</h2>
+      <p>{{ leadImage.caption || "Published Veterans Affairs image." }}</p>
+
+      <div class="gallery-feature-meta">
+        <span>{{ imageDateLabel(leadImage) }}</span>
+        <span>{{ filterCount(activeFilter) }} image{{ filterCount(activeFilter) === 1 ? "" : "s" }} in this view</span>
+      </div>
+
+      <div class="gallery-feature-actions">
+        <button
+          class="button button-primary"
+          type="button"
+          (click)="openImage(leadImage)"
+        >
+          Open full image
+        </button>
+        <a class="button button-secondary" *ngIf="canManageGallery" routerLink="/manage-gallery">Manage gallery</a>
+        <a class="button button-secondary" *ngIf="!canManageGallery" routerLink="/contact">Contact center</a>
       </div>
     </article>
   </section>
 
-  <section class="section" appRevealOnScroll>
-    <div class="section-heading">
-      <p class="eyebrow">Photo gallery</p>
-      <h2>Outreach photos and published images from Veterans Affairs activity.</h2>
+  <section class="gallery-grid-section">
+    <div class="gallery-grid-header">
+      <div>
+        <p class="card-kicker">Photo collection</p>
+        <h2>Public images available in this gallery view.</h2>
+      </div>
+      <div class="gallery-stats">
+        <article *ngFor="let stat of galleryStats">
+          <span>{{ stat.label }}</span>
+          <strong>{{ stat.value }}</strong>
+        </article>
+      </div>
     </div>
 
     <p class="empty-state" *ngIf="loading">Loading gallery images...</p>
     <p class="form-status is-error" *ngIf="error">{{ error }}</p>
-    <p class="empty-state" *ngIf="!loading && !allImages.length">No gallery images have been published yet.</p>
+    <p class="empty-state" *ngIf="!loading && !filteredImages.length">No gallery images are available in this view yet.</p>
 
-    <div class="gallery-grid" *ngIf="galleryGridImages.length">
-      <article class="feature-card gallery-card" *ngFor="let image of galleryGridImages; trackBy: trackByGalleryImage" appRevealOnScroll>
-        <a
-          class="gallery-image-link gallery-card-media"
-          [href]="image.imageUrl"
-          target="_blank"
-          rel="noopener"
+    <div class="gallery-grid" *ngIf="gridImages.length">
+      <article class="gallery-card" *ngFor="let image of gridImages; trackBy: trackByGalleryImage">
+        <button
+          class="gallery-card-media"
+          type="button"
+          (click)="openImage(image)"
           [attr.aria-label]="'Open full image for ' + image.title"
         >
           <img [src]="image.imageUrl" [alt]="image.altText || image.title">
           <span class="gallery-open-chip">Open image</span>
-        </a>
+        </button>
+
         <div class="gallery-card-copy">
-          <p class="card-kicker">VA activity</p>
+          <div class="gallery-card-topline">
+            <p class="card-kicker">{{ isArchiveImage(image) ? "Outreach archive" : "Published upload" }}</p>
+            <span class="gallery-date-pill">{{ imageDateLabel(image) }}</span>
+          </div>
           <h3>{{ image.title }}</h3>
-          <p>{{ image.caption }}</p>
-          <p class="gallery-image-date" *ngIf="image.activityDate">{{ image.activityDate | date:'longDate' }}</p>
+          <p>{{ image.caption || "Veterans Affairs image published to the gallery." }}</p>
         </div>
       </article>
     </div>
+  </section>
+
+  <section class="gallery-bottom-panels" appRevealOnScroll>
+    <article class="gallery-panel gallery-panel--archive">
+      <p class="card-kicker">Outreach archive</p>
+      <h2>Fixed outreach photos are already part of the public gallery.</h2>
+      <p>
+        The outreach archive remains available even if live uploads are unavailable, so the public gallery still shows Veterans Affairs activity.
+      </p>
+      <button class="button button-secondary" type="button" (click)="openImage(leadImage)">Open current feature</button>
+    </article>
+
+    <article class="gallery-panel gallery-panel--manage">
+      <p class="card-kicker">Gallery management</p>
+      <h2>{{ canManageGallery ? "Staff can publish new images through the gallery manager." : "Gallery updates can be routed through staff support." }}</h2>
+      <p>
+        {{ canManageGallery
+          ? "Use the management page to upload, publish, and feature images that should appear in the public gallery."
+          : "Published uploads are added by authorized staff and then shown here alongside the fixed outreach archive." }}
+      </p>
+      <a class="button button-primary" *ngIf="canManageGallery" routerLink="/manage-gallery">Open manager</a>
+      <a class="button button-primary" *ngIf="!canManageGallery" routerLink="/contact">Contact center</a>
+    </article>
   </section>
 </main>

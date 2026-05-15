@@ -1,65 +1,68 @@
 <main class="page-shell roadmap-page">
-  <section class="page-hero">
-    <div class="hero-copy">
-      <p class="eyebrow">Retirement Roadmap</p>
-      <h1>Navigate retirement from records and certificates into benefits and identification.</h1>
-      <p class="lead">
-        Move from certificates and record preparation into pensions, gratuity, ex-gratia, insurance, and the
-        Veteran's ID Card with clear steps at each stage.
-      </p>
-
-      <div class="button-row">
-        <a class="button button-primary" routerLink="/records">Start with records and certificates</a>
-        <a class="button button-secondary" routerLink="/pensions">Go to pensions and benefits</a>
+  <section class="roadmap-preview-card" appRevealOnScroll>
+    <div class="roadmap-preview-card__head">
+      <div>
+        <p class="card-kicker">Retirement pathway poster</p>
+        <h2>Jamaica Defence Force pension and retirement roadmap.</h2>
       </div>
+      <a class="button button-secondary" href="assets/roadmap.png" target="_blank" rel="noopener">Open image</a>
     </div>
 
-    <aside class="hero-side">
-      <figure class="media-frame slim-frame">
-        <img src="assets/roadmap1.png" alt="Retirement roadmap board">
-      </figure>
-    </aside>
+    <a
+      class="roadmap-preview-link"
+      href="assets/roadmap.png"
+      target="_blank"
+      rel="noopener"
+      aria-label="Open the full retirement roadmap image"
+    >
+      <img
+        class="roadmap-preview-image"
+        src="assets/roadmap.png"
+        alt="Retirement roadmap showing the service path from records to benefits, insurance, and Veteran ID support"
+      >
+    </a>
   </section>
 
-  <section class="section">
-    <div class="section-heading">
-      <p class="eyebrow">Roadmap Stages</p>
-      <h2>The retirement journey starts with the right records, then moves into benefits.</h2>
-    </div>
+  <section class="roadmap-timeline-section" appRevealOnScroll>
+    <div class="roadmap-timeline">
+      <div class="roadmap-line" aria-hidden="true"></div>
 
-    <div class="card-grid two-column">
-      <article class="detail-card" *ngFor="let stage of stages">
-        <p class="card-kicker">{{ stage.kicker }}</p>
-        <h3>{{ stage.title }}</h3>
-        <p>{{ stage.description }}</p>
-        <a class="text-link" [routerLink]="stage.route">Open service lane</a>
+      <article class="roadmap-milestone" *ngFor="let milestone of milestones" appRevealOnScroll>
+        <div class="roadmap-step-badge">{{ milestone.step }}</div>
+
+        <div class="roadmap-milestone-content">
+          <div class="roadmap-milestone-head">
+            <h2>{{ milestone.title }}</h2>
+            <span class="roadmap-status" [ngClass]="'roadmap-status--' + milestone.tone">
+              {{ milestone.status }}
+            </span>
+          </div>
+
+          <div class="roadmap-item-stack">
+            <a
+              class="roadmap-item-card"
+              *ngFor="let item of milestone.items"
+              [routerLink]="item.route"
+            >
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.description }}</p>
+            </a>
+          </div>
+        </div>
       </article>
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-heading">
-      <p class="eyebrow">Did You Know?</p>
-      <h2>Important service notes</h2>
-    </div>
+  <section class="roadmap-support-card" appRevealOnScroll>
+    <p class="eyebrow">Need help choosing your next step?</p>
+    <h2>Use the roadmap notes before you submit the request.</h2>
+    <ul class="roadmap-note-list">
+      <li *ngFor="let note of notes">{{ note }}</li>
+    </ul>
 
-    <div class="card-grid three-column">
-      <article class="feature-card dark-card" *ngFor="let note of notes">
-        <p class="card-kicker">{{ note.kicker }}</p>
-        <h3>{{ note.title }}</h3>
-        <p>{{ note.body }}</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="cta-band">
-    <div>
-      <p class="eyebrow">Next step</p>
-      <h2>Move from the roadmap into the exact record or service request you need.</h2>
-    </div>
     <div class="button-row">
-      <a class="button button-primary" routerLink="/records">Records and Certificates</a>
-      <a class="button button-secondary" routerLink="/pensions">Pensions and Benefits</a>
+      <a class="button button-primary" routerLink="/records">Open records</a>
+      <a class="button button-secondary" routerLink="/pensions">Open pensions</a>
     </div>
   </section>
 </main>

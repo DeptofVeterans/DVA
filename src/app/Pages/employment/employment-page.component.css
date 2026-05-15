@@ -1,0 +1,531 @@
+.employment-page {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.employment-hero {
+  padding: 2.5rem 2.35rem;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.2), transparent 30%),
+    linear-gradient(135deg, rgba(16, 45, 35, 0.98), rgba(22, 67, 50, 0.96) 58%, rgba(37, 104, 74, 0.94));
+  border: 1px solid rgba(214, 182, 106, 0.18);
+  box-shadow: 0 24px 46px rgba(17, 28, 23, 0.22);
+}
+
+.employment-hero__copy {
+  max-width: 48rem;
+}
+
+.employment-hero h1 {
+  margin: 0;
+  color: #fff4de;
+  font-size: clamp(2.7rem, 5.4vw, 4.2rem);
+  line-height: 0.96;
+  max-width: 12ch;
+}
+
+.employment-hero__lead {
+  margin: 1rem 0 0;
+  color: rgba(255, 244, 222, 0.9);
+  font-size: 1.05rem;
+  line-height: 1.76;
+  max-width: 43rem;
+}
+
+.employment-hero__tags,
+.employment-hero__actions,
+.employment-search-actions,
+.employment-panel-head__actions,
+.employment-job-actions,
+.employment-support-chips,
+.employment-support-actions,
+.employment-tools-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.employment-hero__tags {
+  margin-top: 1.3rem;
+}
+
+.employment-hero__tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.82rem;
+  border-radius: 999px;
+  background: rgba(255, 244, 222, 0.1);
+  border: 1px solid rgba(255, 244, 222, 0.14);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.employment-hero__actions {
+  margin-top: 1.4rem;
+}
+
+.employment-search-card,
+.employment-jobs-panel,
+.employment-tools-card {
+  padding: 1.6rem;
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.employment-search-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: end;
+}
+
+.employment-search-card__copy h2,
+.employment-panel-head h2,
+.employment-support-card h2,
+.employment-empty-state h3,
+.employment-job-card h3 {
+  margin: 0;
+  color: var(--heading);
+}
+
+.employment-search-card__copy h2,
+.employment-panel-head h2,
+.employment-support-card h2 {
+  font-size: clamp(1.5rem, 2.8vw, 2.05rem);
+  line-height: 1.06;
+}
+
+.employment-search-card__copy p:last-child,
+.employment-panel-copy,
+.employment-job-description,
+.employment-empty-state p,
+.employment-job-expanded p,
+.employment-tools-list {
+  margin: 0.7rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.72;
+}
+
+.employment-search-card__controls {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.employment-search-input {
+  position: relative;
+  display: block;
+}
+
+.employment-search-input input {
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.95rem 1.15rem 0.95rem 3rem;
+  border-radius: 20px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(250, 247, 240, 0.96);
+  color: var(--heading);
+  font-size: 0.98rem;
+}
+
+.employment-search-input input:focus {
+  outline: none;
+  border-color: rgba(37, 104, 74, 0.4);
+  box-shadow: 0 0 0 4px rgba(37, 104, 74, 0.12);
+}
+
+.employment-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 1.1rem;
+  transform: translateY(-50%);
+  color: var(--text-soft);
+  font-size: 1rem;
+}
+
+.employment-search-card__stats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.employment-search-card__stats article,
+.employment-staff-summary div,
+.employment-support-metrics div {
+  padding: 0.95rem 1rem;
+  border-radius: 20px;
+  background: rgba(248, 245, 236, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+.employment-search-card__stats span,
+.employment-staff-summary span,
+.employment-support-metrics span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+.employment-search-card__stats strong,
+.employment-staff-summary strong,
+.employment-support-metrics strong {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--heading);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.employment-resource-grid,
+.employment-detail-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.employment-resource-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.employment-resource-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1.45rem;
+  border-radius: 26px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  text-align: left;
+  color: inherit;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.employment-resource-card:hover,
+.employment-resource-card.is-active {
+  transform: translateY(-2px);
+  border-color: rgba(37, 104, 74, 0.24);
+  box-shadow: 0 24px 42px rgba(15, 23, 42, 0.12);
+}
+
+.employment-resource-card.is-active {
+  background: linear-gradient(135deg, rgba(241, 249, 244, 0.98), rgba(251, 247, 235, 0.96));
+}
+
+.employment-resource-card h2 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 1.35rem;
+  line-height: 1.05;
+  max-width: 13ch;
+}
+
+.employment-resource-card p:not(.card-kicker) {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.employment-resource-card span,
+.employment-resource-card strong {
+  margin: 0;
+}
+
+.employment-resource-card span {
+  color: var(--heading);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.employment-resource-card strong {
+  color: #8a6618;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.employment-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.employment-openings-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(17, 47, 34, 0.08);
+  color: var(--heading);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.employment-loading-state {
+  padding: 1rem 0;
+  color: var(--text-soft);
+}
+
+.employment-jobs-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.employment-job-card {
+  padding: 1.35rem;
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 245, 236, 0.92));
+}
+
+.employment-job-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.employment-job-date {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(17, 47, 34, 0.08);
+  color: var(--heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.employment-job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.95rem;
+}
+
+.employment-job-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(239, 246, 241, 0.92);
+  color: var(--heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.employment-job-actions {
+  margin-top: 1rem;
+}
+
+.employment-job-expanded {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.employment-job-expanded h4 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 0.96rem;
+}
+
+.employment-empty-state {
+  margin-top: 1rem;
+  padding: 1.45rem;
+  border-radius: 24px;
+  background: rgba(250, 247, 240, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.employment-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.employment-support-card,
+.employment-tools-card {
+  padding: 1.6rem;
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.employment-support-card--dark {
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 35%),
+    linear-gradient(155deg, rgba(23, 58, 41, 0.98), rgba(14, 42, 59, 0.96));
+  border-color: rgba(214, 182, 106, 0.18);
+}
+
+.employment-support-card--dark h2,
+.employment-support-card--dark .card-kicker,
+.employment-support-card--dark strong,
+.employment-support-card--dark span,
+.employment-support-card--dark p {
+  color: #fff4de;
+}
+
+.employment-support-card--dark .employment-panel-copy {
+  color: rgba(255, 244, 222, 0.86);
+}
+
+.employment-support-chip {
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 244, 222, 0.18);
+  background: rgba(255, 244, 222, 0.08);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.employment-support-chip.is-active {
+  background: rgba(255, 244, 222, 0.18);
+  border-color: rgba(255, 244, 222, 0.3);
+}
+
+.employment-support-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.1rem;
+}
+
+.employment-support-metrics div {
+  background: rgba(255, 244, 222, 0.08);
+  border-color: rgba(255, 244, 222, 0.12);
+}
+
+.employment-tools-card {
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.employment-tools-card--staff {
+  display: grid;
+  gap: 1rem;
+}
+
+.employment-tools-list {
+  padding-left: 1.15rem;
+}
+
+.employment-post-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.employment-post-form label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.employment-post-form label span {
+  color: var(--heading);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.employment-post-form input,
+.employment-post-form textarea {
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(250, 247, 240, 0.96);
+  color: var(--heading);
+  font: inherit;
+}
+
+.employment-post-form input:focus,
+.employment-post-form textarea:focus {
+  outline: none;
+  border-color: rgba(37, 104, 74, 0.4);
+  box-shadow: 0 0 0 4px rgba(37, 104, 74, 0.12);
+}
+
+.employment-post-form__full {
+  grid-column: 1 / -1;
+}
+
+.employment-staff-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.employment-request-modal {
+  width: min(980px, 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.employment-request-body {
+  min-height: 0;
+  margin-top: 1rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+  padding: 0 1.25rem 1.25rem;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 1120px) {
+  .employment-search-card,
+  .employment-detail-grid,
+  .employment-resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .employment-search-card__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .employment-job-expanded,
+  .employment-post-form,
+  .employment-staff-summary,
+  .employment-support-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .employment-hero,
+  .employment-search-card,
+  .employment-jobs-panel,
+  .employment-support-card,
+  .employment-tools-card {
+    padding: 1.35rem;
+    border-radius: 24px;
+  }
+
+  .employment-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(2.3rem, 13vw, 3.4rem);
+  }
+
+  .employment-job-card__top,
+  .employment-panel-head {
+    flex-direction: column;
+  }
+
+  .employment-request-body {
+    max-height: calc(100vh - 150px);
+    padding: 0 0.9rem 0.9rem;
+  }
+}

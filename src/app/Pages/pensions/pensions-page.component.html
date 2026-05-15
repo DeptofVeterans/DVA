@@ -1,0 +1,149 @@
+<main class="page-shell pensions-page">
+  <section class="pensions-hero" appRevealOnScroll>
+    <div class="pensions-hero__content">
+      <p class="card-kicker">{{ page.eyebrow }}</p>
+      <h1>{{ page.title }}</h1>
+      <p class="pensions-hero__lead">{{ page.lead }}</p>
+
+      <div class="pensions-hero__tags">
+        <span *ngFor="let tag of page.tags">{{ tag }}</span>
+      </div>
+
+      <div class="pensions-hero__actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open benefits form</button>
+        <a class="button button-secondary" routerLink="/roadmap">View roadmap</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pensions-top-grid" appRevealOnScroll>
+    <article class="pensions-overview-card">
+      <div class="pensions-panel-head pensions-panel-head--top">
+        <div>
+          <p class="card-kicker">Benefits overview</p>
+          <h2>Retirement benefits support in one place</h2>
+        </div>
+        <span class="pensions-overview-pill">5 core lanes</span>
+      </div>
+
+      <div class="pensions-overview-number">Before ROD and at ROD</div>
+      <p class="pensions-overview-copy">
+        This page keeps pension, gratuity, ex-gratia, disability, and death benefit guidance together so veterans and
+        families can start in the right place.
+      </p>
+
+      <div class="pensions-snapshot-grid">
+        <article
+          class="pensions-snapshot-card"
+          *ngFor="let snapshot of snapshots"
+          [ngClass]="'pensions-snapshot-card--' + snapshot.tone"
+        >
+          <p>{{ snapshot.label }}</p>
+          <h3>{{ snapshot.value }}</h3>
+          <span>{{ snapshot.note }}</span>
+        </article>
+      </div>
+    </article>
+
+    <article class="pensions-focus-card">
+      <p class="card-kicker">Preparation</p>
+      <h2>What to have ready before you start</h2>
+
+      <ul class="pensions-focus-list">
+        <li *ngFor="let item of preparationChecklist">{{ item }}</li>
+      </ul>
+
+      <div class="pensions-focus-actions">
+        <button class="button button-secondary" type="button" (click)="openRequestModal()">Start request</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="pensions-detail-grid" appRevealOnScroll>
+    <article class="pensions-lanes-card">
+      <div class="pensions-panel-head">
+        <div>
+          <p class="card-kicker">Benefit lanes</p>
+          <h2>Use the correct timing for each benefit</h2>
+        </div>
+      </div>
+
+      <div class="pensions-lane-list">
+        <article
+          class="pensions-lane-row"
+          *ngFor="let lane of benefitLanes"
+          [ngClass]="'pensions-lane-row--' + lane.tone"
+        >
+          <span class="pensions-lane-mark" aria-hidden="true"></span>
+
+          <div class="pensions-lane-copy">
+            <div class="pensions-lane-top">
+              <h3>{{ lane.title }}</h3>
+              <span>{{ lane.timing }}</span>
+            </div>
+            <p>{{ lane.detail }}</p>
+          </div>
+        </article>
+      </div>
+    </article>
+
+    <article class="pensions-support-card">
+      <div class="pensions-panel-head">
+        <div>
+          <p class="card-kicker">Linked support</p>
+          <h2>What connects to benefits work</h2>
+        </div>
+      </div>
+
+      <div class="pensions-support-list">
+        <article class="pensions-support-row" *ngFor="let item of supportLinks">
+          <div class="pensions-support-copy">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.detail }}</p>
+          </div>
+
+          <a class="text-link" [routerLink]="item.route">{{ item.actionLabel }}</a>
+        </article>
+      </div>
+    </article>
+  </section>
+
+  <section class="pensions-tools" appRevealOnScroll>
+    <p class="card-kicker">Retirement planning actions</p>
+    <h2>Move from records to benefits and secure follow-up</h2>
+    <p>
+      Open the benefits intake form, review the retirement roadmap, and keep related records and insurance support
+      close while your request moves through the portal.
+    </p>
+
+    <div class="pensions-tools__actions">
+      <button class="button button-primary" type="button" (click)="openRequestModal()">Open benefits form</button>
+      <a class="button button-secondary" routerLink="/records">Records</a>
+      <a class="button button-secondary" routerLink="/insurance">Insurance</a>
+      <a class="button button-secondary" routerLink="/roadmap">Roadmap</a>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showRequestModal" (click)="closeRequestModal()">
+    <section
+      class="modal-card pensions-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pensions-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Benefits request</p>
+          <h2 id="pensions-request-modal-title">Submit a benefits request</h2>
+          <p class="application-note">Use the secure form for pensions, gratuity, ex-gratia, disability, and death benefits.</p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeRequestModal()">Close</button>
+      </div>
+
+      <div class="pensions-request-body">
+        <app-request-form [config]="benefitsFormConfig"></app-request-form>
+      </div>
+    </section>
+  </div>
+</main>

@@ -1,0 +1,135 @@
+<main class="page-shell records-page">
+  <section class="records-header" appRevealOnScroll>
+    <h1>Your Records</h1>
+    <p>Access and request the official records, certificates, and letters prepared through this portal.</p>
+  </section>
+
+  <section class="records-search-section" appRevealOnScroll>
+    <label class="records-search-shell" for="records-search-input">
+      <span class="records-search-icon" aria-hidden="true">Q</span>
+      <input
+        id="records-search-input"
+        type="search"
+        [(ngModel)]="searchQuery"
+        placeholder="Search record types, letters, certificates, or request details"
+      >
+    </label>
+  </section>
+
+  <section class="records-category-section" appRevealOnScroll>
+    <div class="records-category-grid" *ngIf="filteredCategories.length">
+      <article
+        class="records-category-card"
+        *ngFor="let category of filteredCategories"
+        [ngClass]="'records-category-card--' + category.tone"
+        appRevealOnScroll
+      >
+        <div class="records-category-top">
+          <span class="records-category-mark" aria-hidden="true" [ngSwitch]="category.icon">
+            <svg *ngSwitchCase="'archive'" viewBox="0 0 24 24" focusable="false">
+              <path d="M4 6.5h16"></path>
+              <path d="M6 6.5v12h12v-12"></path>
+              <path d="M8 3.5h8l2 3H6l2-3Z"></path>
+              <path d="M9.5 11h5"></path>
+            </svg>
+
+            <svg *ngSwitchCase="'file-check'" viewBox="0 0 24 24" focusable="false">
+              <path d="M7 3.5h6l4 4v13H7z"></path>
+              <path d="M13 3.5v4h4"></path>
+              <path d="m9.5 14 2 2 4-5"></path>
+            </svg>
+
+            <svg *ngSwitchCase="'certificate'" viewBox="0 0 24 24" focusable="false">
+              <path d="M6 4h12v14H6z"></path>
+              <path d="M9 8h6"></path>
+              <path d="M9 11h6"></path>
+              <path d="M9 14h3"></path>
+              <path d="m15 16 1.2 3 1.1-1 1.4.4-1.2-3"></path>
+            </svg>
+
+            <svg *ngSwitchCase="'briefcase'" viewBox="0 0 24 24" focusable="false">
+              <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"></path>
+              <path d="M4 8h16v10.5A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5z"></path>
+              <path d="M4 12.5h16"></path>
+              <path d="M10.5 12.5h3"></path>
+            </svg>
+
+            <svg *ngSwitchCase="'clipboard'" viewBox="0 0 24 24" focusable="false">
+              <path d="M9 5h6"></path>
+              <path d="M9 4.5A1.5 1.5 0 0 0 10.5 6h3A1.5 1.5 0 0 0 15 4.5"></path>
+              <path d="M7 6H5.5A1.5 1.5 0 0 0 4 7.5v11A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 18.5 6H17"></path>
+              <path d="M8 11h8"></path>
+              <path d="M8 15h5"></path>
+            </svg>
+
+            <svg *ngSwitchCase="'bell'" viewBox="0 0 24 24" focusable="false">
+              <path d="M18 10.5a6 6 0 1 0-12 0c0 4-1.5 5-2.5 6h17c-1-1-2.5-2-2.5-6Z"></path>
+              <path d="M10 19a2 2 0 0 0 4 0"></path>
+              <path d="M18.8 5.2 20.5 3.5"></path>
+              <path d="M3.5 3.5l1.7 1.7"></path>
+            </svg>
+          </span>
+          <span class="records-category-count">{{ category.count }}</span>
+        </div>
+        <h2>{{ category.name }}</h2>
+        <p>{{ category.detail }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="records-list-section" appRevealOnScroll>
+    <article class="records-list-card">
+      <div class="records-list-head">
+        <h2>Common document requests</h2>
+      </div>
+
+      <div class="records-list-body" *ngIf="filteredRequests.length">
+        <article class="records-list-row" *ngFor="let request of filteredRequests" appRevealOnScroll>
+          <div class="records-row-copy">
+            <h3>{{ request.name }}</h3>
+            <div class="records-row-meta">
+              <span>{{ request.meta }}</span>
+              <span class="records-row-type">{{ request.type }}</span>
+            </div>
+            <p>{{ request.note }}</p>
+          </div>
+
+          <div class="records-row-actions">
+            <button class="records-action-button" type="button" (click)="openRequestModal()">Open form</button>
+          </div>
+        </article>
+      </div>
+    </article>
+  </section>
+
+  <section class="records-request-cta" appRevealOnScroll>
+    <h2>Need a document?</h2>
+    <p>Request the correct record, certificate, or confirmation letter through the secure records form.</p>
+    <button class="button button-primary" type="button" (click)="openRequestModal()">Request document</button>
+  </section>
+
+  <p class="empty-state" *ngIf="hasNoMatches">No record topics match that search. Try broader document keywords.</p>
+
+  <div class="modal-backdrop" *ngIf="showRequestModal" (click)="closeRequestModal()">
+    <section
+      class="modal-card records-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="records-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Records request</p>
+          <h2 id="records-request-modal-title">Request records and letters</h2>
+          <p class="application-note">Use the secure records form to request the exact document by name.</p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeRequestModal()">Close</button>
+      </div>
+
+      <div class="records-request-body">
+        <app-request-form [config]="recordsFormConfig"></app-request-form>
+      </div>
+    </section>
+  </div>
+</main>

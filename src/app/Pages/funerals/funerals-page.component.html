@@ -1,0 +1,159 @@
+<main class="page-shell funerals-page">
+  <section class="funerals-hero" appRevealOnScroll>
+    <div class="funerals-hero__copy">
+      <p class="card-kicker">{{ page.eyebrow }}</p>
+      <h1>{{ page.title }}</h1>
+      <p class="funerals-hero__lead">{{ page.lead }}</p>
+
+      <div class="funerals-hero__tags">
+        <span *ngFor="let tag of page.tags">{{ tag }}</span>
+      </div>
+
+      <div class="funerals-hero__actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open funeral form</button>
+        <a class="button button-secondary" routerLink="/contact">Contact center</a>
+      </div>
+    </div>
+
+    <button
+      class="funerals-hero__media"
+      type="button"
+      (click)="openHeroImage()"
+      aria-label="Open funeral floral arrangement"
+    >
+      <img
+        class="funerals-hero__image"
+        src="assets/images/funerals/funeral_flowers.jpeg"
+        alt="Funeral floral arrangement"
+      >
+    </button>
+  </section>
+
+  <section class="funerals-urgent-callout" appRevealOnScroll>
+    <div class="funerals-urgent-callout__mark" aria-hidden="true">!</div>
+    <div class="funerals-urgent-callout__copy">
+      <p class="card-kicker">Immediate family coordination</p>
+      <h2>Use contact support first if the family needs guidance before private portal submission.</h2>
+      <p>
+        The funeral request form remains the tracked route, but the contact center can still help a family understand
+        what lane to use before they sign in and submit the secure request.
+      </p>
+    </div>
+    <div class="funerals-urgent-callout__actions">
+      <a class="button button-secondary" routerLink="/contact">Open contact page</a>
+      <button class="button button-primary" type="button" (click)="openRequestModal()">Open request form</button>
+    </div>
+  </section>
+
+  <section class="funerals-service-grid" appRevealOnScroll>
+    <button
+      class="funerals-service-card"
+      type="button"
+      *ngFor="let service of serviceCards"
+      [class.is-active]="service.id === activeServiceId"
+      (click)="selectService(service.id)"
+    >
+      <p class="card-kicker">{{ service.label }}</p>
+      <h2>{{ service.title }}</h2>
+      <p>{{ service.description }}</p>
+      <span *ngIf="service.costHeadline">{{ service.costHeadline }}</span>
+      <strong>{{ service.actionLabel }}</strong>
+    </button>
+  </section>
+
+  <section class="funerals-process-card" appRevealOnScroll>
+    <h2>Funeral support process</h2>
+    <div class="funerals-process-grid">
+      <article class="funerals-process-step" *ngFor="let item of processSteps">
+        <div class="funerals-process-step__number">{{ item.step }}</div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="funerals-detail-grid" appRevealOnScroll>
+    <article class="funerals-detail-card funerals-detail-card--light">
+      <p class="card-kicker">Active support lane</p>
+      <h2>{{ activeService.detailTitle }}</h2>
+      <p>{{ activeService.detailCopy }}</p>
+      <ul class="funerals-detail-list">
+        <li *ngFor="let item of activeService.detailPoints">{{ item }}</li>
+      </ul>
+    </article>
+
+    <article class="funerals-detail-card funerals-detail-card--dark">
+      <p class="card-kicker">Support routing</p>
+      <h2>Choose the support type that should open in the funeral form</h2>
+      <p>
+        The selected support type below will be prefilled when the funeral request form opens so the request starts in the right lane.
+      </p>
+
+      <div class="funerals-support-chips">
+        <button
+          class="funerals-support-chip"
+          type="button"
+          *ngFor="let option of activeService.relatedSupportTypes"
+          [class.is-active]="option === selectedSupportType"
+          (click)="selectSupportType(option)"
+        >
+          {{ option }}
+        </button>
+      </div>
+
+      <div class="funerals-detail-metrics">
+        <div>
+          <span>Selected support</span>
+          <strong>{{ selectedSupportType }}</strong>
+        </div>
+        <div>
+          <span>Proof-of-payment</span>
+          <strong>Uses submitted home address</strong>
+        </div>
+      </div>
+
+      <div class="funerals-detail-actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open funeral form</button>
+        <a class="button button-secondary" routerLink="/welfare">Open welfare</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="funerals-faq-card" appRevealOnScroll>
+    <h2>Frequently asked questions</h2>
+    <div class="funerals-faq-list">
+      <details class="funerals-faq-item" *ngFor="let item of faqs">
+        <summary>
+          <span>{{ item.question }}</span>
+          <span class="funerals-faq-arrow" aria-hidden="true">v</span>
+        </summary>
+        <p>{{ item.answer }}</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showRequestModal" (click)="closeRequestModal()">
+    <section
+      class="modal-card funerals-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="funerals-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Funeral request</p>
+          <h2 id="funerals-request-modal-title">{{ funeralsFormConfig?.title }}</h2>
+          <p class="application-note">
+            The funeral form will open with this support type selected: <strong>{{ selectedSupportType }}</strong>.
+          </p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeRequestModal()">Close</button>
+      </div>
+
+      <div class="funerals-request-body">
+        <app-request-form [config]="funeralsFormConfig" [initialValues]="requestFormInitialValues"></app-request-form>
+      </div>
+    </section>
+  </div>
+</main>

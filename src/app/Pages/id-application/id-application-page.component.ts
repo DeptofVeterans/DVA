@@ -1,10 +1,30 @@
 import { Component, HostListener, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { FormBuilder, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
 import { AuthService } from "../../core/services/auth.service";
+import { ImageLightboxService } from "../../core/services/image-lightbox.service";
 import { RequestsService } from "../../core/services/requests.service";
 import { buildVeteransIdApplicationPdf } from "../../core/utils/veterans-id-pdf";
+import { RequestSummary } from "../../models/app.models";
+
+interface IdApplicationTypeCard {
+  type: string;
+  title: string;
+  description: string;
+  supportLabel: string;
+}
+
+interface IdSupportProfile {
+  title: string;
+  copy: string;
+  checklist: string[];
+}
+
+interface IdGuidanceCard {
+  kicker: string;
+  title: string;
+  points: string[];
+}
 
 @Component({
   selector: "app-id-application-page",
@@ -16,11 +36,108 @@ export class IdApplicationPageComponent implements OnInit {
   readonly genders = ["Male", "Female"];
   readonly bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
   readonly identificationTypes = ["Driver's License", "National ID", "Passport"];
+  readonly applicationTypeCards: IdApplicationTypeCard[] = [
+    {
+      type: "New",
+      title: "First issue for eligible veterans",
+      description: "Use this route when applying for a Veteran's ID Card for the first time.",
+      supportLabel: "Start new issue"
+    },
+    {
+      type: "Replacement",
+      title: "Renew, replace, or update an existing card",
+      description: "Use this route when the card is expired, damaged, or being replaced through normal review.",
+      supportLabel: "Open replacement route"
+    },
+    {
+      type: "Stolen",
+      title: "Report a stolen card for replacement review",
+      description: "Use this route when the previous card has been stolen and immediate reporting is needed.",
+      supportLabel: "Report stolen card"
+    },
+    {
+      type: "Lost",
+      title: "Report a lost card and restart the issue process",
+      description: "Use this route when the previous card is lost and the department needs the replacement details.",
+      supportLabel: "Report lost card"
+    }
+  ];
+
+  readonly supportProfiles: Record<string, IdSupportProfile> = {
+    New: {
+      title: "New application support",
+      copy: "This route is for the first issue of a Veteran's Identification Card once the veteran meets the service and eligibility rules.",
+      checklist: [
+        "Prepare service details, home address, and preferred identification type",
+        "The declaration remains fixed and non-editable in the form",
+        "Use the PDF action when a legal-size print-ready copy is needed"
+      ]
+    },
+    Replacement: {
+      title: "Replacement and renewal support",
+      copy: "Use this route when the card has expired, is damaged, or needs normal replacement processing through the department.",
+      checklist: [
+        "Cards expire ten years from the issue date and must be renewed",
+        "The listed card fee is J$1,000.00",
+        "Official-use-only fields remain blank for department processing"
+      ]
+    },
+    Stolen: {
+      title: "Stolen card support",
+      copy: "A stolen card should be reported immediately so the department can review the replacement request and next steps.",
+      checklist: [
+        "Report the stolen card to the DVA without delay",
+        "Use the replacement route details in the same secure form flow",
+        "Track status updates and pickup readiness in the dashboard"
+      ]
+    },
+    Lost: {
+      title: "Lost card support",
+      copy: "A lost card must be reported immediately and moved into replacement review through the approved application route.",
+      checklist: [
+        "Lost cards should be reported immediately to the DVA",
+        "Replacement remains subject to department review and approval",
+        "Use the same secure request flow to track the card outcome"
+      ]
+    }
+  };
+
+  readonly guidanceCards: IdGuidanceCard[] = [
+    {
+      kicker: "Eligibility",
+      title: "Who can receive the card",
+      points: [
+        "A veteran must have served at least three years in the regular or reserve force",
+        "The card is issued through the Department of Veterans Affairs application route",
+        "Restricted or dishonourably discharged applicants are not eligible"
+      ]
+    },
+    {
+      kicker: "Card use",
+      title: "How the card works",
+      points: [
+        "The card is not a JDF Identification Card and must not be used as military identification",
+        "Blue strip cards allow ingress to military bases only",
+        "Red strip cards also support HSC medical consultations and reviews where eligible"
+      ]
+    },
+    {
+      kicker: "Renewal and control",
+      title: "Expiry, replacement, and authority",
+      points: [
+        "The card expires ten years after issue and requires reapplication",
+        "Lost, stolen, or damaged cards must be reported immediately",
+        "The CDS may approve, deny, or revoke the card at any time"
+      ]
+    }
+  ];
 
   submitting = false;
   showApplicationModal = false;
+  requestsLoading = false;
   feedback = "";
   error = "";
+  idRequests: RequestSummary[] = [];
 
   readonly form = this.formBuilder.group({
     application_type: ["New", Validators.required],
@@ -57,6 +174,7 @@ export class IdApplicationPageComponent implements OnInit {
     private readonly route: ActivatedRoute,
     public readonly auth: AuthService,
     private readonly requests: RequestsService,
+    private readonly imageLightbox: ImageLightboxService,
     private readonly router: Router
   ) {}
 
@@ -90,12 +208,34 @@ export class IdApplicationPageComponent implements OnInit {
       email: user.email,
       signature_name: user.fullName
     });
+
+    this.loadIdRequests();
   }
 
-  openApplicationModal(): void {
+  get activeApplicationType(): string {
+    return String(this.form.get("application_type")?.value || "New");
+  }
+
+  get activeSupportProfile(): IdSupportProfile {
+    return this.supportProfiles[this.activeApplicationType] || this.supportProfiles["New"];
+  }
+
+  get hasIdRequests(): boolean {
+    return this.idRequests.length > 0;
+  }
+
+  selectApplicationType(type: string): void {
+    this.form.get("application_type")?.setValue(type);
+  }
+
+  openApplicationModal(type?: string): void {
     if (!this.auth.isAuthenticated) {
       this.redirectToAuthForApplication();
       return;
+    }
+
+    if (type) {
+      this.selectApplicationType(type);
     }
 
     this.showApplicationModal = true;
@@ -151,6 +291,7 @@ export class IdApplicationPageComponent implements OnInit {
       next: (response) => {
         this.feedback = `Veteran ID request submitted successfully. Reference ${response.publicUuid}.`;
         this.submitting = false;
+        this.loadIdRequests();
       },
       error: (error) => {
         this.error = error?.error?.message || "Unable to submit the ID application right now.";
@@ -190,27 +331,74 @@ export class IdApplicationPageComponent implements OnInit {
     return Boolean(control && control.invalid && (control.dirty || control.touched));
   }
 
-  get previewFullName(): string {
-    const forenames = String(this.form.get("full_name")?.value || "").trim();
-    const surname = String(this.form.get("surname")?.value || "").trim();
-    const combined = `${forenames} ${surname}`.trim();
-    return combined || "Veteran Name";
-  }
-
-  get previewRank(): string {
-    return String(this.form.get("rank")?.value || "").trim() || "Rank";
-  }
-
-  get previewServiceNumber(): string {
-    return String(this.form.get("service_number")?.value || "").trim() || "Service No.";
-  }
-
   get previewApplicationType(): string {
     return String(this.form.get("application_type")?.value || "New");
   }
 
   get previewIdentificationType(): string {
     return String(this.form.get("identification_type")?.value || "Driver's License");
+  }
+
+  get previewServiceNumber(): string {
+    return String(this.form.get("service_number")?.value || "").trim() || "Service No.";
+  }
+
+  openReferenceImage(): void {
+    this.imageLightbox.open({
+      src: "assets/Veteran_ID.png",
+      title: "Veteran ID reference preview",
+      alt: "Veteran ID reference image"
+    });
+  }
+
+  requestReference(value: string | null | undefined): string {
+    const code = String(value || "").trim();
+
+    if (!code) {
+      return "Reference pending";
+    }
+
+    return `Ref ${code.split("-")[0].toUpperCase()}`;
+  }
+
+  displayRequestCode(value: string | null | undefined): string {
+    const code = String(value || "").trim();
+
+    if (!code) {
+      return "";
+    }
+
+    return code
+      .split("-")
+      .map((segment) => segment.toUpperCase())
+      .join(" / ");
+  }
+
+  private loadIdRequests(): void {
+    if (!this.auth.isAuthenticated) {
+      this.idRequests = [];
+      return;
+    }
+
+    this.requestsLoading = true;
+
+    this.requests.getMyRequests().subscribe({
+      next: ({ requests }) => {
+        this.idRequests = (requests || [])
+          .filter((request) => (request.request_type_code || request.requestTypeCode) === "VETERANS_ID_APPLICATION")
+          .sort((a, b) => {
+            const aDate = new Date(String(a.submitted_at || a.submittedAt || 0)).getTime();
+            const bDate = new Date(String(b.submitted_at || b.submittedAt || 0)).getTime();
+            return bDate - aDate;
+          })
+          .slice(0, 3);
+        this.requestsLoading = false;
+      },
+      error: () => {
+        this.idRequests = [];
+        this.requestsLoading = false;
+      }
+    });
   }
 
   private redirectToAuthForApplication(): void {

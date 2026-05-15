@@ -1,0 +1,184 @@
+<main class="page-shell welfare-page">
+  <section class="welfare-hero" appRevealOnScroll>
+    <div class="welfare-hero__copy">
+      <p class="card-kicker">{{ page.eyebrow }}</p>
+      <h1>{{ page.title }}</h1>
+      <p class="welfare-hero__lead">{{ page.lead }}</p>
+
+      <div class="welfare-hero__tags">
+        <span *ngFor="let tag of page.tags">{{ tag }}</span>
+      </div>
+
+      <div class="welfare-hero__actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open support form</button>
+        <a class="button button-secondary" routerLink="/contact">Open contact center</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="welfare-summary-grid" appRevealOnScroll>
+    <article
+      class="welfare-summary-card"
+      *ngFor="let card of summaryCards"
+      [ngClass]="'welfare-summary-card--' + card.tone"
+    >
+      <p class="card-kicker">{{ card.label }}</p>
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.detail }}</p>
+      <span>{{ card.value }}</span>
+    </article>
+  </section>
+
+  <section class="welfare-detail-grid" appRevealOnScroll>
+    <article class="welfare-focus-card">
+      <div class="welfare-panel-head">
+        <div>
+          <p class="card-kicker">Who can use this route</p>
+          <h2>Welfare support is not limited to the veteran alone.</h2>
+        </div>
+      </div>
+
+      <div class="welfare-audience-list">
+        <article class="welfare-audience-item" *ngFor="let item of audienceGroups">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.detail }}</p>
+        </article>
+      </div>
+    </article>
+
+    <article class="welfare-routing-card">
+      <div class="welfare-panel-head">
+        <div>
+          <p class="card-kicker">Support routing</p>
+          <h2>Choose the welfare lane before opening the form.</h2>
+        </div>
+      </div>
+
+      <p class="welfare-panel-copy">
+        The secure welfare form will open with the correct support lane selected so the request starts in the right queue.
+      </p>
+
+      <div class="welfare-routing-chips">
+        <button
+          class="welfare-routing-chip"
+          type="button"
+          *ngFor="let lane of supportLanes"
+          [class.is-active]="lane.id === activeLaneId"
+          (click)="selectLane(lane.id)"
+        >
+          {{ lane.title }}
+        </button>
+      </div>
+
+      <div class="welfare-routing-metrics">
+        <div>
+          <span>Queue</span>
+          <strong>{{ activeLane.response }}</strong>
+        </div>
+        <div>
+          <span>Case type</span>
+          <strong>{{ activeLane.caseType }}</strong>
+        </div>
+      </div>
+
+      <div class="welfare-routing-actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open support form</button>
+        <a class="button button-secondary" routerLink="/dashboard">Open dashboard</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="welfare-lanes-section" appRevealOnScroll>
+    <div class="welfare-section-heading">
+      <p class="card-kicker">Available support programs</p>
+      <h2>Use the lane that matches the real welfare need.</h2>
+      <p>
+        Medical reviews, insurance-linked welfare support, family coordination, and outreach can all be directed through the correct case type from here.
+      </p>
+    </div>
+
+    <div class="welfare-program-grid">
+      <article class="welfare-program-card" *ngFor="let program of programs">
+        <p class="card-kicker">{{ program.kicker }}</p>
+        <h3>{{ program.title }}</h3>
+        <p>{{ program.description }}</p>
+        <div class="welfare-program-actions">
+          <button class="text-link" type="button" (click)="selectLane(program.laneId)">Use this lane</button>
+          <button class="button button-secondary" type="button" (click)="openRequestModal(program.laneId)">Open form</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="welfare-tools-grid" appRevealOnScroll>
+    <article class="welfare-tools-card welfare-tools-card--dark">
+      <p class="card-kicker">Current selection</p>
+      <h2>{{ activeLane.title }}</h2>
+      <p class="welfare-panel-copy">{{ activeLane.detail }}</p>
+
+      <div class="welfare-tools-list">
+        <article *ngFor="let item of activePrograms">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </article>
+      </div>
+    </article>
+
+    <article class="welfare-tools-card">
+      <p class="card-kicker">Linked routes</p>
+      <h2>Keep other support pathways close.</h2>
+      <p class="welfare-panel-copy">
+        Welfare often connects to funeral follow-up, Veteran ID questions, insurance support, and public contact-center help.
+      </p>
+
+      <div class="welfare-tools-actions">
+        <a class="button button-secondary" routerLink="/funerals">Funerals</a>
+        <a class="button button-secondary" routerLink="/insurance">Insurance</a>
+        <a class="button button-secondary" routerLink="/id">Veteran ID</a>
+        <a class="button button-secondary" routerLink="/contact">Contact</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="welfare-help-band" appRevealOnScroll>
+    <div>
+      <p class="card-kicker">Need help now?</p>
+      <h2>Use contact guidance first if the person needs direction before signing in.</h2>
+      <p>
+        The contact center remains the quickest route for general guidance, while the welfare form keeps the request tracked once the case is ready.
+      </p>
+    </div>
+
+    <div class="welfare-help-band__actions">
+      <a class="button button-secondary" routerLink="/contact">Open contact center</a>
+      <button class="button button-primary" type="button" (click)="openRequestModal()">Open support form</button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showRequestModal" (click)="closeRequestModal()">
+    <section
+      class="modal-card welfare-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="welfare-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Welfare request</p>
+          <h2 id="welfare-request-modal-title">{{ welfareFormConfig?.title }}</h2>
+          <p class="application-note">
+            The form will open with this support lane selected:
+            <strong>{{ activeLane.caseType }}</strong>
+            through <strong>{{ activeLane.response }}</strong>.
+          </p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeRequestModal()">Close</button>
+      </div>
+
+      <div class="welfare-request-body">
+        <app-request-form [config]="welfareFormConfig" [initialValues]="requestFormInitialValues"></app-request-form>
+      </div>
+    </section>
+  </div>
+</main>

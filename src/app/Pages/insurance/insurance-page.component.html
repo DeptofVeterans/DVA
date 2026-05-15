@@ -1,0 +1,170 @@
+<main class="page-shell insurance-page">
+  <section class="insurance-hero" appRevealOnScroll>
+    <div class="insurance-hero__copy">
+      <p class="card-kicker">{{ page.eyebrow }}</p>
+      <h1>{{ page.title }}</h1>
+      <p class="insurance-hero__lead">{{ page.lead }}</p>
+
+      <div class="insurance-hero__tags">
+        <span *ngFor="let tag of page.tags">{{ tag }}</span>
+      </div>
+
+      <div class="insurance-hero__actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open insurance form</button>
+        <a class="button button-secondary" routerLink="/dashboard">Open dashboard</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="insurance-policy-grid" appRevealOnScroll>
+    <button
+      class="insurance-policy-card"
+      type="button"
+      *ngFor="let lane of laneSummaries"
+      [class.is-active]="lane.id === activeLaneId"
+      (click)="selectLane(lane.id)"
+    >
+      <p>{{ lane.label }}</p>
+      <h2>{{ lane.title }}</h2>
+      <span>{{ lane.coverageLabel }}</span>
+      <strong>{{ lane.detail }}</strong>
+    </button>
+  </section>
+
+  <section class="insurance-detail-grid" appRevealOnScroll>
+    <article class="insurance-benefits-card">
+      <p class="card-kicker">Current lane</p>
+      <h2>{{ activeLane.title }}</h2>
+      <p class="insurance-panel-copy">{{ activeLane.detail }}</p>
+
+      <ul class="insurance-benefits-list">
+        <li>Showing <strong>{{ activeGuidanceCount }}</strong> guidance card(s) for this lane.</li>
+        <li>Showing <strong>{{ activeTableCount }}</strong> table section(s) for this lane.</li>
+        <li>Support requests stay connected to the exact insurance area selected below.</li>
+      </ul>
+    </article>
+
+    <article class="insurance-support-card">
+      <p class="card-kicker">Support logic</p>
+      <h2>Choose the insurance area before opening the form</h2>
+      <p class="insurance-panel-copy">
+        The support form will use the selected insurance area so the request reaches the right part of the insurance lane faster.
+      </p>
+
+      <div class="insurance-support-options">
+        <button
+          class="insurance-support-chip"
+          type="button"
+          *ngFor="let option of activeLane.supportOptions"
+          [class.is-active]="option === selectedSupportOption"
+          (click)="selectSupportOption(option)"
+        >
+          {{ option }}
+        </button>
+      </div>
+
+      <div class="insurance-support-metrics">
+        <div>
+          <span>Focus</span>
+          <strong>{{ selectedSupportOption }}</strong>
+        </div>
+        <div>
+          <span>Visible sections</span>
+          <strong>{{ activeSectionTitles.length }}</strong>
+        </div>
+      </div>
+
+      <div class="insurance-support-actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open support form</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="insurance-sections" appRevealOnScroll>
+    <section class="insurance-section" *ngFor="let section of visibleSections" appRevealOnScroll>
+      <div class="insurance-section-heading">
+        <p class="card-kicker">{{ section.eyebrow }}</p>
+        <h2>{{ section.title }}</h2>
+        <p *ngIf="section.copy">{{ section.copy }}</p>
+      </div>
+
+      <div class="insurance-card-grid" *ngIf="section.cards?.length">
+        <article class="insurance-info-card" *ngFor="let card of section.cards" [class.is-dark]="card.dark">
+          <p class="card-kicker">{{ card.kicker }}</p>
+          <h3>{{ card.title }}</h3>
+          <p *ngIf="card.description">{{ card.description }}</p>
+          <ul class="insurance-checklist" *ngIf="card.checklist?.length">
+            <li *ngFor="let item of card.checklist">{{ item }}</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="insurance-table-stack" *ngIf="section.tables?.length">
+        <article class="insurance-table-card" *ngFor="let table of section.tables">
+          <p class="card-kicker">{{ table.title }}</p>
+          <div class="insurance-table-wrap">
+            <table class="insurance-data-table">
+              <thead>
+                <tr>
+                  <th *ngFor="let column of table.columns">{{ column }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of table.rows">
+                  <td *ngFor="let cell of row">{{ cell }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="insurance-table-note" *ngIf="table.note">{{ table.note }}</p>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <section class="insurance-tools" appRevealOnScroll>
+    <article class="insurance-tool-card insurance-tool-card--primary">
+      <p class="card-kicker">Insurance support</p>
+      <h2>Open the support form with the right coverage focus</h2>
+      <p>
+        Keep claims, enrolment follow-up, and plan questions connected to the correct insurance area from the start.
+      </p>
+      <button class="button button-primary" type="button" (click)="openRequestModal()">Open insurance form</button>
+    </article>
+
+    <article class="insurance-tool-card">
+      <p class="card-kicker">Related pathways</p>
+      <h2>Move to another service area if the case changes</h2>
+      <div class="insurance-tool-links">
+        <a class="button button-secondary" routerLink="/pensions">Pensions</a>
+        <a class="button button-secondary" routerLink="/welfare">Welfare</a>
+        <a class="button button-secondary" routerLink="/contact">Contact</a>
+      </div>
+    </article>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showRequestModal" (click)="closeRequestModal()">
+    <section
+      class="modal-card insurance-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="insurance-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Insurance request</p>
+          <h2 id="insurance-request-modal-title">{{ insuranceFormConfig?.title }}</h2>
+          <p class="application-note">
+            The selected insurance area will be used as the starting point for this request: <strong>{{ selectedSupportOption }}</strong>.
+          </p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeRequestModal()">Close</button>
+      </div>
+
+      <div class="insurance-request-body">
+        <app-request-form [config]="insuranceFormConfig" [initialValues]="requestFormInitialValues"></app-request-form>
+      </div>
+    </section>
+  </div>
+</main>

@@ -4,6 +4,7 @@ import { PortalEvent } from './models/app.models';
 import { AuthService } from './core/services/auth.service';
 import { PortalEventsService } from './core/services/portal-events.service';
 import { RequestsService } from './core/services/requests.service';
+import { ImageLightboxService } from './core/services/image-lightbox.service';
 import { UserProfileService } from './core/services/user-profile.service';
 
 @Component({
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit {
     private readonly router: Router,
     private readonly portalEvents: PortalEventsService,
     private readonly requests: RequestsService,
+    private readonly imageLightbox: ImageLightboxService,
     private readonly profile: UserProfileService
   ) {}
 
@@ -35,6 +37,7 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.isRouteChanging = true;
+        this.imageLightbox.close();
         return;
       }
 

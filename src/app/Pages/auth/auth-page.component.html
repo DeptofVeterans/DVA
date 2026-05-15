@@ -1,163 +1,189 @@
 <main class="page-shell auth-page">
-  <section class="section">
-    <div class="auth-layout auth-access-layout">
-      <article class="hero-copy auth-access-copy">
+  <section class="auth-shell">
+    <article class="auth-hero-panel" appRevealOnScroll>
+      <div class="auth-hero-panel__top">
         <p class="eyebrow">Secure Access</p>
         <h1>Sign in or create your portal account.</h1>
         <p class="lead">
-          Veterans can create private accounts to track requests, uploads, and pickup alerts. Staff accounts
-          can be requested here and become active only after administrative approval.
+          Access your secure portal account for request tracking, uploads, and follow-up.
         </p>
+      </div>
+    </article>
 
-        <div class="pill-row">
-          <span class="tag">Veteran access</span>
-          <span class="tag">Staff approval</span>
-          <span class="tag">Department restrictions</span>
-          <span class="tag">In-app alerts</span>
+    <article class="auth-form-panel" appRevealOnScroll>
+      <div class="auth-form-panel__head">
+        <div>
+          <p class="card-kicker">{{ mode === 'login' ? 'Portal sign in' : 'Portal account setup' }}</p>
+          <h2>{{ mode === "login" ? "Sign in" : "Create your account" }}</h2>
+          <p>
+            {{ mode === "login"
+              ? "Enter your credentials to continue."
+              : accountType === "veteran"
+                ? "Veteran signup signs you in as soon as your account is created."
+                : "Staff signup stays pending until an administrator approves the account." }}
+          </p>
         </div>
-      </article>
 
-      <article class="feature-card auth-form-card">
-        <div class="segmented-control">
+        <div class="segmented-control auth-mode-switch">
           <button class="segment" type="button" [class.is-active]="mode === 'login'" (click)="setMode('login')">Sign in</button>
           <button class="segment" type="button" [class.is-active]="mode === 'signup'" (click)="setMode('signup')">Sign up</button>
         </div>
+      </div>
 
-        <div class="segmented-control" *ngIf="mode === 'signup'">
-          <button class="segment" type="button" [class.is-active]="accountType === 'veteran'" (click)="setAccountType('veteran')">Veteran</button>
-          <button class="segment" type="button" [class.is-active]="accountType === 'staff'" (click)="setAccountType('staff')">Staff</button>
+      <div class="segmented-control auth-account-switch" *ngIf="mode === 'signup'">
+        <button class="segment" type="button" [class.is-active]="accountType === 'veteran'" (click)="setAccountType('veteran')">Veteran</button>
+        <button class="segment" type="button" [class.is-active]="accountType === 'staff'" (click)="setAccountType('staff')">Staff</button>
+      </div>
+
+      <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+      <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+
+      <form class="form-grid auth-form-grid" *ngIf="mode === 'login'" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+        <label class="field field-wide">
+          <span>Email address <strong class="required-mark">*</strong></span>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+          <small class="field-error" *ngIf="hasError('login', 'email')">A valid email address is required.</small>
+        </label>
+
+        <label class="field field-wide">
+          <span>Password <strong class="required-mark">*</strong></span>
+          <div class="auth-password-field">
+            <input [type]="showLoginPassword ? 'text' : 'password'" formControlName="password" placeholder="Enter password">
+            <button class="auth-password-toggle" type="button" (click)="togglePasswordVisibility('login')">
+              {{ showLoginPassword ? "Hide" : "Show" }}
+            </button>
+          </div>
+          <small class="field-error" *ngIf="hasError('login', 'password')">Password is required.</small>
+        </label>
+
+        <div class="button-row form-actions field-wide">
+          <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Working..." : "Sign in" }}</button>
         </div>
+      </form>
 
-        <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
-        <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+      <form class="form-grid auth-form-grid" *ngIf="mode === 'signup' && accountType === 'veteran'" [formGroup]="veteranForm" (ngSubmit)="submitVeteranSignup()">
+        <label class="field field-wide">
+          <span>Full name <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="fullName" placeholder="Enter full name">
+        </label>
 
-        <form class="form-grid" *ngIf="mode === 'login'" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-          <label class="field field-wide">
-            <span>Email address <strong class="required-mark">*</strong></span>
-            <input type="email" formControlName="email" placeholder="Enter email address">
-            <small class="field-error" *ngIf="hasError('login', 'email')">A valid email address is required.</small>
-          </label>
+        <label class="field">
+          <span>Email <strong class="required-mark">*</strong></span>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+        </label>
 
-          <label class="field field-wide">
-            <span>Password <strong class="required-mark">*</strong></span>
-            <input type="password" formControlName="password" placeholder="Enter password">
-            <small class="field-error" *ngIf="hasError('login', 'password')">Password is required.</small>
-          </label>
-
-          <div class="button-row form-actions field-wide">
-            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Working..." : "Sign in" }}</button>
+        <label class="field">
+          <span>Password <strong class="required-mark">*</strong></span>
+          <div class="auth-password-field">
+            <input [type]="showVeteranPassword ? 'text' : 'password'" formControlName="password" placeholder="Use at least 8 characters">
+            <button class="auth-password-toggle" type="button" (click)="togglePasswordVisibility('veteran')">
+              {{ showVeteranPassword ? "Hide" : "Show" }}
+            </button>
           </div>
-        </form>
+        </label>
 
-        <form class="form-grid" *ngIf="mode === 'signup' && accountType === 'veteran'" [formGroup]="veteranForm" (ngSubmit)="submitVeteranSignup()">
+        <label class="field">
+          <span>Rank <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="rank" placeholder="Enter rank">
+        </label>
+
+        <label class="field">
+          <span>Regimental number <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="regimentalNumber" placeholder="4 or 5 digits">
+        </label>
+
+        <div class="button-row form-actions field-wide">
+          <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Working..." : "Create veteran account" }}</button>
+        </div>
+      </form>
+
+      <form class="form-grid auth-form-grid" *ngIf="mode === 'signup' && accountType === 'staff'" [formGroup]="staffForm" (ngSubmit)="submitStaffSignup()">
+        <label class="field field-wide">
+          <span>Full name <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="fullName" placeholder="Enter full name">
+        </label>
+
+        <label class="field">
+          <span>Email <strong class="required-mark">*</strong></span>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+        </label>
+
+        <label class="field">
+          <span>Password <strong class="required-mark">*</strong></span>
+          <div class="auth-password-field">
+            <input [type]="showStaffPassword ? 'text' : 'password'" formControlName="password" placeholder="Use at least 8 characters">
+            <button class="auth-password-toggle" type="button" (click)="togglePasswordVisibility('staff')">
+              {{ showStaffPassword ? "Hide" : "Show" }}
+            </button>
+          </div>
+        </label>
+
+        <label class="field">
+          <span>Rank <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="rank" placeholder="Enter rank">
+        </label>
+
+        <label class="field">
+          <span>Regimental number <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="regimentalNumber" placeholder="4 or 5 digits">
+        </label>
+
+        <label class="field field-wide">
+          <span>Requested department <strong class="required-mark">*</strong></span>
+          <select formControlName="requestedPrimaryDepartmentId">
+            <option value="">Select one</option>
+            <option *ngFor="let department of departments" [value]="department.department_id">{{ department.department_name }}</option>
+          </select>
+        </label>
+
+        <div class="button-row form-actions field-wide">
+          <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Working..." : "Request staff account" }}</button>
+        </div>
+      </form>
+
+      <details class="bootstrap-panel" *ngIf="showBootstrapPanel">
+        <summary>Local setup: bootstrap the first Main Admin</summary>
+        <form class="form-grid auth-form-grid" [formGroup]="bootstrapForm" (ngSubmit)="submitBootstrap()">
           <label class="field field-wide">
-            <span>Full name <strong class="required-mark">*</strong></span>
+            <span>Bootstrap key</span>
+            <input type="password" formControlName="bootstrapKey" placeholder="Enter the configured bootstrap key">
+          </label>
+
+          <label class="field field-wide">
+            <span>Full name</span>
             <input type="text" formControlName="fullName" placeholder="Enter full name">
           </label>
 
           <label class="field">
-            <span>Email <strong class="required-mark">*</strong></span>
+            <span>Email</span>
             <input type="email" formControlName="email" placeholder="Enter email address">
           </label>
 
           <label class="field">
-            <span>Password <strong class="required-mark">*</strong></span>
-            <input type="password" formControlName="password" placeholder="Use at least 8 characters">
-          </label>
-
-          <label class="field">
-            <span>Rank <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="rank" placeholder="Enter rank">
-          </label>
-
-          <label class="field">
-            <span>Regimental number <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="regimentalNumber" placeholder="4 or 5 digits">
-          </label>
-
-          <div class="button-row form-actions field-wide">
-            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Working..." : "Create veteran account" }}</button>
-          </div>
-        </form>
-
-        <form class="form-grid" *ngIf="mode === 'signup' && accountType === 'staff'" [formGroup]="staffForm" (ngSubmit)="submitStaffSignup()">
-          <label class="field field-wide">
-            <span>Full name <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="fullName" placeholder="Enter full name">
-          </label>
-
-          <label class="field">
-            <span>Email <strong class="required-mark">*</strong></span>
-            <input type="email" formControlName="email" placeholder="Enter email address">
-          </label>
-
-          <label class="field">
-            <span>Password <strong class="required-mark">*</strong></span>
-            <input type="password" formControlName="password" placeholder="Use at least 8 characters">
-          </label>
-
-          <label class="field">
-            <span>Rank <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="rank" placeholder="Enter rank">
-          </label>
-
-          <label class="field">
-            <span>Regimental number <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="regimentalNumber" placeholder="4 or 5 digits">
-          </label>
-
-          <label class="field field-wide">
-            <span>Requested department <strong class="required-mark">*</strong></span>
-            <select formControlName="requestedPrimaryDepartmentId">
-              <option value="">Select one</option>
-              <option *ngFor="let department of departments" [value]="department.department_id">{{ department.department_name }}</option>
-            </select>
-          </label>
-
-          <div class="button-row form-actions field-wide">
-            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Working..." : "Request staff account" }}</button>
-          </div>
-        </form>
-
-        <details class="bootstrap-panel" *ngIf="showBootstrapPanel">
-          <summary>Local setup: bootstrap the first Main Admin</summary>
-          <form class="form-grid" [formGroup]="bootstrapForm" (ngSubmit)="submitBootstrap()">
-            <label class="field field-wide">
-              <span>Bootstrap key</span>
-              <input type="password" formControlName="bootstrapKey" placeholder="Enter the configured bootstrap key">
-            </label>
-
-            <label class="field field-wide">
-              <span>Full name</span>
-              <input type="text" formControlName="fullName" placeholder="Enter full name">
-            </label>
-
-            <label class="field">
-              <span>Email</span>
-              <input type="email" formControlName="email" placeholder="Enter email address">
-            </label>
-
-            <label class="field">
-              <span>Password</span>
-              <input type="password" formControlName="password" placeholder="Use at least 8 characters">
-            </label>
-
-            <label class="field">
-              <span>Rank</span>
-              <input type="text" formControlName="rank" placeholder="Enter rank">
-            </label>
-
-            <label class="field">
-              <span>Regimental number</span>
-              <input type="text" formControlName="regimentalNumber" placeholder="4 or 5 digits">
-            </label>
-
-            <div class="button-row compact-row field-wide">
-              <button class="button button-secondary" type="submit" [disabled]="submitting">Bootstrap Main Admin</button>
+            <span>Password</span>
+            <div class="auth-password-field">
+              <input [type]="showBootstrapPassword ? 'text' : 'password'" formControlName="password" placeholder="Use at least 8 characters">
+              <button class="auth-password-toggle" type="button" (click)="togglePasswordVisibility('bootstrap')">
+                {{ showBootstrapPassword ? "Hide" : "Show" }}
+              </button>
             </div>
-          </form>
-        </details>
-      </article>
-    </div>
+          </label>
+
+          <label class="field">
+            <span>Rank</span>
+            <input type="text" formControlName="rank" placeholder="Enter rank">
+          </label>
+
+          <label class="field">
+            <span>Regimental number</span>
+            <input type="text" formControlName="regimentalNumber" placeholder="4 or 5 digits">
+          </label>
+
+          <div class="button-row compact-row field-wide">
+            <button class="button button-secondary" type="submit" [disabled]="submitting">Bootstrap Main Admin</button>
+          </div>
+        </form>
+      </details>
+    </article>
   </section>
 </main>

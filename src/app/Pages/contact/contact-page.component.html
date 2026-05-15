@@ -1,255 +1,268 @@
 <main class="page-shell contact-page">
-  <section class="page-hero compact-hero">
-    <article class="hero-copy contact-hero-copy" appRevealOnScroll>
-      <p class="eyebrow">Contact Center</p>
+  <section class="contact-hero" appRevealOnScroll>
+    <div class="contact-hero__copy">
+      <p class="card-kicker">Contact center</p>
       <h1>Reach the department whether you are signed in or not.</h1>
-      <p class="lead">
+      <p class="contact-hero__lead">
         Use the contact-center forms for general enquiries, callback requests, and organization outreach.
-        Portal sign-in is only needed for private request tracking, not for these contact forms.
       </p>
 
-      <div class="pill-row">
-        <span class="tag">Public forms</span>
-        <span class="tag">Veteran guidance</span>
-        <span class="tag">Family support</span>
-        <span class="tag">Organization outreach</span>
+      <div class="contact-hero__tags">
+        <span>Public forms</span>
+        <span>Veteran guidance</span>
+        <span>Family support</span>
+        <span>Organization outreach</span>
       </div>
 
       <div class="contact-signed-in-note" *ngIf="auth.currentUser">
         Signed in as <strong>{{ auth.currentUser.fullName }}</strong>. You can still use this public contact page.
       </div>
+    </div>
+  </section>
+
+  <section class="contact-method-grid" appRevealOnScroll>
+    <button
+      *ngFor="let card of laneCards"
+      type="button"
+      class="contact-method-card"
+      [class.is-active]="activeLane === card.lane"
+      (click)="setLane(card.lane)"
+    >
+      <p class="card-kicker">{{ card.kicker }}</p>
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.description }}</p>
+    </button>
+  </section>
+
+  <section class="contact-main-grid" appRevealOnScroll>
+    <article class="contact-form-card">
+      <div class="contact-panel-head">
+        <div>
+          <p class="card-kicker">Send a message</p>
+          <h2>{{ activeLaneDetail.title }}</h2>
+        </div>
+      </div>
+
+      <div class="segmented-control">
+        <button class="segment" type="button" [class.is-active]="activeLane === 'general'" (click)="setLane('general')">General</button>
+        <button class="segment" type="button" [class.is-active]="activeLane === 'callback'" (click)="setLane('callback')">Callback</button>
+        <button class="segment" type="button" [class.is-active]="activeLane === 'partner'" (click)="setLane('partner')">Partner</button>
+      </div>
+
+      <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
+      <p class="form-status is-error" *ngIf="error">{{ error }}</p>
+
+      <form class="form-grid" *ngIf="activeLane === 'general'" [formGroup]="generalForm" (ngSubmit)="submitGeneral()">
+        <label class="field">
+          <span>Full name <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="fullName" placeholder="Enter full name">
+          <small class="field-error" *ngIf="hasError('general', 'fullName')">Full name is required.</small>
+        </label>
+
+        <label class="field">
+          <span>Email address <strong class="required-mark">*</strong></span>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+          <small class="field-error" *ngIf="hasError('general', 'email')">A valid email address is required.</small>
+        </label>
+
+        <label class="field">
+          <span>Phone number</span>
+          <input type="tel" formControlName="phone" placeholder="Enter phone number">
+        </label>
+
+        <label class="field">
+          <span>I am contacting as</span>
+          <select formControlName="audience">
+            <option *ngFor="let option of audienceOptions" [value]="option">{{ option }}</option>
+          </select>
+        </label>
+
+        <label class="field field-wide">
+          <span>Department to contact <strong class="required-mark">*</strong></span>
+          <select formControlName="departmentCode">
+            <option *ngFor="let department of departmentOptions" [value]="department.value">{{ department.label }}</option>
+          </select>
+        </label>
+
+        <label class="field field-wide">
+          <span>Subject <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="subject" placeholder="Add a short subject">
+          <small class="field-error" *ngIf="hasError('general', 'subject')">Subject is required.</small>
+        </label>
+
+        <label class="field field-wide">
+          <span>Message <strong class="required-mark">*</strong></span>
+          <textarea rows="7" formControlName="message" placeholder="Explain the question or support needed."></textarea>
+          <small class="field-error" *ngIf="hasError('general', 'message')">Please add a longer message.</small>
+        </label>
+
+        <div class="button-row form-actions field-wide">
+          <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Sending..." : "Send enquiry" }}</button>
+        </div>
+      </form>
+
+      <form class="form-grid" *ngIf="activeLane === 'callback'" [formGroup]="callbackForm" (ngSubmit)="submitCallback()">
+        <label class="field">
+          <span>Full name <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="fullName" placeholder="Enter full name">
+          <small class="field-error" *ngIf="hasError('callback', 'fullName')">Full name is required.</small>
+        </label>
+
+        <label class="field">
+          <span>Phone number <strong class="required-mark">*</strong></span>
+          <input type="tel" formControlName="phone" placeholder="Enter phone number">
+          <small class="field-error" *ngIf="hasError('callback', 'phone')">Phone number is required.</small>
+        </label>
+
+        <label class="field">
+          <span>Email address</span>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+          <small class="field-error" *ngIf="hasError('callback', 'email')">If used, the email must be valid.</small>
+        </label>
+
+        <label class="field">
+          <span>Best time to call</span>
+          <select formControlName="callbackWindow">
+            <option *ngFor="let window of callbackWindows" [value]="window">{{ window }}</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Service number</span>
+          <input type="text" formControlName="serviceNumber" placeholder="Enter service number if known">
+        </label>
+
+        <label class="field">
+          <span>Department to contact <strong class="required-mark">*</strong></span>
+          <select formControlName="departmentCode">
+            <option *ngFor="let department of departmentOptions" [value]="department.value">{{ department.label }}</option>
+          </select>
+        </label>
+
+        <label class="field field-wide">
+          <span>Reason for callback <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="reason" placeholder="Add a short callback reason">
+          <small class="field-error" *ngIf="hasError('callback', 'reason')">Reason is required.</small>
+        </label>
+
+        <label class="field field-wide">
+          <span>Message <strong class="required-mark">*</strong></span>
+          <textarea rows="7" formControlName="message" placeholder="Summarize the issue, next step, or question for the call."></textarea>
+          <small class="field-error" *ngIf="hasError('callback', 'message')">Please add a longer message.</small>
+        </label>
+
+        <div class="button-row form-actions field-wide">
+          <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Sending..." : "Request callback" }}</button>
+        </div>
+      </form>
+
+      <form class="form-grid" *ngIf="activeLane === 'partner'" [formGroup]="partnerForm" (ngSubmit)="submitPartner()">
+        <label class="field">
+          <span>Organization name <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="organizationName" placeholder="Enter organization name">
+          <small class="field-error" *ngIf="hasError('partner', 'organizationName')">Organization name is required.</small>
+        </label>
+
+        <label class="field">
+          <span>Contact person <strong class="required-mark">*</strong></span>
+          <input type="text" formControlName="contactPerson" placeholder="Enter contact person">
+          <small class="field-error" *ngIf="hasError('partner', 'contactPerson')">Contact person is required.</small>
+        </label>
+
+        <label class="field">
+          <span>Email address <strong class="required-mark">*</strong></span>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+          <small class="field-error" *ngIf="hasError('partner', 'email')">A valid email address is required.</small>
+        </label>
+
+        <label class="field">
+          <span>Phone number</span>
+          <input type="tel" formControlName="phone" placeholder="Enter phone number">
+        </label>
+
+        <label class="field">
+          <span>Website</span>
+          <input type="url" formControlName="website" placeholder="Enter website if available">
+        </label>
+
+        <label class="field">
+          <span>Contact lane <strong class="required-mark">*</strong></span>
+          <select formControlName="departmentCode">
+            <option *ngFor="let department of departmentOptions" [value]="department.value">{{ department.label }}</option>
+          </select>
+        </label>
+
+        <label class="field field-wide">
+          <span>Partnership type <strong class="required-mark">*</strong></span>
+          <select formControlName="partnershipType">
+            <option *ngFor="let type of partnershipTypes" [value]="type">{{ type }}</option>
+          </select>
+        </label>
+
+        <label class="field field-wide">
+          <span>Message <strong class="required-mark">*</strong></span>
+          <textarea rows="7" formControlName="message" placeholder="Describe the offer, partnership idea, or organization enquiry."></textarea>
+          <small class="field-error" *ngIf="hasError('partner', 'message')">Please add a longer message.</small>
+        </label>
+
+        <div class="button-row form-actions field-wide">
+          <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Sending..." : "Send organization form" }}</button>
+        </div>
+      </form>
+
+      <p class="contact-inline-note">
+        Need status updates and dashboard follow-up? Use the application forms on the service pages.
+      </p>
     </article>
 
-    <aside class="hero-side contact-hero-side" appRevealOnScroll>
-      <article class="summary-card dark-card contact-summary-card">
-        <p class="card-kicker">How it works</p>
-        <h3>Choose the contact lane that matches the reason for reaching out.</h3>
-        <p>
-          These forms are for guidance, follow-up, and outreach contact. If you need a tracked service request,
-          use the application or request forms on the service pages.
-        </p>
-
-        <ul class="icon-list">
-          <li>General questions and written replies</li>
-          <li>Callback requests for follow-up guidance</li>
-          <li>Organization offers, partnerships, and veteran opportunities</li>
-        </ul>
-      </article>
-    </aside>
-  </section>
-
-  <section class="section">
-    <div class="section-heading" appRevealOnScroll>
-      <p class="eyebrow">Choose a Form</p>
-      <h2>Pick the contact lane before you send the message.</h2>
-      <p class="section-copy">Each form is public-facing and routes the message to the right part of the department.</p>
-    </div>
-
-    <div class="card-grid three-column contact-lane-grid">
-      <button
-        *ngFor="let card of laneCards"
-        type="button"
-        class="portal-card-button contact-lane-card"
-        [class.is-active]="activeLane === card.lane"
-        (click)="setLane(card.lane)"
-        appRevealOnScroll
-      >
-        <p class="card-kicker">{{ card.kicker }}</p>
-        <h3>{{ card.title }}</h3>
-        <p>{{ card.description }}</p>
-      </button>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="form-layout contact-form-layout">
-      <article class="feature-card contact-form-card" appRevealOnScroll>
-        <div class="segmented-control">
-          <button class="segment" type="button" [class.is-active]="activeLane === 'general'" (click)="setLane('general')">General</button>
-          <button class="segment" type="button" [class.is-active]="activeLane === 'callback'" (click)="setLane('callback')">Callback</button>
-          <button class="segment" type="button" [class.is-active]="activeLane === 'partner'" (click)="setLane('partner')">Partner</button>
-        </div>
-
-        <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
-        <p class="form-status is-error" *ngIf="error">{{ error }}</p>
-
-        <form class="form-grid" *ngIf="activeLane === 'general'" [formGroup]="generalForm" (ngSubmit)="submitGeneral()">
-          <label class="field">
-            <span>Full name <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="fullName" placeholder="Enter full name">
-            <small class="field-error" *ngIf="hasError('general', 'fullName')">Full name is required.</small>
-          </label>
-
-          <label class="field">
-            <span>Email address <strong class="required-mark">*</strong></span>
-            <input type="email" formControlName="email" placeholder="Enter email address">
-            <small class="field-error" *ngIf="hasError('general', 'email')">A valid email address is required.</small>
-          </label>
-
-          <label class="field">
-            <span>Phone number</span>
-            <input type="tel" formControlName="phone" placeholder="Enter phone number">
-          </label>
-
-          <label class="field">
-            <span>I am contacting as</span>
-            <select formControlName="audience">
-              <option *ngFor="let option of audienceOptions" [value]="option">{{ option }}</option>
-            </select>
-          </label>
-
-          <label class="field field-wide">
-            <span>Department to contact <strong class="required-mark">*</strong></span>
-            <select formControlName="departmentCode">
-              <option *ngFor="let department of departmentOptions" [value]="department.value">{{ department.label }}</option>
-            </select>
-          </label>
-
-          <label class="field field-wide">
-            <span>Subject <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="subject" placeholder="Add a short subject">
-            <small class="field-error" *ngIf="hasError('general', 'subject')">Subject is required.</small>
-          </label>
-
-          <label class="field field-wide">
-            <span>Message <strong class="required-mark">*</strong></span>
-            <textarea rows="7" formControlName="message" placeholder="Explain the question or support needed."></textarea>
-            <small class="field-error" *ngIf="hasError('general', 'message')">Please add a longer message.</small>
-          </label>
-
-          <div class="button-row form-actions field-wide">
-            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Sending..." : "Send enquiry" }}</button>
-          </div>
-        </form>
-
-        <form class="form-grid" *ngIf="activeLane === 'callback'" [formGroup]="callbackForm" (ngSubmit)="submitCallback()">
-          <label class="field">
-            <span>Full name <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="fullName" placeholder="Enter full name">
-            <small class="field-error" *ngIf="hasError('callback', 'fullName')">Full name is required.</small>
-          </label>
-
-          <label class="field">
-            <span>Phone number <strong class="required-mark">*</strong></span>
-            <input type="tel" formControlName="phone" placeholder="Enter phone number">
-            <small class="field-error" *ngIf="hasError('callback', 'phone')">Phone number is required.</small>
-          </label>
-
-          <label class="field">
-            <span>Email address</span>
-            <input type="email" formControlName="email" placeholder="Enter email address">
-            <small class="field-error" *ngIf="hasError('callback', 'email')">If used, the email must be valid.</small>
-          </label>
-
-          <label class="field">
-            <span>Best time to call</span>
-            <select formControlName="callbackWindow">
-              <option *ngFor="let window of callbackWindows" [value]="window">{{ window }}</option>
-            </select>
-          </label>
-
-          <label class="field">
-            <span>Service number</span>
-            <input type="text" formControlName="serviceNumber" placeholder="Enter service number if known">
-          </label>
-
-          <label class="field">
-            <span>Department to contact <strong class="required-mark">*</strong></span>
-            <select formControlName="departmentCode">
-              <option *ngFor="let department of departmentOptions" [value]="department.value">{{ department.label }}</option>
-            </select>
-          </label>
-
-          <label class="field field-wide">
-            <span>Reason for callback <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="reason" placeholder="Add a short callback reason">
-            <small class="field-error" *ngIf="hasError('callback', 'reason')">Reason is required.</small>
-          </label>
-
-          <label class="field field-wide">
-            <span>Message <strong class="required-mark">*</strong></span>
-            <textarea rows="7" formControlName="message" placeholder="Summarize the issue, next step, or question for the call."></textarea>
-            <small class="field-error" *ngIf="hasError('callback', 'message')">Please add a longer message.</small>
-          </label>
-
-          <div class="button-row form-actions field-wide">
-            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Sending..." : "Request callback" }}</button>
-          </div>
-        </form>
-
-        <form class="form-grid" *ngIf="activeLane === 'partner'" [formGroup]="partnerForm" (ngSubmit)="submitPartner()">
-          <label class="field">
-            <span>Organization name <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="organizationName" placeholder="Enter organization name">
-            <small class="field-error" *ngIf="hasError('partner', 'organizationName')">Organization name is required.</small>
-          </label>
-
-          <label class="field">
-            <span>Contact person <strong class="required-mark">*</strong></span>
-            <input type="text" formControlName="contactPerson" placeholder="Enter contact person">
-            <small class="field-error" *ngIf="hasError('partner', 'contactPerson')">Contact person is required.</small>
-          </label>
-
-          <label class="field">
-            <span>Email address <strong class="required-mark">*</strong></span>
-            <input type="email" formControlName="email" placeholder="Enter email address">
-            <small class="field-error" *ngIf="hasError('partner', 'email')">A valid email address is required.</small>
-          </label>
-
-          <label class="field">
-            <span>Phone number</span>
-            <input type="tel" formControlName="phone" placeholder="Enter phone number">
-          </label>
-
-          <label class="field">
-            <span>Website</span>
-            <input type="url" formControlName="website" placeholder="Enter website if available">
-          </label>
-
-          <label class="field">
-            <span>Contact lane <strong class="required-mark">*</strong></span>
-            <select formControlName="departmentCode">
-              <option *ngFor="let department of departmentOptions" [value]="department.value">{{ department.label }}</option>
-            </select>
-          </label>
-
-          <label class="field field-wide">
-            <span>Partnership type <strong class="required-mark">*</strong></span>
-            <select formControlName="partnershipType">
-              <option *ngFor="let type of partnershipTypes" [value]="type">{{ type }}</option>
-            </select>
-          </label>
-
-          <label class="field field-wide">
-            <span>Message <strong class="required-mark">*</strong></span>
-            <textarea rows="7" formControlName="message" placeholder="Describe the offer, partnership idea, or organization enquiry."></textarea>
-            <small class="field-error" *ngIf="hasError('partner', 'message')">Please add a longer message.</small>
-          </label>
-
-          <div class="button-row form-actions field-wide">
-            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Sending..." : "Send organization form" }}</button>
-          </div>
-        </form>
-
-        <p class="contact-inline-note">
-          Need a tracked request with status updates and dashboard follow-up? Use the application forms on the service pages instead.
-        </p>
-      </article>
-
-      <aside class="summary-card dark-card contact-guidance-card" appRevealOnScroll>
+    <div class="contact-side-stack">
+      <article class="contact-info-card contact-info-card--dark">
         <p class="card-kicker">{{ activeLaneDetail.kicker }}</p>
-        <h3>{{ activeLaneDetail.title }}</h3>
+        <h2>{{ activeLaneDetail.title }}</h2>
         <p>{{ activeLaneDetail.copy }}</p>
 
-        <ul class="icon-list">
+        <ul class="contact-info-list">
           <li *ngFor="let item of activeLaneDetail.checklist">{{ item }}</li>
         </ul>
+      </article>
 
-        <div class="pill-row">
-          <span class="tag">No sign-in required</span>
-          <span class="tag" *ngIf="auth.currentUser">Linked to your account</span>
+      <article class="contact-info-card">
+        <p class="card-kicker">Routing</p>
+        <h2>Current department selection</h2>
+        <div class="contact-info-metrics">
+          <div>
+            <span>Current lane</span>
+            <strong>{{ activeDepartmentLabel }}</strong>
+          </div>
+          <div>
+            <span>Portal access</span>
+            <strong>{{ auth.currentUser ? "Signed in but public form remains available" : "Public form access" }}</strong>
+          </div>
         </div>
-      </aside>
+      </article>
+    </div>
+  </section>
+
+  <section class="contact-support-grid" appRevealOnScroll>
+    <article class="contact-support-card" *ngFor="let panel of supportPanels">
+      <p class="card-kicker">Support note</p>
+      <h2>{{ panel.title }}</h2>
+      <p>{{ panel.detail }}</p>
+    </article>
+  </section>
+
+  <section class="contact-bottom-band" appRevealOnScroll>
+    <div>
+      <p class="card-kicker">Need to apply?</p>
+      <h2>Use the contact page for enquiries and the service pages for applications.</h2>
+      <p>
+        Records, pensions, insurance, funerals, jobs, welfare, and ID requests are submitted through the service pages.
+      </p>
+    </div>
+
+    <div class="contact-bottom-band__actions">
+      <a class="button button-secondary" routerLink="/dashboard">Open dashboard</a>
+      <a class="button button-primary" routerLink="/services">Open services</a>
     </div>
   </section>
 </main>

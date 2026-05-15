@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from "@angular/core";
 import { ActivatedRoute, Data, Router } from "@angular/router";
 import { AuthService } from "../../core/services/auth.service";
+import { ImageLightboxService } from "../../core/services/image-lightbox.service";
 import { EmploymentJobListing, PortalPageConfig, RequestFormConfig } from "../../models/app.models";
 import { PortalContentService } from "../../core/services/portal-content.service";
 import { PortalJobsService } from "../../core/services/portal-jobs.service";
@@ -490,7 +491,7 @@ const SUPPLEMENTS: Record<string, PortalSection[]> = {
             "Medical and retiree support requests route to the welfare side",
             "Mental health, home visits, and transport coordination stay in assistance support",
             "Funeral arrangements and final rites can be routed through the funerals service",
-            "Benefits, insurance, or ID-related issues can still be escalated to the correct page when needed",
+            "Benefits, insurance, or ID-related issues can be directed to the correct service area",
             "General queries, liaison, and outreach matters stay with Outreach and Communication"
           ],
           dark: true
@@ -598,7 +599,7 @@ const PAGE_ART_DIRECTION: Record<string, PortalArtDirectionConfig> = {
       {
         label: "Support cases",
         value: "Disability + Death Benefits",
-        detail: "High-support cases can still be tracked in the same secure workflow with welfare coordination where needed.",
+        detail: "High-support cases can be tracked with welfare coordination where required.",
         tone: "dark"
       }
     ],
@@ -611,7 +612,7 @@ const PAGE_ART_DIRECTION: Record<string, PortalArtDirectionConfig> = {
   insurance: {
     eyebrow: "Coverage Navigation",
     title: "Move from plan guidance into practical support without losing the details of the policy.",
-    copy: "This page is both a reference centre and a service lane, so coverage notes, premium tables, and support follow-up stay connected.",
+    copy: "Coverage notes, premium tables, and support follow-up stay connected here.",
     focusCards: [
       {
         label: "Core plan",
@@ -640,7 +641,7 @@ const PAGE_ART_DIRECTION: Record<string, PortalArtDirectionConfig> = {
   funerals: {
     eyebrow: "Family Coordination",
     title: "Keep burial, tombing, payment, and family support moving together during a difficult process.",
-    copy: "The funeral lane is designed to reduce handoffs by keeping service guidance, costs, and proof-of-payment follow-up in one place.",
+    copy: "Funeral guidance, costs, and proof-of-payment follow-up are kept together in one place.",
     focusCards: [
       {
         label: "Burial arrangements",
@@ -697,8 +698,8 @@ const PAGE_ART_DIRECTION: Record<string, PortalArtDirectionConfig> = {
   },
   welfare: {
     eyebrow: "Support Network",
-    title: "This lane is built for people, families, and support circles, not just a single applicant type.",
-    copy: "Welfare, outreach, and follow-up work best when the portal makes it clear who can ask for help and how the request will be routed.",
+    title: "Support is available for veterans, families, caregivers, and representatives.",
+    copy: "Welfare, outreach, and follow-up support are organized so each request reaches the correct department area.",
     focusCards: [
       {
         label: "Who can ask",
@@ -727,7 +728,7 @@ const PAGE_ART_DIRECTION: Record<string, PortalArtDirectionConfig> = {
   "id-guidance": {
     eyebrow: "Formal Guidance",
     title: "Treat the ID card as a controlled eligibility document with its own rules, access notes, and renewal conditions.",
-    copy: "The guidance page is designed to be read like an official reference sheet before the user opens the confirmed application form.",
+    copy: "Review the official guidance before opening the Veteran ID application form.",
     focusCards: [
       {
         label: "Eligibility",
@@ -786,7 +787,8 @@ export class PortalPageComponent implements OnInit {
     private readonly router: Router,
     private readonly content: PortalContentService,
     public readonly auth: AuthService,
-    private readonly portalJobs: PortalJobsService
+    private readonly portalJobs: PortalJobsService,
+    private readonly imageLightbox: ImageLightboxService
   ) {}
 
   ngOnInit(): void {
@@ -958,7 +960,7 @@ export class PortalPageComponent implements OnInit {
   }
 
   get focusTitle(): string {
-    return this.artDirection?.title || "Use the service lane that matches the request.";
+    return this.artDirection?.title || "Use the service area that matches the request.";
   }
 
   get focusCopy(): string {
@@ -1009,7 +1011,7 @@ export class PortalPageComponent implements OnInit {
       case "benefits":
         return "Retirement and benefits reference";
       case "insurance":
-        return "Insurance reference imagery";
+        return "Insurance guidance material";
       case "funerals":
         return "Funeral support visual";
       case "employment":
@@ -1062,6 +1064,14 @@ export class PortalPageComponent implements OnInit {
 
   jobPostedAt(job: EmploymentJobListing): string {
     return String(job.postedAt || job.posted_at || "");
+  }
+
+  openMediaItem(item: PortalMediaItem): void {
+    this.imageLightbox.open({
+      src: item.imageUrl,
+      title: item.title,
+      alt: item.alt
+    });
   }
 
   createEmploymentJob(): void {

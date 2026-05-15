@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthService } from "../../core/services/auth.service";
 import { GalleryService } from "../../core/services/gallery.service";
+import { ImageLightboxService } from "../../core/services/image-lightbox.service";
 import { CurrentUser, GalleryImage } from "../../models/app.models";
 
 @Component({
@@ -31,7 +32,8 @@ export class ManageGalleryPageComponent implements OnInit {
     private readonly auth: AuthService,
     private readonly router: Router,
     private readonly formBuilder: FormBuilder,
-    private readonly galleryService: GalleryService
+    private readonly galleryService: GalleryService,
+    private readonly imageLightbox: ImageLightboxService
   ) {}
 
   ngOnInit(): void {
@@ -176,6 +178,20 @@ export class ManageGalleryPageComponent implements OnInit {
 
   trackByGalleryImage(_index: number, image: GalleryImage): number {
     return Number(image.galleryImageId || 0);
+  }
+
+  openImage(image: GalleryImage): void {
+    const imageUrl = String(image.imageUrl || "").trim();
+
+    if (!imageUrl) {
+      return;
+    }
+
+    this.imageLightbox.open({
+      src: imageUrl,
+      title: image.title,
+      alt: image.altText || image.title
+    });
   }
 
   private handleUser(user: CurrentUser | null): void {

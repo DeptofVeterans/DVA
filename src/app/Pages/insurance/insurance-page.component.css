@@ -1,0 +1,411 @@
+.insurance-page {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.insurance-hero {
+  padding: 2.4rem 2.3rem;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 30%),
+    linear-gradient(135deg, rgba(15, 48, 70, 0.98), rgba(23, 58, 41, 0.96) 62%, rgba(33, 92, 66, 0.94));
+  border: 1px solid rgba(214, 182, 106, 0.18);
+  box-shadow: 0 24px 46px rgba(16, 26, 28, 0.22);
+}
+
+.insurance-hero__copy {
+  max-width: 48rem;
+}
+
+.insurance-hero h1 {
+  margin: 0;
+  color: #fff4de;
+  font-size: clamp(2.6rem, 5vw, 4.1rem);
+  line-height: 0.96;
+  max-width: 13ch;
+}
+
+.insurance-hero__lead {
+  margin: 1rem 0 0;
+  color: rgba(246, 241, 231, 0.9);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  max-width: 41rem;
+}
+
+.insurance-hero__tags,
+.insurance-hero__actions,
+.insurance-support-options,
+.insurance-tool-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.insurance-hero__tags {
+  margin-top: 1.35rem;
+}
+
+.insurance-hero__tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 244, 222, 0.1);
+  border: 1px solid rgba(255, 244, 222, 0.14);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.insurance-hero__actions {
+  margin-top: 1.45rem;
+}
+
+.insurance-policy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.insurance-policy-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1.35rem;
+  border-radius: 26px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  color: inherit;
+  text-align: left;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.insurance-policy-card:hover,
+.insurance-policy-card.is-active {
+  transform: translateY(-2px);
+  border-color: rgba(33, 92, 66, 0.28);
+  box-shadow: 0 24px 42px rgba(15, 23, 42, 0.12);
+}
+
+.insurance-policy-card.is-active {
+  background: linear-gradient(135deg, rgba(239, 248, 244, 0.98), rgba(251, 247, 235, 0.96));
+}
+
+.insurance-policy-card p,
+.insurance-policy-card h2,
+.insurance-policy-card span,
+.insurance-policy-card strong {
+  margin: 0;
+}
+
+.insurance-policy-card p {
+  color: #8a6618;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.insurance-policy-card h2 {
+  color: var(--heading);
+  font-size: 1.4rem;
+  line-height: 1.05;
+  max-width: 12ch;
+}
+
+.insurance-policy-card span {
+  color: var(--heading);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.insurance-policy-card strong {
+  color: var(--text-soft);
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+.insurance-detail-grid,
+.insurance-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.insurance-benefits-card,
+.insurance-support-card,
+.insurance-tool-card {
+  padding: 1.6rem;
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.insurance-benefits-card,
+.insurance-tool-card {
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.insurance-support-card {
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 35%),
+    linear-gradient(155deg, rgba(23, 58, 41, 0.98), rgba(14, 42, 59, 0.96));
+  border-color: rgba(214, 182, 106, 0.18);
+}
+
+.insurance-benefits-card h2,
+.insurance-support-card h2,
+.insurance-section-heading h2,
+.insurance-tool-card h2 {
+  margin: 0;
+  color: var(--heading);
+  font-size: clamp(1.45rem, 2.6vw, 2rem);
+  line-height: 1.06;
+}
+
+.insurance-support-card h2,
+.insurance-support-card .card-kicker,
+.insurance-support-card strong,
+.insurance-support-card span,
+.insurance-support-card p {
+  color: #fff4de;
+}
+
+.insurance-panel-copy {
+  margin: 0.7rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.72;
+}
+
+.insurance-support-card .insurance-panel-copy {
+  color: rgba(255, 244, 222, 0.86);
+}
+
+.insurance-benefits-list,
+.insurance-checklist {
+  margin: 1rem 0 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.7rem;
+  line-height: 1.72;
+}
+
+.insurance-benefits-list strong {
+  color: var(--heading);
+}
+
+.insurance-support-chip {
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 244, 222, 0.18);
+  background: rgba(255, 244, 222, 0.08);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.insurance-support-chip.is-active {
+  background: rgba(255, 244, 222, 0.18);
+  border-color: rgba(255, 244, 222, 0.32);
+}
+
+.insurance-support-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.1rem;
+}
+
+.insurance-support-metrics div {
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: rgba(255, 244, 222, 0.08);
+  border: 1px solid rgba(255, 244, 222, 0.12);
+}
+
+.insurance-support-metrics span,
+.insurance-support-metrics strong {
+  display: block;
+}
+
+.insurance-support-metrics span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.insurance-support-metrics strong {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.insurance-support-actions {
+  margin-top: 1.2rem;
+}
+
+.insurance-sections {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.insurance-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.insurance-section-heading {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.insurance-section-heading p:last-child {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.7;
+  max-width: 48rem;
+}
+
+.insurance-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.insurance-info-card,
+.insurance-table-card {
+  padding: 1.35rem;
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.insurance-info-card.is-dark {
+  background: linear-gradient(155deg, rgba(23, 58, 41, 0.98), rgba(14, 42, 59, 0.96));
+  border-color: rgba(214, 182, 106, 0.16);
+}
+
+.insurance-info-card.is-dark h3,
+.insurance-info-card.is-dark p,
+.insurance-info-card.is-dark li,
+.insurance-info-card.is-dark .card-kicker {
+  color: #fff4de;
+}
+
+.insurance-info-card h3 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 1.08rem;
+}
+
+.insurance-info-card p {
+  margin: 0.55rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.insurance-table-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.insurance-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.insurance-data-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.insurance-data-table th,
+.insurance-data-table td {
+  padding: 0.78rem 0.9rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  text-align: left;
+  vertical-align: top;
+}
+
+.insurance-data-table th {
+  background: rgba(250, 247, 240, 0.95);
+  color: var(--heading);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.insurance-data-table td {
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.insurance-data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.insurance-table-note {
+  margin: 0.75rem 0 0;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+
+.insurance-tool-card--primary {
+  background: linear-gradient(135deg, rgba(251, 246, 233, 0.98), rgba(247, 239, 213, 0.96));
+  border-color: rgba(214, 182, 106, 0.28);
+}
+
+.insurance-tool-card p {
+  margin: 0.7rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.72;
+}
+
+.insurance-tool-links {
+  margin-top: 1.25rem;
+}
+
+.insurance-request-modal {
+  width: min(940px, calc(100vw - 28px));
+}
+
+.insurance-request-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+  padding-right: 0.1rem;
+}
+
+@media (max-width: 1100px) {
+  .insurance-policy-grid,
+  .insurance-detail-grid,
+  .insurance-tools,
+  .insurance-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .insurance-hero,
+  .insurance-benefits-card,
+  .insurance-support-card,
+  .insurance-tool-card,
+  .insurance-info-card,
+  .insurance-table-card {
+    padding: 1.2rem;
+    border-radius: 22px;
+  }
+
+  .insurance-support-metrics {
+    grid-template-columns: 1fr;
+  }
+}

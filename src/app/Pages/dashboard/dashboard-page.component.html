@@ -45,7 +45,7 @@
         Upload a government-issued identification image so requests that require verification can continue.
       </p>
       <p class="section-copy" *ngIf="isStaff">
-        Review identity submissions before protected requests move further through the service workflow.
+        Review identity submissions before protected requests move further through service review.
       </p>
     </div>
 
@@ -176,7 +176,7 @@
   <section class="section" appRevealOnScroll>
     <div class="section-heading">
       <p class="eyebrow">{{ isVeteran ? "My Requests" : "Department Queue" }}</p>
-      <h2>{{ isVeteran ? "Track your submitted requests by service type." : "Review requests in separate service lanes by request type." }}</h2>
+      <h2>{{ isVeteran ? "Track your submitted requests by service type." : "Review requests by service type." }}</h2>
     </div>
 
     <p class="form-status is-success" *ngIf="feedback">{{ feedback }}</p>
@@ -190,7 +190,7 @@
           <div>
             <p class="card-kicker">{{ lane.departmentName }}</p>
             <h3>{{ lane.requestTypeName }}</h3>
-            <p class="section-copy">{{ requestCountLabel(lane.requests.length) }} in this service lane.</p>
+            <p class="section-copy">{{ requestCountLabel(lane.requests.length) }} in this service area.</p>
           </div>
           <span class="tag">{{ lane.requests.length }}</span>
         </div>

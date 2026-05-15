@@ -12,6 +12,7 @@ import { RequestsService } from "../../../core/services/requests.service";
 })
 export class RequestFormComponent implements OnChanges {
   @Input() config?: RequestFormConfig;
+  @Input() initialValues?: Record<string, unknown>;
 
   form: FormGroup = this.formBuilder.group({});
   submitting = false;
@@ -38,6 +39,12 @@ export class RequestFormComponent implements OnChanges {
 
       this.form = this.formBuilder.group(controls);
       this.applyUserDefaults();
+      this.applyInitialValues();
+      return;
+    }
+
+    if (changes["initialValues"] && this.config) {
+      this.applyInitialValues();
     }
   }
 
@@ -77,6 +84,7 @@ export class RequestFormComponent implements OnChanges {
         this.feedback = `Request submitted successfully. Reference ${response.publicUuid}.`;
         this.form.reset();
         this.applyUserDefaults();
+        this.applyInitialValues();
         this.submitting = false;
       },
       error: (error) => {
@@ -115,6 +123,22 @@ export class RequestFormComponent implements OnChanges {
       if (this.form.contains(key) && !this.form.get(key)?.value) {
         this.form.get(key)?.setValue(value);
       }
+    });
+  }
+
+  private applyInitialValues(): void {
+    if (!this.initialValues) {
+      return;
+    }
+
+    Object.entries(this.initialValues).forEach(([key, value]) => {
+      const control = this.form.get(key);
+
+      if (!control || !this.form.contains(key) || control.value || value === undefined || value === null) {
+        return;
+      }
+
+      control.setValue(value);
     });
   }
 }

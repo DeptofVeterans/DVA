@@ -1,0 +1,23 @@
+<ng-container *ngIf="lightbox.state$ | async as state">
+  <div class="image-lightbox-backdrop" (click)="close()">
+    <section
+      class="image-lightbox-card"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="state.title || 'Image preview'"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="image-lightbox-head">
+        <div class="image-lightbox-copy">
+          <p class="image-lightbox-kicker">Image preview</p>
+          <h2>{{ state.title || "Preview" }}</h2>
+        </div>
+        <button class="button button-ghost image-lightbox-close" type="button" (click)="close()">Close</button>
+      </div>
+
+      <div class="image-lightbox-body">
+        <img [src]="state.src" [alt]="state.alt || state.title || 'Image preview'">
+      </div>
+    </section>
+  </div>
+</ng-container>

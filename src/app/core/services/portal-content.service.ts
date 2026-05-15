@@ -237,21 +237,21 @@ export class PortalContentService {
             { label: "Representative", value: "Representative" }
           ]
         },
-        {
-          key: "requestTypeCode",
-          label: "Support needed",
-          type: "select",
-          required: true,
-          options: [
-            { label: "Resume creation support", value: "EMPLOYMENT_SUPPORT_REQUEST" },
-            { label: "Interviewing workshop", value: "EMPLOYMENT_SUPPORT_REQUEST" },
-            { label: "Resettlement plan", value: "EMPLOYMENT_SUPPORT_REQUEST" },
-            { label: "Job Bank support", value: "JOB_OPPORTUNITY_REQUEST" },
-            { label: "Job placement assistance", value: "JOB_OPPORTUNITY_REQUEST" },
-            { label: "Job opportunities intake", value: "JOB_OPPORTUNITY_REQUEST" },
-            { label: "Employer introduction request", value: "JOB_OPPORTUNITY_REQUEST" }
-          ]
-        },
+          {
+            key: "requestTypeCode",
+            label: "Support needed",
+            type: "select",
+            required: true,
+            options: [
+              { label: "Resume creation support", value: "RESUME_CREATION_SUPPORT" },
+              { label: "Interviewing workshop", value: "INTERVIEWING_WORKSHOP" },
+              { label: "Resettlement plan", value: "RESETTLEMENT_PLAN" },
+              { label: "Job Bank support", value: "JOB_BANK_SUPPORT" },
+              { label: "Job placement assistance", value: "JOB_PLACEMENT_ASSISTANCE" },
+              { label: "Job opportunities intake", value: "JOB_OPPORTUNITIES_INTAKE" },
+              { label: "Employer introduction request", value: "EMPLOYER_INTRODUCTION_REQUEST" }
+            ]
+          },
         {
           key: "appointment_style",
           label: "Appointment style",
@@ -286,8 +286,20 @@ export class PortalContentService {
           placeholder: "Summarize your employment goals, current resume status, and what support you want from the team."
         }
       ],
-      resolveRequestTypeCode: (value) => String(value["requestTypeCode"] || "EMPLOYMENT_SUPPORT_REQUEST")
-    },
+        resolveRequestTypeCode: (value) => {
+          const selected = String(value["requestTypeCode"] || "RESUME_CREATION_SUPPORT");
+          const jobOpportunitySelections = [
+            "JOB_BANK_SUPPORT",
+            "JOB_PLACEMENT_ASSISTANCE",
+            "JOB_OPPORTUNITIES_INTAKE",
+            "EMPLOYER_INTRODUCTION_REQUEST"
+          ];
+
+          return jobOpportunitySelections.includes(selected)
+            ? "JOB_OPPORTUNITY_REQUEST"
+            : "EMPLOYMENT_SUPPORT_REQUEST";
+        }
+      },
     welfare: {
       title: "Request welfare or outreach support",
       description: "Use this form for welfare assistance, outreach, family support, home visits, and general veteran follow-up.",

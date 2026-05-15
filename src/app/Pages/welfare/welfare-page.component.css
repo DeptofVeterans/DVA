@@ -1,0 +1,351 @@
+.welfare-page {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.welfare-hero {
+  padding: 2.45rem 2.35rem;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 31%),
+    linear-gradient(135deg, rgba(21, 54, 44, 0.98), rgba(30, 84, 67, 0.96) 58%, rgba(82, 114, 54, 0.94));
+  border: 1px solid rgba(214, 182, 106, 0.18);
+  box-shadow: 0 24px 46px rgba(17, 28, 23, 0.22);
+}
+
+.welfare-hero__copy {
+  max-width: 49rem;
+}
+
+.welfare-hero h1 {
+  margin: 0;
+  color: #fff4de;
+  font-size: clamp(2.55rem, 5vw, 4.1rem);
+  line-height: 0.96;
+  max-width: 13ch;
+}
+
+.welfare-hero__lead {
+  margin: 1rem 0 0;
+  color: rgba(255, 244, 222, 0.9);
+  font-size: 1.05rem;
+  line-height: 1.76;
+  max-width: 43rem;
+}
+
+.welfare-hero__tags,
+.welfare-hero__actions,
+.welfare-routing-chips,
+.welfare-routing-actions,
+.welfare-program-actions,
+.welfare-tools-actions,
+.welfare-help-band__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.welfare-hero__tags {
+  margin-top: 1.3rem;
+}
+
+.welfare-hero__tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.82rem;
+  border-radius: 999px;
+  background: rgba(255, 244, 222, 0.1);
+  border: 1px solid rgba(255, 244, 222, 0.14);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.welfare-hero__actions {
+  margin-top: 1.45rem;
+}
+
+.welfare-summary-grid,
+.welfare-detail-grid,
+.welfare-program-grid,
+.welfare-tools-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.welfare-summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.welfare-summary-card,
+.welfare-focus-card,
+.welfare-routing-card,
+.welfare-program-card,
+.welfare-tools-card,
+.welfare-help-band {
+  padding: 1.55rem;
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.welfare-summary-card h2,
+.welfare-panel-head h2,
+.welfare-section-heading h2,
+.welfare-tools-card h2,
+.welfare-help-band h2 {
+  margin: 0;
+  color: var(--heading);
+}
+
+.welfare-summary-card h2,
+.welfare-panel-head h2,
+.welfare-section-heading h2,
+.welfare-tools-card h2,
+.welfare-help-band h2 {
+  font-size: clamp(1.45rem, 2.7vw, 2rem);
+  line-height: 1.06;
+}
+
+.welfare-summary-card p:not(.card-kicker),
+.welfare-panel-copy,
+.welfare-audience-item p,
+.welfare-section-heading p:last-child,
+.welfare-program-card p:not(.card-kicker),
+.welfare-tools-list p,
+.welfare-help-band p:not(.card-kicker) {
+  margin: 0.7rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.72;
+}
+
+.welfare-summary-card span {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1rem;
+  min-height: 2rem;
+  padding: 0.32rem 0.78rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.welfare-summary-card--gold span {
+  background: rgba(214, 182, 106, 0.16);
+  color: #7a5a15;
+}
+
+.welfare-summary-card--green span {
+  background: rgba(48, 128, 91, 0.14);
+  color: #1f5e43;
+}
+
+.welfare-summary-card--ink span {
+  background: rgba(58, 86, 136, 0.12);
+  color: #29466d;
+}
+
+.welfare-detail-grid,
+.welfare-tools-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.welfare-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.welfare-audience-list {
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 1rem;
+}
+
+.welfare-audience-item {
+  padding: 1rem 1.05rem;
+  border-radius: 20px;
+  background: rgba(248, 245, 236, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.welfare-audience-item h3,
+.welfare-program-card h3,
+.welfare-tools-list h3 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 1rem;
+}
+
+.welfare-routing-card {
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 36%),
+    linear-gradient(155deg, rgba(23, 58, 41, 0.98), rgba(19, 47, 61, 0.96));
+  border-color: rgba(214, 182, 106, 0.18);
+}
+
+.welfare-routing-card h2,
+.welfare-routing-card .card-kicker,
+.welfare-routing-card strong,
+.welfare-routing-card span,
+.welfare-routing-card p {
+  color: #fff4de;
+}
+
+.welfare-routing-chip {
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 244, 222, 0.18);
+  background: rgba(255, 244, 222, 0.08);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.welfare-routing-chip.is-active {
+  background: rgba(255, 244, 222, 0.18);
+  border-color: rgba(255, 244, 222, 0.3);
+}
+
+.welfare-routing-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.1rem;
+}
+
+.welfare-routing-metrics div {
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: rgba(255, 244, 222, 0.08);
+  border: 1px solid rgba(255, 244, 222, 0.12);
+}
+
+.welfare-routing-metrics span,
+.welfare-routing-metrics strong {
+  display: block;
+}
+
+.welfare-routing-metrics span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.welfare-routing-metrics strong {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.welfare-lanes-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.welfare-section-heading {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.welfare-program-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.welfare-program-card {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.welfare-program-actions {
+  margin-top: 0.7rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.welfare-tools-card--dark {
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 34%),
+    linear-gradient(150deg, rgba(37, 79, 59, 0.98), rgba(23, 58, 41, 0.98));
+  border-color: rgba(214, 182, 106, 0.16);
+}
+
+.welfare-tools-card--dark h2,
+.welfare-tools-card--dark .card-kicker,
+.welfare-tools-card--dark h3,
+.welfare-tools-card--dark p {
+  color: #fff4de;
+}
+
+.welfare-tools-list {
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 1rem;
+}
+
+.welfare-tools-list article {
+  padding: 1rem 1.05rem;
+  border-radius: 20px;
+  background: rgba(255, 244, 222, 0.08);
+  border: 1px solid rgba(255, 244, 222, 0.12);
+}
+
+.welfare-help-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(250, 247, 240, 0.98), rgba(241, 248, 244, 0.98));
+}
+
+.welfare-request-modal {
+  width: min(980px, 100%);
+}
+
+.welfare-request-body {
+  margin-top: 1rem;
+}
+
+@media (max-width: 1120px) {
+  .welfare-summary-grid,
+  .welfare-detail-grid,
+  .welfare-program-grid,
+  .welfare-tools-grid,
+  .welfare-help-band {
+    grid-template-columns: 1fr;
+  }
+
+  .welfare-routing-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .welfare-hero,
+  .welfare-summary-card,
+  .welfare-focus-card,
+  .welfare-routing-card,
+  .welfare-program-card,
+  .welfare-tools-card,
+  .welfare-help-band {
+    padding: 1.35rem;
+    border-radius: 24px;
+  }
+
+  .welfare-hero h1 {
+    max-width: 12ch;
+    font-size: clamp(2.25rem, 12vw, 3.3rem);
+  }
+
+  .welfare-program-actions,
+  .welfare-panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

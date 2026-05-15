@@ -16,6 +16,10 @@
 
 .manage-gallery-page .gallery-manage-media {
   display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
   min-height: 240px;
   overflow: hidden;
   background: rgba(16, 32, 22, 0.08);
@@ -38,6 +42,13 @@
 
 .manage-gallery-page .gallery-manage-actions {
   margin-top: 0.9rem;
+}
+
+.manage-gallery-page .gallery-manage-actions .text-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
 @media (max-width: 1024px) {

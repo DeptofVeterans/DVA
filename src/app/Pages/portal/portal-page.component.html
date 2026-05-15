@@ -40,17 +40,16 @@
 
         <div class="image-slot-frame image-slot-frame-has-media" *ngIf="pageMediaItems.length">
           <div class="image-slot-media-tiles">
-            <a
+            <button
               class="image-slot-media-link"
+              type="button"
               *ngFor="let item of pageMediaItems"
-              [href]="item.imageUrl"
-              target="_blank"
-              rel="noopener"
+              (click)="openMediaItem(item)"
               [attr.aria-label]="'Open full image for ' + item.title"
             >
               <img [src]="item.imageUrl" [alt]="item.alt">
               <span class="image-slot-open-chip">Open image</span>
-            </a>
+            </button>
           </div>
 
           <div class="image-slot-copy image-slot-copy-static">
@@ -401,7 +400,7 @@
           <ul class="checklist">
             <li>Use your private dashboard to follow status changes and ready-for-pickup alerts.</li>
             <li>Staff actions are restricted by department while oversight roles can manage broader queues.</li>
-            <li>Supporting uploads and funeral receipts stay inside the secure request workflow.</li>
+            <li>Supporting uploads and funeral receipts stay attached to the request.</li>
           </ul>
         </article>
       </div>

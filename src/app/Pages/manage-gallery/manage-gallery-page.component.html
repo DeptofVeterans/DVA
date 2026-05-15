@@ -121,9 +121,9 @@
 
     <div class="gallery-manage-grid" *ngIf="galleryImages.length">
       <article class="feature-card gallery-manage-card" *ngFor="let image of galleryImages; trackBy: trackByGalleryImage" appRevealOnScroll>
-        <a class="gallery-manage-media" [href]="image.imageUrl" target="_blank" rel="noopener">
+        <button class="gallery-manage-media" type="button" (click)="openImage(image)">
           <img [src]="image.imageUrl" [alt]="image.altText || image.title">
-        </a>
+        </button>
         <div class="gallery-manage-copy">
           <div class="workspace-row-top">
             <div>
@@ -141,7 +141,7 @@
           <p class="gallery-image-date" *ngIf="image.activityDate">{{ image.activityDate | date:'longDate' }}</p>
 
           <div class="button-row compact-row gallery-manage-actions">
-            <a class="text-link" [href]="image.imageUrl" target="_blank" rel="noopener">Open image</a>
+            <button class="text-link" type="button" (click)="openImage(image)">Open image</button>
             <button class="button button-secondary" type="button" *ngIf="!(image.isPublished || image.is_published)" (click)="setPublished(image, true)">Publish</button>
             <button class="button button-ghost" type="button" *ngIf="image.isPublished || image.is_published" (click)="setPublished(image, false)">Unpublish</button>
             <button class="button button-secondary" type="button" *ngIf="!(image.isFeatured || image.is_featured)" (click)="setFeatured(image, true)">Feature</button>

@@ -19,6 +19,11 @@ interface ContactLaneDetail {
   checklist: string[];
 }
 
+interface ContactSupportPanel {
+  title: string;
+  detail: string;
+}
+
 @Component({
   selector: "app-contact-page",
   templateUrl: "./contact-page.component.html",
@@ -115,6 +120,21 @@ export class ContactPageComponent implements OnInit {
     }
   };
 
+  readonly supportPanels: ContactSupportPanel[] = [
+    {
+      title: "Public access",
+      detail: "Anyone can use the contact page, whether signed in or not."
+    },
+    {
+      title: "Secure requests stay separate",
+      detail: "Applications with status updates are submitted through the service pages."
+    },
+    {
+      title: "Right lane, faster routing",
+      detail: "Choosing the correct contact lane helps the department answer faster and more clearly."
+    }
+  ];
+
   readonly generalForm = this.formBuilder.group({
     fullName: ["", Validators.required],
     email: ["", [Validators.required, Validators.email]],
@@ -159,6 +179,13 @@ export class ContactPageComponent implements OnInit {
 
   get activeLaneDetail(): ContactLaneDetail {
     return this.laneDetails[this.activeLane];
+  }
+
+  get activeDepartmentLabel(): string {
+    const laneForm = this.getLaneForm(this.activeLane);
+    const departmentCode = String(laneForm.get("departmentCode")?.value || "");
+    const match = this.departmentOptions.find((item) => item.value === departmentCode);
+    return match?.label || "Department contact";
   }
 
   setLane(lane: ContactLane): void {

@@ -16,6 +16,10 @@ export class AuthPageComponent implements OnInit {
   accountType: "veteran" | "staff" = "veteran";
   departments: Department[] = [];
   showBootstrapPanel = false;
+  showLoginPassword = false;
+  showVeteranPassword = false;
+  showStaffPassword = false;
+  showBootstrapPassword = false;
   submitting = false;
   feedback = "";
   error = "";
@@ -88,6 +92,25 @@ export class AuthPageComponent implements OnInit {
     this.accountType = accountType;
     this.feedback = "";
     this.error = "";
+  }
+
+  togglePasswordVisibility(target: "login" | "veteran" | "staff" | "bootstrap"): void {
+    switch (target) {
+      case "login":
+        this.showLoginPassword = !this.showLoginPassword;
+        break;
+      case "veteran":
+        this.showVeteranPassword = !this.showVeteranPassword;
+        break;
+      case "staff":
+        this.showStaffPassword = !this.showStaffPassword;
+        break;
+      case "bootstrap":
+        this.showBootstrapPassword = !this.showBootstrapPassword;
+        break;
+      default:
+        break;
+    }
   }
 
   submitLogin(): void {

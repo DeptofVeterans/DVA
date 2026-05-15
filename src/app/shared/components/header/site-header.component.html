@@ -1,4 +1,4 @@
-<header class="site-header" [class.mobile-menu-open]="navOpen">
+<header class="site-header" [class.mobile-menu-open]="navOpen" [class.site-header--signed-in]="!!currentUser">
   <a class="brand" routerLink="/" aria-label="Veterans Affairs Jamaica portal home" (click)="closeNav()">
     <span class="brand-mark brand-mark-logo" aria-hidden="true">
       <img class="brand-logo-image" src="assets/logo-salute-copy.png" alt="">
@@ -27,8 +27,7 @@
     <a
       *ngFor="let item of navItems"
       [routerLink]="item.route"
-      routerLinkActive="is-active"
-      [routerLinkActiveOptions]="{ exact: item.exact !== false }"
+      [class.is-active]="isNavActive(item)"
       (click)="closeNav()"
     >
       {{ item.label }}
@@ -56,8 +55,7 @@
       <a
         *ngFor="let item of navItems"
         [routerLink]="item.route"
-        routerLinkActive="is-active"
-        [routerLinkActiveOptions]="{ exact: item.exact !== false }"
+        [class.is-active]="isNavActive(item)"
         (click)="closeNav()"
       >
         {{ item.label }}

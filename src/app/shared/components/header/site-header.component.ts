@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Router } from "@angular/router";
 import { CurrentUser } from "../../../models/app.models";
 
 interface NavItem {
@@ -9,7 +10,8 @@ interface NavItem {
 
 @Component({
   selector: "app-site-header",
-  templateUrl: "./site-header.component.html"
+  templateUrl: "./site-header.component.html",
+  styleUrls: ["./site-header.component.css"]
 })
 export class SiteHeaderComponent {
   @Input() currentUser: CurrentUser | null = null;
@@ -20,18 +22,26 @@ export class SiteHeaderComponent {
 
   navOpen = false;
 
+  constructor(private readonly router: Router) {}
+
   readonly navItems: NavItem[] = [
     { label: "Home", route: "/", exact: true },
+    { label: "Services", route: "/services", exact: false },
     { label: "Roadmap", route: "/roadmap" },
-    { label: "Records", route: "/records" },
-    { label: "Pensions", route: "/pensions" },
-    { label: "Insurance", route: "/insurance" },
-    { label: "Funerals", route: "/funerals" },
-    { label: "ID", route: "/id" },
-    { label: "Employment", route: "/employment" },
-    { label: "Welfare", route: "/welfare" },
     { label: "Gallery", route: "/gallery" },
     { label: "Contact", route: "/contact" }
+  ];
+
+  private readonly groupedServiceRoutes = [
+    "/records",
+    "/pensions",
+    "/benefits",
+    "/insurance",
+    "/funerals",
+    "/id",
+    "/id-application",
+    "/employment",
+    "/welfare"
   ];
 
   toggleNav(): void {
@@ -44,5 +54,15 @@ export class SiteHeaderComponent {
 
   get unreadAlertsLabel(): string {
     return this.unreadAlerts > 99 ? "99+" : String(this.unreadAlerts);
+  }
+
+  isNavActive(item: NavItem): boolean {
+    const currentUrl = this.router.url.split("?")[0].split("#")[0];
+
+    if (item.route === "/services") {
+      return currentUrl === "/services" || this.groupedServiceRoutes.some((route) => currentUrl === route);
+    }
+
+    return item.exact === true ? currentUrl === item.route : currentUrl.startsWith(item.route);
   }
 }

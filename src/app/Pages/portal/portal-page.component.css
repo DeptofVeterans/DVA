@@ -199,6 +199,10 @@
 .image-slot-media-link {
   position: relative;
   display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
   min-height: 150px;
   overflow: hidden;
   border-radius: 18px;

@@ -1,0 +1,44 @@
+<main class="page-shell services-page">
+  <section class="services-hero" appRevealOnScroll>
+    <div class="services-hero__copy">
+      <p class="eyebrow">Veteran services</p>
+      <h1>Veteran services arranged by the retirement roadmap.</h1>
+      <p>
+        Start with records, prepare benefits before ROD, handle identification and family support at the right time,
+        then continue into insurance, jobs, and welfare support after service.
+      </p>
+      <div class="button-row">
+        <a class="button button-primary" routerLink="/roadmap">View roadmap</a>
+        <a class="button button-secondary" [routerLink]="auth.isAuthenticated ? '/dashboard' : '/signin'">
+          {{ auth.isAuthenticated ? "Open dashboard" : "Sign in to apply" }}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="services-flow" aria-label="Veteran service groups">
+    <article
+      class="services-flow-group"
+      *ngFor="let group of flowGroups"
+      [ngClass]="'services-flow-group--' + group.tone"
+      appRevealOnScroll
+    >
+      <div class="services-flow-group__head">
+        <p class="card-kicker">{{ group.eyebrow }}</p>
+        <h2>{{ group.title }}</h2>
+        <p>{{ group.description }}</p>
+      </div>
+
+      <div class="services-flow-group__items">
+        <a class="services-flow-item" *ngFor="let item of group.items" [routerLink]="item.route">
+          <span class="services-flow-item__mark" aria-hidden="true"></span>
+          <span class="services-flow-item__copy">
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.description }}</span>
+          </span>
+          <span class="services-flow-item__action">{{ item.action }}</span>
+        </a>
+      </div>
+    </article>
+  </section>
+</main>

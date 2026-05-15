@@ -1,0 +1,522 @@
+.funerals-page {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.funerals-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+  gap: 1.4rem;
+  align-items: stretch;
+  padding: 2.5rem 2.35rem;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.16), transparent 32%),
+    linear-gradient(140deg, rgba(22, 36, 32, 0.98), rgba(39, 56, 49, 0.97) 60%, rgba(76, 97, 50, 0.92));
+  border: 1px solid rgba(214, 182, 106, 0.18);
+  box-shadow: 0 24px 46px rgba(17, 22, 20, 0.24);
+}
+
+.funerals-hero__copy {
+  max-width: 48rem;
+}
+
+.funerals-hero__media {
+  position: relative;
+  width: min(100%, 340px);
+  min-height: 100%;
+  aspect-ratio: 0.88;
+  justify-self: end;
+  align-self: center;
+  overflow: hidden;
+  padding: 0.8rem;
+  cursor: pointer;
+  border: 1px solid rgba(255, 244, 222, 0.12);
+  background:
+    linear-gradient(180deg, rgba(12, 24, 18, 0.14), rgba(12, 24, 18, 0.32)),
+    rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 244, 222, 0.08);
+  clip-path: polygon(50% 0%, 95% 30%, 82% 100%, 18% 100%, 5% 30%);
+}
+
+.funerals-hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(13, 25, 18, 0.08), rgba(13, 25, 18, 0.34)),
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.14), transparent 32%);
+  pointer-events: none;
+}
+
+.funerals-hero__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  object-fit: cover;
+  clip-path: polygon(50% 0%, 95% 30%, 82% 100%, 18% 100%, 5% 30%);
+  transform: scale(0.9);
+  transform-origin: center;
+}
+
+.funerals-hero h1 {
+  margin: 0;
+  color: #fff4de;
+  font-size: clamp(2.55rem, 5vw, 4.15rem);
+  line-height: 0.96;
+  max-width: 12ch;
+}
+
+.funerals-hero__lead {
+  margin: 1rem 0 0;
+  color: rgba(250, 243, 231, 0.9);
+  font-size: 1.06rem;
+  line-height: 1.76;
+  max-width: 42rem;
+}
+
+.funerals-hero__tags,
+.funerals-hero__actions,
+.funerals-support-chips,
+.funerals-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.funerals-hero__tags {
+  margin-top: 1.3rem;
+}
+
+.funerals-hero__tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.82rem;
+  border-radius: 999px;
+  background: rgba(255, 244, 222, 0.1);
+  border: 1px solid rgba(255, 244, 222, 0.14);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.funerals-hero__actions {
+  margin-top: 1.45rem;
+}
+
+.funerals-urgent-callout {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.35rem 1.45rem;
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(243, 248, 255, 0.98), rgba(250, 247, 240, 0.98));
+  border: 1px solid rgba(75, 106, 151, 0.18);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.funerals-urgent-callout__mark {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(75, 106, 151, 0.12);
+  color: var(--heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.funerals-urgent-callout__copy h2,
+.funerals-process-card h2,
+.funerals-detail-card h2,
+.funerals-faq-card h2 {
+  margin: 0;
+  color: var(--heading);
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+  line-height: 1.08;
+}
+
+.funerals-urgent-callout__copy p:last-child {
+  margin: 0.45rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.72;
+  max-width: 48rem;
+}
+
+.funerals-urgent-callout__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: flex-end;
+}
+
+.funerals-service-grid,
+.funerals-process-grid,
+.funerals-detail-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.funerals-service-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.funerals-service-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1.45rem;
+  border-radius: 26px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  text-align: left;
+  color: inherit;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.funerals-service-card:hover,
+.funerals-service-card.is-active {
+  transform: translateY(-2px);
+  border-color: rgba(76, 97, 50, 0.28);
+  box-shadow: 0 22px 42px rgba(15, 23, 42, 0.12);
+}
+
+.funerals-service-card.is-active {
+  background: linear-gradient(135deg, rgba(251, 247, 235, 0.98), rgba(242, 248, 238, 0.96));
+}
+
+.funerals-service-card h2 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 1.38rem;
+  line-height: 1.05;
+  max-width: 14ch;
+}
+
+.funerals-service-card p:not(.card-kicker) {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.funerals-service-card span,
+.funerals-service-card strong {
+  margin: 0;
+}
+
+.funerals-service-card span {
+  color: var(--heading);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.funerals-service-card strong {
+  color: #8a6618;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.funerals-process-card,
+.funerals-detail-card,
+.funerals-faq-card {
+  padding: 1.6rem;
+  border-radius: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.funerals-process-card,
+.funerals-detail-card--light,
+.funerals-faq-card {
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.funerals-process-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1.35rem;
+}
+
+.funerals-process-step {
+  position: relative;
+  text-align: center;
+  padding: 0 0.65rem;
+}
+
+.funerals-process-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 2rem;
+  left: calc(50% + 2rem);
+  width: calc(100% - 1rem);
+  height: 2px;
+  background: rgba(15, 23, 42, 0.12);
+}
+
+.funerals-process-step__number {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 0.95rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(39, 56, 49, 0.98), rgba(76, 97, 50, 0.94));
+  color: #fff4de;
+  font-size: 1.4rem;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(17, 22, 20, 0.18);
+}
+
+.funerals-process-step h3 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 1.02rem;
+}
+
+.funerals-process-step p {
+  margin: 0.5rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.68;
+}
+
+.funerals-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.funerals-detail-card--dark {
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 36%),
+    linear-gradient(150deg, rgba(39, 56, 49, 0.98), rgba(22, 36, 32, 0.98));
+  border-color: rgba(214, 182, 106, 0.16);
+}
+
+.funerals-detail-card p {
+  margin: 0.6rem 0 0;
+  color: var(--text-soft);
+  line-height: 1.72;
+}
+
+.funerals-detail-card--dark h2,
+.funerals-detail-card--dark p,
+.funerals-detail-card--dark span,
+.funerals-detail-card--dark strong,
+.funerals-detail-card--dark .card-kicker {
+  color: #fff4de;
+}
+
+.funerals-detail-list {
+  margin: 1rem 0 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.75rem;
+  line-height: 1.72;
+  color: var(--text);
+}
+
+.funerals-support-chips {
+  margin-top: 1.1rem;
+}
+
+.funerals-support-chip {
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 244, 222, 0.16);
+  background: rgba(255, 244, 222, 0.07);
+  color: rgba(255, 244, 222, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.funerals-support-chip.is-active {
+  background: rgba(255, 244, 222, 0.18);
+  border-color: rgba(255, 244, 222, 0.3);
+}
+
+.funerals-detail-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.15rem;
+}
+
+.funerals-detail-metrics div {
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: rgba(255, 244, 222, 0.08);
+  border: 1px solid rgba(255, 244, 222, 0.12);
+}
+
+.funerals-detail-metrics span,
+.funerals-detail-metrics strong {
+  display: block;
+}
+
+.funerals-detail-metrics span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.funerals-detail-metrics strong {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  line-height: 1.36;
+}
+
+.funerals-detail-actions {
+  margin-top: 1.2rem;
+}
+
+.funerals-faq-list {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+
+.funerals-faq-item {
+  border-radius: 20px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(250, 247, 240, 0.82);
+  overflow: hidden;
+}
+
+.funerals-faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  color: var(--heading);
+  font-weight: 700;
+}
+
+.funerals-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.funerals-faq-arrow {
+  transition: transform 0.2s ease;
+}
+
+.funerals-faq-item[open] .funerals-faq-arrow {
+  transform: rotate(180deg);
+}
+
+.funerals-faq-item p {
+  margin: 0;
+  padding: 0 1.1rem 1rem;
+  color: var(--text-soft);
+  line-height: 1.72;
+}
+
+.funerals-request-modal {
+  width: min(940px, calc(100vw - 28px));
+}
+
+.funerals-request-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+  padding-right: 0.1rem;
+}
+
+@media (max-width: 1100px) {
+  .funerals-hero,
+  .funerals-urgent-callout,
+  .funerals-service-grid,
+  .funerals-detail-grid,
+  .funerals-process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .funerals-hero__media {
+    width: min(100%, 520px);
+    max-width: 100%;
+    min-height: auto;
+    aspect-ratio: 1.06;
+    justify-self: center;
+    align-self: start;
+  }
+
+  .funerals-hero__copy {
+    max-width: 100%;
+  }
+
+  .funerals-hero__image {
+    min-height: 0;
+    transform: none;
+  }
+
+  .funerals-urgent-callout__actions {
+    justify-content: flex-start;
+  }
+
+  .funerals-process-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 880px) {
+  .funerals-hero__media,
+  .funerals-hero__image {
+    clip-path: none;
+    border-radius: 24px;
+  }
+
+  .funerals-hero__media {
+    width: 100%;
+    padding: 0.7rem;
+    aspect-ratio: auto;
+  }
+
+  .funerals-hero__image {
+    height: auto;
+    max-height: min(60vh, 420px);
+    aspect-ratio: 1.08;
+  }
+}
+
+@media (max-width: 720px) {
+  .funerals-hero,
+  .funerals-process-card,
+  .funerals-detail-card,
+  .funerals-faq-card {
+    padding: 1.2rem;
+    border-radius: 24px;
+  }
+
+  .funerals-urgent-callout {
+    padding: 1.15rem;
+  }
+
+  .funerals-hero__image {
+    min-height: 0;
+    max-height: 320px;
+    aspect-ratio: auto;
+  }
+
+  .funerals-hero__media,
+  .funerals-hero__image {
+    clip-path: none;
+    border-radius: 22px;
+  }
+
+  .funerals-hero__media {
+    width: 100%;
+    max-width: none;
+    padding: 0.65rem;
+  }
+
+  .funerals-detail-metrics {
+    grid-template-columns: 1fr;
+  }
+}

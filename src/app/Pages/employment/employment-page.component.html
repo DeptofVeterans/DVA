@@ -1,0 +1,299 @@
+<main class="page-shell employment-page">
+  <section class="employment-hero" appRevealOnScroll>
+    <div class="employment-hero__copy">
+      <p class="card-kicker">{{ page.eyebrow }}</p>
+      <h1>{{ page.title }}</h1>
+      <p class="employment-hero__lead">{{ page.lead }}</p>
+
+      <div class="employment-hero__tags">
+        <span *ngFor="let tag of page.tags">{{ tag }}</span>
+      </div>
+
+      <div class="employment-hero__actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open jobs form</button>
+        <a class="button button-secondary" routerLink="/dashboard">Open dashboard</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="employment-search-card" appRevealOnScroll>
+    <div class="employment-search-card__copy">
+      <p class="card-kicker">Search jobs</p>
+      <h2>Browse live openings and move straight into the right support lane.</h2>
+      <p>
+        Search the active jobs board, then use the same page to request resume support, placement help, or an employer
+        introduction without leaving the employment lane.
+      </p>
+    </div>
+
+    <div class="employment-search-card__controls">
+      <label class="employment-search-input">
+        <span class="employment-search-icon" aria-hidden="true">⌕</span>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search job title, organization, qualifications, or application details"
+        />
+      </label>
+
+      <div class="employment-search-actions">
+        <button class="button button-secondary" type="button" (click)="openRequestModal('job-bank')">Job bank support</button>
+        <button class="button button-primary" type="button" (click)="openRequestModal('job-intake')">Request opportunity intake</button>
+      </div>
+    </div>
+
+    <div class="employment-search-card__stats">
+      <article>
+        <span>Live board</span>
+        <strong>{{ searchSummaryLabel }}</strong>
+      </article>
+      <article>
+        <span>Support lanes</span>
+        <strong>{{ supportTracks.length }} employment routes</strong>
+      </article>
+      <article>
+        <span>Secure follow-up</span>
+        <strong>Tracked in your dashboard after submission</strong>
+      </article>
+    </div>
+  </section>
+
+  <section class="employment-resource-grid" appRevealOnScroll>
+    <button
+      class="employment-resource-card"
+      type="button"
+      *ngFor="let track of topTracks"
+      [class.is-active]="track.id === activeTrackId"
+      (click)="selectTrack(track.id)"
+    >
+      <p class="card-kicker">{{ track.label }}</p>
+      <h2>{{ track.title }}</h2>
+      <p>{{ track.detail }}</p>
+      <span>{{ track.routeNote }}</span>
+      <strong>{{ track.actionLabel }}</strong>
+    </button>
+  </section>
+
+  <section class="employment-jobs-panel" appRevealOnScroll>
+    <div class="employment-panel-head employment-panel-head--jobs">
+      <div>
+        <p class="card-kicker">Featured openings</p>
+        <h2>Open jobs for veterans</h2>
+      </div>
+
+      <div class="employment-panel-head__actions">
+        <span class="employment-openings-pill">{{ filteredJobs.length }} showing</span>
+        <button class="button button-secondary" type="button" (click)="openRequestModal('employer-intro')">Request introduction</button>
+      </div>
+    </div>
+
+    <p class="employment-panel-copy">
+      These openings can be viewed directly on the page. Veterans can ask for introduction support or broader job opportunity intake from the same employment lane.
+    </p>
+
+    <p class="feedback-banner success" *ngIf="jobsFeedback">{{ jobsFeedback }}</p>
+    <p class="feedback-banner error" *ngIf="jobsError">{{ jobsError }}</p>
+
+    <div class="employment-loading-state" *ngIf="jobsLoading">Loading open jobs...</div>
+
+    <div class="employment-jobs-list" *ngIf="!jobsLoading && filteredJobs.length">
+      <article class="employment-job-card" *ngFor="let job of filteredJobs">
+        <div class="employment-job-card__top">
+          <div>
+            <p class="card-kicker">{{ jobOrganization(job) }}</p>
+            <h3>{{ jobTitle(job) }}</h3>
+          </div>
+
+          <span class="employment-job-date">{{ jobPostedAt(job) }}</span>
+        </div>
+
+        <p class="employment-job-description">{{ jobDescription(job) }}</p>
+
+        <div class="employment-job-meta">
+          <span>{{ jobQualifications(job) ? "Qualifications listed" : "General intake opening" }}</span>
+          <span>How to apply included</span>
+        </div>
+
+        <div class="employment-job-actions">
+          <button class="button button-secondary" type="button" (click)="toggleJobDetails(job)">
+            {{ isJobExpanded(job) ? "Hide details" : "View details" }}
+          </button>
+          <button class="button button-primary" type="button" (click)="openRequestModal('employer-intro', job)">
+            Request introduction
+          </button>
+          <button
+            class="button button-ghost"
+            type="button"
+            *ngIf="canManageEmploymentJobs"
+            [disabled]="closingJobId === (job.jobId || job.employment_job_listing_id || 0)"
+            (click)="closeEmploymentJob(job)"
+          >
+            {{ closingJobId === (job.jobId || job.employment_job_listing_id || 0) ? "Closing..." : "Close opening" }}
+          </button>
+        </div>
+
+        <div class="employment-job-expanded" *ngIf="isJobExpanded(job)">
+          <article>
+            <h4>Qualifications</h4>
+            <p>{{ jobQualifications(job) || "No specific qualification note was added to this opening." }}</p>
+          </article>
+
+          <article>
+            <h4>How to apply</h4>
+            <p>{{ jobHowToApply(job) }}</p>
+          </article>
+        </div>
+      </article>
+    </div>
+
+    <article class="employment-empty-state" *ngIf="!jobsLoading && !jobsError && !filteredJobs.length">
+      <p class="card-kicker">Jobs board</p>
+      <h3>No openings match the current search.</h3>
+      <p>
+        Try another keyword, or open opportunity intake so the employment team can help route the veteran into the right next step.
+      </p>
+      <button class="button button-primary" type="button" (click)="openRequestModal('job-intake')">Open opportunity intake</button>
+    </article>
+  </section>
+
+  <section class="employment-detail-grid" appRevealOnScroll>
+    <article class="employment-support-card employment-support-card--dark">
+      <p class="card-kicker">Selected support lane</p>
+      <h2>{{ activeTrack.title }}</h2>
+      <p class="employment-panel-copy">
+        {{ activeTrack.detail }}
+      </p>
+
+      <div class="employment-support-chips">
+        <button
+          class="employment-support-chip"
+          type="button"
+          *ngFor="let track of supportTracks"
+          [class.is-active]="track.id === activeTrackId"
+          (click)="selectTrack(track.id)"
+        >
+          {{ track.title }}
+        </button>
+      </div>
+
+      <div class="employment-support-metrics">
+        <div>
+          <span>Current route</span>
+          <strong>{{ activeTrack.routeNote }}</strong>
+        </div>
+        <div>
+          <span>Open jobs</span>
+          <strong>{{ openJobsCount }} published</strong>
+        </div>
+      </div>
+
+      <div class="employment-support-actions">
+        <button class="button button-primary" type="button" (click)="openRequestModal()">Open jobs form</button>
+        <a class="button button-secondary" routerLink="/records">Records</a>
+        <a class="button button-secondary" routerLink="/contact">Contact</a>
+      </div>
+    </article>
+
+    <article class="employment-tools-card" *ngIf="!canManageEmploymentJobs">
+      <p class="card-kicker">Transition support</p>
+      <h2>Move from preparation into real opportunities</h2>
+      <p class="employment-panel-copy">
+        Use resume, interview, resettlement, and job opportunity lanes together so the transition from service stays practical and connected.
+      </p>
+
+      <ul class="employment-tools-list">
+        <li *ngFor="let track of opportunityTracks">{{ track.title }}: {{ track.detail }}</li>
+      </ul>
+
+      <div class="employment-tools-actions">
+        <button class="button button-secondary" type="button" (click)="openRequestModal('placement')">Open placement support</button>
+        <a class="button button-secondary" routerLink="/dashboard">View dashboard</a>
+      </div>
+    </article>
+
+    <article class="employment-tools-card employment-tools-card--staff" *ngIf="canManageEmploymentJobs">
+      <div class="employment-panel-head">
+        <div>
+          <p class="card-kicker">Department desk</p>
+          <h2>Post and manage job opportunities</h2>
+        </div>
+        <button class="button button-secondary" type="button" (click)="togglePostComposer()">
+          {{ showPostComposer ? "Hide posting form" : "Add opening" }}
+        </button>
+      </div>
+
+      <p class="employment-panel-copy">
+        Department staff can publish openings here so veterans see them on the public jobs board while follow-up stays tied to the employment lane.
+      </p>
+
+      <form class="employment-post-form" *ngIf="showPostComposer" (ngSubmit)="createEmploymentJob()">
+        <label>
+          <span>Job title</span>
+          <input type="text" [(ngModel)]="jobDraft.jobTitle" name="jobTitle" />
+        </label>
+
+        <label>
+          <span>Organization</span>
+          <input type="text" [(ngModel)]="jobDraft.organizationName" name="organizationName" />
+        </label>
+
+        <label class="employment-post-form__full">
+          <span>Job description</span>
+          <textarea rows="5" [(ngModel)]="jobDraft.jobDescription" name="jobDescription"></textarea>
+        </label>
+
+        <label>
+          <span>Qualifications</span>
+          <textarea rows="4" [(ngModel)]="jobDraft.qualificationsText" name="qualificationsText"></textarea>
+        </label>
+
+        <label>
+          <span>How to apply</span>
+          <textarea rows="4" [(ngModel)]="jobDraft.howToApply" name="howToApply"></textarea>
+        </label>
+
+        <button class="button button-primary" type="submit" [disabled]="postingJob">
+          {{ postingJob ? "Posting..." : "Publish opening" }}
+        </button>
+      </form>
+
+      <div class="employment-staff-summary">
+        <div>
+          <span>Open jobs</span>
+          <strong>{{ openJobsCount }}</strong>
+        </div>
+        <div>
+          <span>Visible lane</span>
+          <strong>Resettlement and Employment</strong>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showRequestModal" (click)="closeRequestModal()">
+    <section
+      class="modal-card employment-request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="employment-request-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-head">
+        <div>
+          <p class="card-kicker">Employment request</p>
+          <h2 id="employment-request-modal-title">{{ employmentFormConfig?.title }}</h2>
+          <p class="application-note">
+            The form will open with this employment focus selected:
+            <strong>{{ activeTrack.title }}</strong>
+            <ng-container *ngIf="selectedJob"> for <strong>{{ jobTitle(selectedJob) }}</strong> at <strong>{{ jobOrganization(selectedJob) }}</strong></ng-container>.
+          </p>
+        </div>
+        <button class="button button-ghost modal-close-button" type="button" (click)="closeRequestModal()">Close</button>
+      </div>
+
+      <div class="employment-request-body">
+        <app-request-form [config]="employmentFormConfig" [initialValues]="requestFormInitialValues"></app-request-form>
+      </div>
+    </section>
+  </div>
+</main>

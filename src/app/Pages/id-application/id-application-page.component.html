@@ -1,11 +1,11 @@
 <main class="page-shell id-application-page">
-  <section class="page-hero" appRevealOnScroll>
-    <div class="hero-copy">
+  <section class="id-page-hero" appRevealOnScroll>
+    <div class="id-page-hero__copy">
       <p class="eyebrow">Veteran ID Application</p>
-      <h1>Apply for your Veteran's ID Card.</h1>
+      <h1>Apply for your Veteran's Identification Card.</h1>
       <p class="lead">
-        Complete the Veterans Identification Access and Medical Card application and use the print-ready PDF
-        action when you need a saved or printable copy.
+        Start the confirmed Veteran ID application, keep the application type clear from the beginning,
+        and generate the legal-size PDF whenever you need a print-ready copy.
       </p>
 
       <div class="button-row">
@@ -14,80 +14,112 @@
       </div>
     </div>
 
-    <aside class="hero-side">
-      <div class="summary-card dark-card">
-        <p class="card-kicker">Before you begin</p>
-        <ul class="icon-list">
-          <li>Have your service details, contact details, and identification choice ready.</li>
-          <li>Use the PDF action when you need a print-ready version for review or records.</li>
-          <li>Official-use-only areas stay blank so staff can complete them during processing.</li>
-        </ul>
+    <button
+      class="id-page-hero__media"
+      type="button"
+      (click)="openReferenceImage()"
+      aria-label="Open the Veteran ID reference image"
+    >
+      <div class="id-page-hero__image-wrap">
+        <img
+          class="id-page-hero__image"
+          src="assets/Veteran_ID.png"
+          alt="Veteran ID reference image"
+        >
       </div>
-    </aside>
+      <div class="id-page-hero__meta">
+        <span>Reference preview</span>
+        <strong>Open the Veteran ID image</strong>
+      </div>
+    </button>
   </section>
 
-  <section class="section id-application-section" appRevealOnScroll>
-    <div class="split-layout">
-      <article class="feature-card">
-        <p class="card-kicker">Application access</p>
-        <h2>Open the confirmed Veteran ID form in a focused popup.</h2>
-        <p class="section-copy">
-          Use the start button to open the full application without stretching the page layout. The popup keeps the
-          form, PDF action, and submission controls in one focused space.
-        </p>
-        <ul class="checklist">
-          <li>The page keeps its standard portal margin and spacing.</li>
-          <li>The declaration stays fixed and non-editable.</li>
-          <li>The PDF action remains available inside the application popup.</li>
-        </ul>
-        <div class="button-row compact-row">
-          <button class="button button-primary" type="button" (click)="openApplicationModal()">Start application</button>
-          <a class="button button-secondary" routerLink="/id-guidance">Read guidance</a>
-        </div>
-      </article>
+  <section class="id-type-grid" appRevealOnScroll>
+    <button
+      class="id-type-card"
+      type="button"
+      *ngFor="let card of applicationTypeCards"
+      [class.is-active]="activeApplicationType === card.type"
+      (click)="selectApplicationType(card.type)"
+    >
+      <p class="card-kicker">{{ card.type }}</p>
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.description }}</p>
+      <strong>{{ card.supportLabel }}</strong>
+    </button>
+  </section>
 
-      <article class="feature-card dark-card id-display-panel">
-        <p class="card-kicker">Veteran ID visual lane</p>
-        <h3>Keep the page ready for approved card visuals and display panels.</h3>
-        <p class="section-copy">
-          The application stays wider on the left while this green display space remains available for Veteran ID front,
-          back, or supporting image panels.
-        </p>
-        <div class="id-display-stage">
-          <article class="id-preview-card id-preview-card-front">
-            <div class="id-preview-top">
-              <img class="id-preview-logo" src="/assets/logo-board-clean.png" alt="Department of Veterans Affairs Jamaica">
-              <div class="id-preview-stripes" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-            <div class="id-preview-body">
-              <p class="id-preview-label">Veteran ID front</p>
-              <h4>{{ previewFullName }}</h4>
-              <p class="id-preview-meta">{{ previewRank }} • {{ previewServiceNumber }}</p>
-              <span class="id-preview-chip">{{ previewApplicationType }}</span>
-            </div>
-          </article>
+  <section class="id-detail-grid" appRevealOnScroll>
+    <article class="id-status-card">
+      <p class="card-kicker">Application status</p>
+      <h2>Recent Veteran ID requests</h2>
+      <p class="id-panel-copy" *ngIf="auth.isAuthenticated">
+        Your most recent Veteran ID applications stay visible here before you move into the dashboard.
+      </p>
+      <p class="id-panel-copy" *ngIf="!auth.isAuthenticated">
+        Sign in to see your own ID applications, pickup alerts, and private status updates.
+      </p>
 
-          <article class="id-preview-card id-preview-card-back">
-            <div class="id-preview-body">
-              <p class="id-preview-label">Veteran ID back</p>
-              <h4>Application route</h4>
-              <ul class="id-preview-notes">
-                <li>{{ previewIdentificationType }} selected for identification support.</li>
-                <li>Final card issue remains subject to department review and approval.</li>
-                <li>Printable application and guidance stay available from this page.</li>
-              </ul>
+      <div class="id-status-stack" *ngIf="auth.isAuthenticated && requestsLoading">
+        <p class="empty-state">Loading your ID applications...</p>
+      </div>
+
+      <div class="id-status-stack" *ngIf="auth.isAuthenticated && !requestsLoading && hasIdRequests">
+        <article class="id-status-item" *ngFor="let request of idRequests">
+          <div class="id-status-item__top">
+            <div>
+              <span class="id-status-label">{{ requestReference(request.public_uuid || request.publicUuid) }}</span>
+              <h3>{{ displayRequestCode(request.public_uuid || request.publicUuid) }}</h3>
             </div>
-          </article>
-        </div>
-        <div class="button-row compact-row">
-          <a class="button button-ghost" routerLink="/id-guidance">Read full ID guidance</a>
-        </div>
-      </article>
-    </div>
+            <span class="id-status-pill">{{ request.status_name || request.statusName }}</span>
+          </div>
+          <p>{{ request.request_type_name || request.requestTypeName }}</p>
+          <small>Submitted {{ (request.submitted_at || request.submittedAt) | date:'mediumDate' }}</small>
+        </article>
+      </div>
+
+      <div class="id-status-stack" *ngIf="auth.isAuthenticated && !requestsLoading && !hasIdRequests">
+        <p class="empty-state">No Veteran ID applications have been submitted yet.</p>
+      </div>
+
+      <div class="id-status-actions">
+        <button class="button button-primary" type="button" (click)="openApplicationModal()">Open application</button>
+        <a class="button button-secondary" [routerLink]="auth.isAuthenticated ? '/dashboard' : '/signin'">
+          {{ auth.isAuthenticated ? 'Open dashboard' : 'Sign in first' }}
+        </a>
+      </div>
+    </article>
+
+    <article class="id-support-card">
+      <p class="card-kicker">{{ previewApplicationType }} application</p>
+      <h2>{{ activeSupportProfile.title }}</h2>
+      <p class="id-panel-copy">{{ activeSupportProfile.copy }}</p>
+
+      <ul class="id-support-list">
+        <li *ngFor="let item of activeSupportProfile.checklist">{{ item }}</li>
+      </ul>
+
+      <div class="id-preview-strip">
+        <span>{{ previewIdentificationType }}</span>
+        <strong>{{ previewApplicationType }}</strong>
+        <span>{{ previewServiceNumber }}</span>
+      </div>
+
+      <div class="button-row compact-row">
+        <button class="button button-primary" type="button" (click)="openApplicationModal(activeApplicationType)">Open {{ previewApplicationType | lowercase }} form</button>
+        <a class="button button-secondary" routerLink="/id-guidance">Read guidance</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="id-guidance-grid" appRevealOnScroll>
+    <article class="id-guidance-card" *ngFor="let card of guidanceCards">
+      <p class="card-kicker">{{ card.kicker }}</p>
+      <h2>{{ card.title }}</h2>
+      <ul class="id-guidance-list">
+        <li *ngFor="let item of card.points">{{ item }}</li>
+      </ul>
+    </article>
   </section>
 
   <div class="modal-backdrop" *ngIf="showApplicationModal" (click)="closeApplicationModal()">
@@ -102,7 +134,9 @@
         <div>
           <p class="card-kicker">Veteran ID application</p>
           <h2 id="id-application-modal-title">Veterans Identification Access and Medical Card application</h2>
-          <p class="application-note">Complete the form and use the PDF action to generate the legal-size application PDF.</p>
+          <p class="application-note">
+            Complete the form for the <strong>{{ previewApplicationType }}</strong> route and use the PDF action to generate the legal-size application PDF.
+          </p>
         </div>
         <button class="button button-ghost modal-close-button" type="button" (click)="closeApplicationModal()">Close</button>
       </div>
