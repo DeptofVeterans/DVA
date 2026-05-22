@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: dva-backend
+    env: node
+    rootDir: backend
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_SSL
+        value: true
+      - key: DB_SSL_REJECT_UNAUTHORIZED
+        value: true
+      - key: ALLOW_STAFF_SELF_SIGNUP
+        value: true
+      - key: REQUIRE_IDENTITY_VERIFICATION_FOR_ISSUANCE
+        value: true
