@@ -1,6 +1,7 @@
 .insurance-page {
   display: grid;
   gap: 1.4rem;
+  min-width: 0;
 }
 
 .insurance-hero {
@@ -15,6 +16,7 @@
 
 .insurance-hero__copy {
   max-width: 48rem;
+  min-width: 0;
 }
 
 .insurance-hero h1 {
@@ -72,6 +74,7 @@
 .insurance-policy-card {
   display: grid;
   gap: 0.55rem;
+  min-width: 0;
   padding: 1.35rem;
   border-radius: 26px;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -125,6 +128,7 @@
   color: var(--text-soft);
   font-weight: 500;
   line-height: 1.65;
+  overflow-wrap: anywhere;
 }
 
 .insurance-detail-grid,
@@ -137,6 +141,7 @@
 .insurance-benefits-card,
 .insurance-support-card,
 .insurance-tool-card {
+  min-width: 0;
   padding: 1.6rem;
   border-radius: 28px;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -197,6 +202,7 @@
 }
 
 .insurance-support-chip {
+  max-width: 100%;
   min-height: 2rem;
   padding: 0.35rem 0.8rem;
   border-radius: 999px;
@@ -205,6 +211,8 @@
   color: rgba(255, 244, 222, 0.92);
   font-size: 0.82rem;
   font-weight: 700;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .insurance-support-chip.is-active {
@@ -220,6 +228,7 @@
 }
 
 .insurance-support-metrics div {
+  min-width: 0;
   padding: 0.9rem 1rem;
   border-radius: 18px;
   background: rgba(255, 244, 222, 0.08);
@@ -243,6 +252,7 @@
   margin-top: 0.35rem;
   font-size: 1rem;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .insurance-support-actions {
@@ -279,6 +289,7 @@
 
 .insurance-info-card,
 .insurance-table-card {
+  min-width: 0;
   padding: 1.35rem;
   border-radius: 24px;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -316,7 +327,10 @@
 }
 
 .insurance-table-wrap {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin-top: 0.8rem;
   border-radius: 16px;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -377,6 +391,7 @@
 
 .insurance-request-modal {
   width: min(940px, calc(100vw - 28px));
+  max-height: calc(100vh - 24px);
 }
 
 .insurance-request-body {
@@ -395,6 +410,10 @@
 }
 
 @media (max-width: 720px) {
+  .insurance-page {
+    gap: 1rem;
+  }
+
   .insurance-hero,
   .insurance-benefits-card,
   .insurance-support-card,
@@ -405,7 +424,61 @@
     border-radius: 22px;
   }
 
+  .insurance-hero h1 {
+    max-width: none;
+    font-size: clamp(2.2rem, 11vw, 3.1rem);
+  }
+
+  .insurance-hero__lead {
+    font-size: 0.98rem;
+  }
+
+  .insurance-hero__actions,
+  .insurance-tool-links,
+  .insurance-support-actions {
+    width: 100%;
+  }
+
+  .insurance-hero__actions .button,
+  .insurance-tool-links .button,
+  .insurance-support-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .insurance-policy-card h2 {
+    max-width: none;
+  }
+
   .insurance-support-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .insurance-request-modal {
+    width: calc(100vw - 18px);
+  }
+
+  .insurance-request-body {
+    max-height: calc(100vh - 150px);
+  }
+}
+
+@media (max-width: 520px) {
+  .insurance-policy-card,
+  .insurance-benefits-card,
+  .insurance-support-card,
+  .insurance-tool-card,
+  .insurance-info-card,
+  .insurance-table-card {
+    padding: 1rem;
+  }
+
+  .insurance-support-options,
+  .insurance-hero__tags {
+    gap: 0.55rem;
+  }
+
+  .insurance-data-table {
+    min-width: 620px;
   }
 }
