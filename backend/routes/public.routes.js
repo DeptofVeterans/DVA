@@ -3,7 +3,7 @@ const express = require("express");
 const { transaction } = require("../config/database");
 const { optionalAuth } = require("../middleware/auth");
 const { writeAudit } = require("../services/audit.service");
-const { emailLookupHash, encryptJson } = require("../utils/crypto");
+const { emailLookupHash, encryptJson, regimentalLookupHash } = require("../utils/crypto");
 const { asyncHandler } = require("../utils/http");
 
 const router = express.Router();
@@ -191,6 +191,104 @@ function sanitizeSubmission(contactType, formData) {
   }
 }
 
+function sanitizeVeteransIdApplication(formData) {
+  const applicationType = cleanText(formData.application_type, 40);
+  const surname = cleanText(formData.surname, 100);
+  const rank = cleanOptionalText(formData.rank, 80);
+  const fullName = cleanText(formData.full_name, 180);
+  const gender = cleanText(formData.gender, 20);
+  const dateOfBirth = cleanText(formData.date_of_birth, 20);
+  const enlistmentDate = cleanOptionalText(formData.enlistment_date, 20);
+  const dischargeDate = cleanOptionalText(formData.discharge_date, 20);
+  const totalService = cleanOptionalText(formData.total_service, 80);
+  const terminationReason = cleanOptionalText(formData.termination_reason, 180);
+  const serviceNumber = cleanOptionalText(formData.service_number, 30);
+  const referenceNumber = cleanOptionalText(formData.reference_number, 80);
+  const bloodGroup = cleanOptionalText(formData.blood_group, 10);
+  const identificationType = cleanText(formData.identification_type, 80);
+  const phone = cleanText(formData.phone, 40);
+  const email = cleanOptionalText(formData.email, 180)?.toLowerCase() || null;
+  const homeAddress = cleanText(formData.home_address, 500);
+  const signatureName = cleanText(formData.signature_name, 180);
+  const applicationDate = cleanText(formData.application_date, 20);
+  const notes = cleanOptionalText(formData.notes, 1000);
+  const allowedApplicationTypes = new Set(["New", "Replacement", "Stolen", "Lost"]);
+  const allowedGenders = new Set(["Male", "Female"]);
+
+  if (!allowedApplicationTypes.has(applicationType)) {
+    return { error: "Choose a valid application type." };
+  }
+
+  if (!surname) {
+    return { error: "Surname is required." };
+  }
+
+  if (!fullName) {
+    return { error: "Forenames are required." };
+  }
+
+  if (!allowedGenders.has(gender)) {
+    return { error: "Choose a valid gender." };
+  }
+
+  if (!dateOfBirth) {
+    return { error: "Date of birth is required." };
+  }
+
+  if (!identificationType) {
+    return { error: "Type of identification is required." };
+  }
+
+  if (!phone) {
+    return { error: "Telephone number is required." };
+  }
+
+  if (email && !isValidEmail(email)) {
+    return { error: "If you include an email address, it must be valid." };
+  }
+
+  if (!homeAddress) {
+    return { error: "Home address is required." };
+  }
+
+  if (!signatureName) {
+    return { error: "Applicant signature or typed name is required." };
+  }
+
+  if (!applicationDate) {
+    return { error: "Application date is required." };
+  }
+
+  return {
+    email,
+    serviceNumber,
+    payload: {
+      application_type: applicationType,
+      surname,
+      rank,
+      full_name: fullName,
+      gender,
+      date_of_birth: dateOfBirth,
+      enlistment_date: enlistmentDate,
+      discharge_date: dischargeDate,
+      total_service: totalService,
+      termination_reason: terminationReason,
+      service_number: serviceNumber,
+      reference_number: referenceNumber,
+      blood_group: bloodGroup,
+      identification_type: identificationType,
+      phone,
+      email,
+      home_address: homeAddress,
+      declaration:
+        "I, the undersigned, apply for the issue of a Veterans Identification Access and Medical Card. I declare that the information given in this application is correct and to the best of my knowledge and belief.",
+      signature_name: signatureName,
+      application_date: applicationDate,
+      notes
+    }
+  };
+}
+
 router.post(
   "/contact-submissions",
   optionalAuth,
@@ -279,6 +377,103 @@ router.post(
         statusCode: 201,
         body: {
           message: "Your contact form was submitted successfully.",
+          publicUuid
+        }
+      };
+    });
+
+    return res.status(result.statusCode).json(result.body);
+  })
+);
+
+router.post(
+  "/veterans-id-applications",
+  optionalAuth,
+  asyncHandler(async (req, res) => {
+    const { formData } = req.body || {};
+
+    if (!formData || typeof formData !== "object") {
+      return res.status(400).json({ message: "Veteran ID application data is required." });
+    }
+
+    const application = sanitizeVeteransIdApplication(formData);
+
+    if (application.error || !application.payload) {
+      return res.status(400).json({ message: application.error || "Veteran ID application is invalid." });
+    }
+
+    const result = await transaction(async (connection) => {
+      const [departmentRows] = await connection.execute(
+        `SELECT department_id, department_name
+        FROM departments
+        WHERE department_code = 'WELFARE_ASSISTANCE'
+          AND is_active = 1
+        LIMIT 1`
+      );
+
+      const department = departmentRows[0];
+
+      if (!department) {
+        return {
+          statusCode: 400,
+          body: { message: "Veteran ID applications are not available right now." }
+        };
+      }
+
+      const publicUuid = randomUUID();
+      const encryptedPayload = encryptJson({
+        ...application.payload,
+        requestTypeCode: "VETERANS_ID_APPLICATION",
+        requestTypeName: "Veterans ID Application",
+        departmentCode: "WELFARE_ASSISTANCE",
+        departmentName: department.department_name,
+        submittedByAuthenticatedUser: Boolean(req.user),
+        submittedAt: new Date().toISOString()
+      });
+
+      const [insertResult] = await connection.execute(
+        `INSERT INTO public_veterans_id_applications (
+          public_uuid,
+          routing_department_id,
+          status,
+          email_lookup_hash,
+          service_number_lookup_hash,
+          payload_ciphertext,
+          payload_iv,
+          payload_tag,
+          key_version,
+          submitted_by_user_id,
+          created_at,
+          updated_at
+        ) VALUES (?, ?, 'NEW', ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())`,
+        [
+          publicUuid,
+          department.department_id,
+          application.email ? emailLookupHash(application.email) : null,
+          application.serviceNumber ? regimentalLookupHash(application.serviceNumber) : null,
+          encryptedPayload.ciphertext,
+          encryptedPayload.iv,
+          encryptedPayload.tag,
+          encryptedPayload.keyVersion,
+          req.user?.userId || null
+        ]
+      );
+
+      await writeAudit(connection, {
+        actorUserId: req.user?.userId || null,
+        actorRoleId: req.user?.roleId || null,
+        actorDepartmentId: req.user?.departments?.[0]?.departmentId || department.department_id,
+        eventCode: "PUBLIC_VETERANS_ID_APPLICATION_CREATED",
+        entityType: "PUBLIC_VETERANS_ID_APPLICATION",
+        entityId: insertResult.insertId,
+        targetUserId: req.user?.userId || null,
+        summary: `Created public Veteran ID application for ${department.department_name}.`
+      });
+
+      return {
+        statusCode: 201,
+        body: {
+          message: "Veteran ID application submitted successfully.",
           publicUuid
         }
       };

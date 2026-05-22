@@ -224,6 +224,21 @@ export interface PaymentReceiptSummary {
   request_uuid: string;
 }
 
+export interface PublicVeteransIdApplication {
+  publicIdApplicationId: number;
+  publicUuid: string;
+  routingDepartmentId: number;
+  departmentCode: string;
+  departmentName: string;
+  status: string;
+  assignedToUserId: number | null;
+  reviewedByUserId: number | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  payload: Record<string, unknown>;
+}
+
 export interface AuditLogItem {
   audit_log_id: number;
   actor_user_id: number | null;

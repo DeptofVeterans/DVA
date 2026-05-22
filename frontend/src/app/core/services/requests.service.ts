@@ -7,6 +7,7 @@ import {
   NotificationItem,
   PaymentReceiptSummary,
   PendingStaffUser,
+  PublicVeteransIdApplication,
   RequestDetail,
   RequestSummary
 } from "../../models/app.models";
@@ -19,6 +20,12 @@ export class RequestsService {
   createRequest(requestTypeCode: string, formData: Record<string, unknown>) {
     return this.api.post<{ requestId: number; publicUuid: string }>("/requests", {
       requestTypeCode,
+      formData
+    });
+  }
+
+  createPublicVeteransIdApplication(formData: Record<string, unknown>) {
+    return this.api.post<{ message: string; publicUuid: string }>("/public/veterans-id-applications", {
       formData
     });
   }
@@ -79,6 +86,14 @@ export class RequestsService {
 
   getStaffQueue(): Observable<{ requests: RequestSummary[] }> {
     return this.api.get<{ requests: RequestSummary[] }>("/staff/queue");
+  }
+
+  getPublicVeteransIdApplications() {
+    return this.api.get<{ applications: PublicVeteransIdApplication[] }>("/staff/public-veterans-id-applications");
+  }
+
+  updatePublicVeteransIdApplicationStatus(applicationId: number, status: string) {
+    return this.api.patch<{ message: string }>(`/staff/public-veterans-id-applications/${applicationId}/status`, { status });
   }
 
   updateRequestStatus(requestId: number, statusCode: string) {

@@ -181,11 +181,6 @@ export class IdApplicationPageComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
       if (params.get("openForm") === "1") {
-        if (!this.auth.isAuthenticated) {
-          this.redirectToAuthForApplication();
-          return;
-        }
-
         this.openApplicationModal();
       }
     });
@@ -229,11 +224,6 @@ export class IdApplicationPageComponent implements OnInit {
   }
 
   openApplicationModal(type?: string): void {
-    if (!this.auth.isAuthenticated) {
-      this.redirectToAuthForApplication();
-      return;
-    }
-
     if (type) {
       this.selectApplicationType(type);
     }
@@ -274,11 +264,6 @@ export class IdApplicationPageComponent implements OnInit {
     this.feedback = "";
     this.error = "";
 
-    if (!this.auth.isAuthenticated) {
-      this.redirectToAuthForApplication();
-      return;
-    }
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.error = "Complete the required fields before submitting the application.";
@@ -286,8 +271,23 @@ export class IdApplicationPageComponent implements OnInit {
     }
 
     this.submitting = true;
+    const formData = this.form.getRawValue();
 
-    this.requests.createRequest("VETERANS_ID_APPLICATION", this.form.getRawValue()).subscribe({
+    if (!this.auth.isAuthenticated) {
+      this.requests.createPublicVeteransIdApplication(formData).subscribe({
+        next: (response) => {
+          this.feedback = `Veteran ID application submitted successfully. Reference ${response.publicUuid}. Staff can review this public intake; sign in next time if you need dashboard tracking.`;
+          this.submitting = false;
+        },
+        error: (error) => {
+          this.error = error?.error?.message || "Unable to submit the ID application right now.";
+          this.submitting = false;
+        }
+      });
+      return;
+    }
+
+    this.requests.createRequest("VETERANS_ID_APPLICATION", formData).subscribe({
       next: (response) => {
         this.feedback = `Veteran ID request submitted successfully. Reference ${response.publicUuid}.`;
         this.submitting = false;
@@ -397,21 +397,6 @@ export class IdApplicationPageComponent implements OnInit {
       error: () => {
         this.idRequests = [];
         this.requestsLoading = false;
-      }
-    });
-  }
-
-  private redirectToAuthForApplication(): void {
-    const redirectTo = this.router.serializeUrl(
-      this.router.createUrlTree(["/id"], {
-        queryParams: { openForm: 1 }
-      })
-    );
-
-    this.router.navigate(["/signin"], {
-      queryParams: {
-        mode: "login",
-        redirectTo
       }
     });
   }

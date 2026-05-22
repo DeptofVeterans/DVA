@@ -27,6 +27,13 @@ export class SiteHeaderComponent {
   readonly navItems: NavItem[] = [
     { label: "Home", route: "/", exact: true },
     { label: "Services", route: "/services", exact: false },
+    { label: "Records", route: "/records" },
+    { label: "Pensions", route: "/pensions" },
+    { label: "Insurance", route: "/insurance" },
+    { label: "Funerals", route: "/funerals" },
+    { label: "ID Card", route: "/id" },
+    { label: "Jobs", route: "/employment" },
+    { label: "Welfare", route: "/welfare" },
     { label: "Roadmap", route: "/roadmap" },
     { label: "Gallery", route: "/gallery" },
     { label: "Contact", route: "/contact" }

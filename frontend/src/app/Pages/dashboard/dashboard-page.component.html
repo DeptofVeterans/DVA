@@ -219,6 +219,44 @@
     </div>
   </section>
 
+  <section class="section" *ngIf="isStaff && publicVeteransIdApplications.length" appRevealOnScroll>
+    <div class="section-heading">
+      <p class="eyebrow">Public ID Applications</p>
+      <h2>Review Veteran ID applications submitted without sign-in.</h2>
+      <p class="section-copy">
+        These public intakes are visible to authorized staff only. They do not appear in a veteran dashboard unless the veteran submits while signed in.
+      </p>
+    </div>
+
+    <div class="card-grid two-column">
+      <article class="feature-card" *ngFor="let application of publicVeteransIdApplications" appRevealOnScroll>
+        <p class="card-kicker">{{ application.departmentName }}</p>
+        <h3 class="request-reference">{{ requestReference(application.publicUuid) }}</h3>
+        <p class="request-code">{{ displayRequestCode(application.publicUuid) }}</p>
+        <p>
+          {{ application.payload['surname'] }}, {{ application.payload['full_name'] }}
+          <ng-container *ngIf="application.payload['service_number']"> | {{ application.payload['service_number'] }}</ng-container>
+        </p>
+        <p class="dashboard-mini-meta">
+          {{ humanizeCode(application.status) }}<br>
+          Submitted {{ application.createdAt | date:'medium' }}
+        </p>
+
+        <label class="field field-wide">
+          <span>Status</span>
+          <select [(ngModel)]="publicIdApplicationStatuses[application.publicIdApplicationId]" [ngModelOptions]="{ standalone: true }">
+            <option *ngFor="let status of publicVeteransIdStatuses" [value]="status">{{ humanizeCode(status) }}</option>
+          </select>
+        </label>
+
+        <div class="button-row compact-row">
+          <button class="button button-secondary" type="button" (click)="openPublicIdApplicationPdf(application)">Open PDF</button>
+          <button class="button button-primary" type="button" (click)="updatePublicIdApplicationStatus(application)">Update status</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <div class="modal-backdrop" *ngIf="selectedRequest || detailLoading" (click)="closeSelectedRequest()">
     <section
       class="modal-card dashboard-request-modal"

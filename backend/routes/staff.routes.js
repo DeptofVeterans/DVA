@@ -44,6 +44,18 @@ function canReviewAccountVerification(user) {
   return user.departments.some((department) => department.departmentCode === "WELFARE_ASSISTANCE");
 }
 
+function canAccessWelfareQueue(user) {
+  if (!user) {
+    return false;
+  }
+
+  if (user.permissions.canAccessAllDepartments) {
+    return true;
+  }
+
+  return user.departments.some((department) => department.departmentCode === "WELFARE_ASSISTANCE");
+}
+
 function ensureIdentityVerificationAccess(user, verificationDetail) {
   if (!verificationDetail) {
     const error = new Error("Identity verification request not found.");
@@ -131,6 +143,124 @@ router.get(
         };
       })
     });
+  })
+);
+
+router.get(
+  "/public-veterans-id-applications",
+  asyncHandler(async (req, res) => {
+    if (!canAccessWelfareQueue(req.user)) {
+      return res.json({ applications: [] });
+    }
+
+    const [rows] = await pool.execute(
+      `SELECT
+        pvia.public_id_application_id,
+        pvia.public_uuid,
+        pvia.routing_department_id,
+        pvia.status,
+        pvia.assigned_to_user_id,
+        pvia.reviewed_by_user_id,
+        pvia.reviewed_at,
+        pvia.created_at,
+        pvia.updated_at,
+        d.department_code,
+        d.department_name,
+        pvia.payload_ciphertext,
+        pvia.payload_iv,
+        pvia.payload_tag
+      FROM public_veterans_id_applications pvia
+      INNER JOIN departments d
+        ON d.department_id = pvia.routing_department_id
+      ORDER BY pvia.updated_at DESC
+      LIMIT 100`
+    );
+
+    return res.json({
+      applications: rows.map((row) => ({
+        publicIdApplicationId: row.public_id_application_id,
+        publicUuid: row.public_uuid,
+        routingDepartmentId: row.routing_department_id,
+        departmentCode: row.department_code,
+        departmentName: row.department_name,
+        status: row.status,
+        assignedToUserId: row.assigned_to_user_id,
+        reviewedByUserId: row.reviewed_by_user_id,
+        reviewedAt: row.reviewed_at,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+        payload: decryptJson(row.payload_ciphertext, row.payload_iv, row.payload_tag)
+      }))
+    });
+  })
+);
+
+router.patch(
+  "/public-veterans-id-applications/:applicationId/status",
+  asyncHandler(async (req, res) => {
+    if (!canAccessWelfareQueue(req.user)) {
+      return res.status(403).json({ message: "Department access denied." });
+    }
+
+    const applicationId = Number(req.params.applicationId);
+    const status = String(req.body?.status || "").trim().toUpperCase();
+    const validStatuses = new Set([
+      "NEW",
+      "UNDER_REVIEW",
+      "APPROVED",
+      "IN_PRODUCTION",
+      "READY_FOR_PICKUP",
+      "COLLECTED",
+      "REJECTED",
+      "CLOSED"
+    ]);
+
+    if (!validStatuses.has(status)) {
+      return res.status(400).json({ message: "Choose a valid public application status." });
+    }
+
+    const result = await transaction(async (connection) => {
+      const [rows] = await connection.execute(
+        `SELECT public_id_application_id, public_uuid, routing_department_id, status
+        FROM public_veterans_id_applications
+        WHERE public_id_application_id = ?
+        LIMIT 1`,
+        [applicationId]
+      );
+
+      const application = rows[0];
+
+      if (!application) {
+        return { statusCode: 404, body: { message: "Public Veteran ID application not found." } };
+      }
+
+      await connection.execute(
+        `UPDATE public_veterans_id_applications
+        SET status = ?,
+            reviewed_by_user_id = ?,
+            reviewed_at = UTC_TIMESTAMP(),
+            updated_at = UTC_TIMESTAMP()
+        WHERE public_id_application_id = ?`,
+        [status, req.user.userId, applicationId]
+      );
+
+      await writeAudit(connection, {
+        actorUserId: req.user.userId,
+        actorRoleId: req.user.roleId,
+        actorDepartmentId: application.routing_department_id,
+        eventCode: "PUBLIC_VETERANS_ID_APPLICATION_STATUS_UPDATED",
+        entityType: "PUBLIC_VETERANS_ID_APPLICATION",
+        entityId: applicationId,
+        summary: `Updated public Veteran ID application ${application.public_uuid} to ${status}.`
+      });
+
+      return {
+        statusCode: 200,
+        body: { message: "Public Veteran ID application status updated." }
+      };
+    });
+
+    return res.status(result.statusCode).json(result.body);
   })
 );
 

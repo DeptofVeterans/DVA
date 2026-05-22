@@ -57,7 +57,7 @@
         Your most recent Veteran ID applications stay visible here before you move into the dashboard.
       </p>
       <p class="id-panel-copy" *ngIf="!auth.isAuthenticated">
-        Sign in to see your own ID applications, pickup alerts, and private status updates.
+        You can submit a public Veteran ID application now. Sign in only if you want private dashboard tracking.
       </p>
 
       <div class="id-status-stack" *ngIf="auth.isAuthenticated && requestsLoading">
@@ -85,7 +85,7 @@
       <div class="id-status-actions">
         <button class="button button-primary" type="button" (click)="openApplicationModal()">Open application</button>
         <a class="button button-secondary" [routerLink]="auth.isAuthenticated ? '/dashboard' : '/signin'">
-          {{ auth.isAuthenticated ? 'Open dashboard' : 'Sign in first' }}
+          {{ auth.isAuthenticated ? 'Open dashboard' : 'Sign in to track' }}
         </a>
       </div>
     </article>
@@ -135,7 +135,7 @@
           <p class="card-kicker">Veteran ID application</p>
           <h2 id="id-application-modal-title">Veterans Identification Access and Medical Card application</h2>
           <p class="application-note">
-            Complete the form for the <strong>{{ previewApplicationType }}</strong> route and use the PDF action to generate the legal-size application PDF.
+            Complete the form for the <strong>{{ previewApplicationType }}</strong> route. Public submissions are visible to staff only; sign in before submitting if you need dashboard tracking.
           </p>
         </div>
         <button class="button button-ghost modal-close-button" type="button" (click)="closeApplicationModal()">Close</button>
@@ -292,7 +292,7 @@
 
           <div class="button-row form-actions">
             <button class="button button-secondary" type="button" (click)="generatePdf()">Generate PDF application</button>
-            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Submitting..." : "Submit ID request" }}</button>
+            <button class="button button-primary" type="submit" [disabled]="submitting">{{ submitting ? "Submitting..." : "Submit ID application" }}</button>
             <p class="form-status is-success action-status-inline" *ngIf="feedback">{{ feedback }}</p>
             <p class="form-status is-error action-status-inline" *ngIf="error">{{ error }}</p>
           </div>

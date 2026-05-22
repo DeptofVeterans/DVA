@@ -9,6 +9,7 @@ import {
   LookupStatus,
   PendingStaffUser,
   PaymentReceiptSummary,
+  PublicVeteransIdApplication,
   RequestDetail,
   RequestSummary,
   RoleOption
@@ -44,6 +45,7 @@ export class DashboardPageComponent implements OnInit {
   requestLanes: RequestLane[] = [];
   selectedRequest: RequestDetail | null = null;
   paymentReceipts: PaymentReceiptSummary[] = [];
+  publicVeteransIdApplications: PublicVeteransIdApplication[] = [];
   identityVerifications: IdentityVerificationItem[] = [];
   identityVerificationQueue: IdentityVerificationItem[] = [];
   pendingStaff: PendingStaffUser[] = [];
@@ -63,6 +65,18 @@ export class DashboardPageComponent implements OnInit {
   statusUpdateError = "";
   outputFeedback = "";
   outputError = "";
+  publicIdApplicationStatuses: Record<number, string> = {};
+
+  readonly publicVeteransIdStatuses = [
+    "NEW",
+    "UNDER_REVIEW",
+    "APPROVED",
+    "IN_PRODUCTION",
+    "READY_FOR_PICKUP",
+    "COLLECTED",
+    "REJECTED",
+    "CLOSED"
+  ];
 
   readonly statusForm = this.formBuilder.group({
     statusCode: ["UNDER_REVIEW", Validators.required]
@@ -276,6 +290,15 @@ export class DashboardPageComponent implements OnInit {
       this.requestsService.getIdentityVerificationQueue().subscribe({
         next: ({ identityVerifications }) => {
           this.identityVerificationQueue = identityVerifications;
+        }
+      });
+
+      this.requestsService.getPublicVeteransIdApplications().subscribe({
+        next: ({ applications }) => {
+          this.publicVeteransIdApplications = applications;
+          applications.forEach((application) => {
+            this.publicIdApplicationStatuses[application.publicIdApplicationId] = application.status;
+          });
         }
       });
     }
@@ -634,6 +657,45 @@ export class DashboardPageComponent implements OnInit {
         this.error = error?.error?.message || "Unable to review the payment receipt.";
       }
     });
+  }
+
+  updatePublicIdApplicationStatus(application: PublicVeteransIdApplication): void {
+    const status = this.publicIdApplicationStatuses[application.publicIdApplicationId] || application.status;
+
+    this.requestsService.updatePublicVeteransIdApplicationStatus(application.publicIdApplicationId, status).subscribe({
+      next: ({ message }) => {
+        this.feedback = message;
+        this.refreshDashboard();
+      },
+      error: (error) => {
+        this.error = error?.error?.message || "Unable to update the public Veteran ID application.";
+      }
+    });
+  }
+
+  async openPublicIdApplicationPdf(application: PublicVeteransIdApplication): Promise<void> {
+    this.error = "";
+    const previewWindow = window.open("", "_blank");
+
+    try {
+      const pdf = await buildVeteransIdApplicationPdf(application.payload || {});
+      const pdfUrl = pdf.output("bloburl").toString();
+
+      if (previewWindow) {
+        previewWindow.location.href = pdfUrl;
+        previewWindow.focus();
+        return;
+      }
+
+      pdf.save("public-veterans-id-application.pdf");
+    } catch (error) {
+      if (previewWindow && !previewWindow.closed) {
+        previewWindow.close();
+      }
+
+      this.error = "Unable to open the public Veteran ID application PDF right now.";
+      console.error(error);
+    }
   }
 
   @HostListener("document:keydown.escape")
