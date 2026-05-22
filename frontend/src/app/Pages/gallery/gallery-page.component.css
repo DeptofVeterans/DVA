@@ -125,6 +125,23 @@
   display: block;
 }
 
+.gallery-image-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at top right, rgba(214, 182, 106, 0.18), transparent 34%),
+    linear-gradient(145deg, rgba(23, 58, 41, 0.96), rgba(18, 51, 67, 0.94));
+  color: #fff4de;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .gallery-feature-media::after,
 .gallery-card-media::after {
   content: "";

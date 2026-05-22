@@ -32,7 +32,15 @@
         (click)="openImage(leadImage)"
         [attr.aria-label]="'Open full image for ' + leadImage.title"
       >
-        <img [src]="leadImage.imageUrl" [alt]="leadImage.altText || leadImage.title">
+        <img
+          *ngIf="!isImageUnavailable(leadImage); else leadImageUnavailable"
+          [src]="leadImage.imageUrl"
+          [alt]="leadImage.altText || leadImage.title"
+          (error)="markImageFailed(leadImage)"
+        >
+        <ng-template #leadImageUnavailable>
+          <span class="gallery-image-fallback">Image file unavailable</span>
+        </ng-template>
         <span class="gallery-open-chip">Open image</span>
       </button>
     </article>
@@ -87,7 +95,15 @@
           (click)="openImage(image)"
           [attr.aria-label]="'Open full image for ' + image.title"
         >
-          <img [src]="image.imageUrl" [alt]="image.altText || image.title">
+          <img
+            *ngIf="!isImageUnavailable(image); else cardImageUnavailable"
+            [src]="image.imageUrl"
+            [alt]="image.altText || image.title"
+            (error)="markImageFailed(image)"
+          >
+          <ng-template #cardImageUnavailable>
+            <span class="gallery-image-fallback">Image file unavailable</span>
+          </ng-template>
           <span class="gallery-open-chip">Open image</span>
         </button>
 

@@ -20,7 +20,7 @@ const STATIC_OUTREACH_IMAGES: GalleryImage[] = Array.from({ length: 13 }, (_valu
     title: imageNumber === 1 ? "Outreach and welfare support" : `Outreach activity ${label}`,
     caption: "Photo from Veterans Affairs outreach, welfare support, and community engagement activity.",
     altText: imageNumber === 1 ? "Veterans Affairs outreach and welfare support activity" : `Veterans Affairs outreach activity ${label}`,
-    imageUrl: `assets/images/gallery/outreach/Outreach_${imageNumber}.jpeg`,
+    imageUrl: `/assets/images/gallery/outreach/Outreach_${imageNumber}.jpeg`,
     isFeatured: imageNumber === 1
   };
 });
@@ -35,6 +35,7 @@ export class GalleryPageComponent implements OnInit {
   error = "";
   activeFilter: GalleryFilterId = "all";
   images: GalleryImage[] = [];
+  private readonly failedImageKeys = new Set<string>();
 
   readonly filters: GalleryFilter[] = [
     { id: "all", label: "All images" },
@@ -154,8 +155,25 @@ export class GalleryPageComponent implements OnInit {
     });
   }
 
-  trackByGalleryImage(index: number, image: GalleryImage): string | number {
+  trackByGalleryImage = (index: number, image: GalleryImage): string | number => {
     return this.getGalleryImageKey(image) || index;
+  };
+
+  isImageUnavailable(image: GalleryImage | null): boolean {
+    if (!image) {
+      return true;
+    }
+
+    const imageUrl = String(image.imageUrl || "").trim();
+    return !imageUrl || this.failedImageKeys.has(this.getGalleryImageKey(image));
+  }
+
+  markImageFailed(image: GalleryImage | null): void {
+    if (!image) {
+      return;
+    }
+
+    this.failedImageKeys.add(this.getGalleryImageKey(image));
   }
 
   openImage(image: GalleryImage | null): void {
@@ -183,6 +201,7 @@ export class GalleryPageComponent implements OnInit {
     this.gallery.loadPublicGallery(true).subscribe({
       next: (images) => {
         this.images = images;
+        this.failedImageKeys.clear();
         this.loading = false;
       },
       error: () => {
