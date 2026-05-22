@@ -7,7 +7,9 @@
     "start": "node server.js",
     "dev": "node server.js",
     "dev:watch": "node --watch server.js",
-    "check": "node --check server.js"
+    "check": "node --check server.js",
+    "db:seed-main-admin": "node scripts/seed-main-admin.js",
+    "db:seed-test-users": "node scripts/seed-test-users.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

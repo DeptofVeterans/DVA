@@ -101,6 +101,30 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 Keep `DATA_ENCRYPTION_KEY` stable after launch. Changing it will prevent existing encrypted data from being decrypted.
 
+## Create The First Main Admin
+
+Import the schema first, then run the backend seed script once with your production Render/Aiven environment variables.
+
+Required seed variables:
+
+```text
+SEED_MAIN_ADMIN_FULL_NAME=<full name>
+SEED_MAIN_ADMIN_EMAIL=<admin email>
+SEED_MAIN_ADMIN_PASSWORD=<strong temporary password>
+SEED_MAIN_ADMIN_RANK=<rank>
+SEED_MAIN_ADMIN_REGIMENTAL_NUMBER=<5 digit JDF or 4 digit JCA number>
+SEED_MAIN_ADMIN_FORCE=false
+```
+
+Run locally against the configured database:
+
+```powershell
+cd backend
+npm run db:seed-main-admin
+```
+
+This script hashes the password and encrypts the profile fields using `DATA_ENCRYPTION_KEY`; do not insert the Main Admin with raw SQL unless you also generate the password hash and encrypted profile values correctly.
+
 ## Netlify Frontend
 
 Create a Netlify site from this repository.
