@@ -24,76 +24,76 @@ export class ServicesPageComponent {
 
   readonly flowGroups: ServiceFlowGroup[] = [
     {
-      eyebrow: "01 Start here",
+      eyebrow: "01 Documents",
       title: "Records and certificates",
-      description: "Begin with the official records, certificates, and letters needed before other requests move forward.",
+      description: "Use this area when you need proof of service, certificates, or official letters.",
       tone: "records",
       items: [
         {
-          title: "Records and Certificates",
-          description: "Request service records, certificates, commendation support, and confirmation of employment letters.",
+          title: "Service records and letters",
+          description: "Request military service records, service certificates, commendation support, or confirmation of employment letters.",
           route: "/records",
-          action: "Open records"
+          action: "Go to records"
         }
       ]
     },
     {
-      eyebrow: "02 Before ROD",
-      title: "Retirement benefits preparation",
-      description: "Prepare pension and gratuity requests early, with related benefit information kept together.",
+      eyebrow: "02 Benefits",
+      title: "Pensions and benefit support",
+      description: "Start here for pension, gratuity, ex-gratia, disability, or death-benefit guidance.",
       tone: "benefits",
       items: [
         {
           title: "Pensions and Benefits",
-          description: "Open pension, gratuity, ex-gratia, disability, and death benefit support.",
+          description: "Get help with pension applications, gratuity, ex-gratia matters, disability benefits, and death benefits.",
           route: "/pensions",
-          action: "Open benefits"
+          action: "Go to benefits"
         }
       ]
     },
     {
-      eyebrow: "03 At ROD",
-      title: "Applications and family support",
-      description: "Handle identification, final rites, and time-sensitive support around retirement or after a passing.",
+      eyebrow: "03 ID and family support",
+      title: "Veteran ID and funeral assistance",
+      description: "Apply for a Veteran ID card or find the correct support path for funeral and family coordination.",
       tone: "service",
       items: [
         {
           title: "Veteran ID",
-          description: "Apply for or replace the Veteran Identification Access and Medical Card.",
+          description: "Apply for a new, replacement, lost, or stolen Veteran Identification Access and Medical Card.",
           route: "/id",
-          action: "Open ID"
+          action: "Go to ID"
         },
         {
           title: "Funeral Services",
-          description: "Request funeral assistance, burial coordination, tombing guidance, and final rites support.",
+          description: "Find burial guidance, tombing steps, church or venue support, and final rites coordination.",
           route: "/funerals",
-          action: "Open funerals"
+          action: "Go to funerals"
         }
       ]
     },
     {
-      eyebrow: "04 After service",
-      title: "Ongoing support after service",
-      description: "Continue with insurance, welfare, resettlement, and employment support after retirement.",
+      eyebrow: "04 Ongoing support",
+      title: "Health, work, and welfare follow-up",
+      description: "Use these areas for insurance questions, job and resettlement support, or welfare assistance.",
       tone: "aftercare",
       items: [
         {
           title: "Insurance",
-          description: "Review group health, supplemental plans, and insurance support requests.",
+          description: "Review group health, supplemental plans, claims guidance, and insurance support requests.",
           route: "/insurance",
-          action: "Open insurance"
+          action: "Go to insurance"
         },
         {
           title: "Jobs and Resettlement",
-          description: "Find job opportunities and request resume, placement, or interview support.",
+          description: "View opportunities and request resume, placement, workshop, or interview support.",
           route: "/employment",
-          action: "Open jobs"
+          action: "Go to jobs"
         },
         {
           title: "Welfare",
-          description: "Request welfare assistance, outreach follow-up, medical coordination, and support referrals.",
+          description: "Request welfare assistance, medical coordination, outreach follow-up, or support referrals.",
           route: "/welfare",
-          action: "Open welfare"
+          action: "Go to welfare"
         }
       ]
     }

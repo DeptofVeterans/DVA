@@ -47,7 +47,7 @@
               (click)="openMediaItem(item)"
               [attr.aria-label]="'Open full image for ' + item.title"
             >
-              <img [src]="item.imageUrl" [alt]="item.alt">
+              <img [src]="item.imageUrl" [alt]="item.alt" loading="lazy" decoding="async">
               <span class="image-slot-open-chip">Open image</span>
             </button>
           </div>

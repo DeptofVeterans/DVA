@@ -5,7 +5,7 @@
   [attr.aria-label]="user?.displayName || 'Profile image'"
 >
   <ng-container *ngIf="resolvedImageUrl; else initialsFallback">
-    <img [src]="resolvedImageUrl" [alt]="altText">
+    <img [src]="resolvedImageUrl" [alt]="altText" loading="lazy" decoding="async">
   </ng-container>
 
   <ng-template #initialsFallback>

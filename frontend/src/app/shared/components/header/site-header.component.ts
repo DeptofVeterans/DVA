@@ -36,18 +36,6 @@ export class SiteHeaderComponent {
     { label: "Contact", route: "/contact" }
   ];
 
-  private readonly groupedServiceRoutes = [
-    "/records",
-    "/pensions",
-    "/benefits",
-    "/insurance",
-    "/funerals",
-    "/id",
-    "/id-application",
-    "/employment",
-    "/welfare"
-  ];
-
   toggleNav(): void {
     this.navOpen = !this.navOpen;
   }
@@ -62,10 +50,6 @@ export class SiteHeaderComponent {
 
   isNavActive(item: NavItem): boolean {
     const currentUrl = this.router.url.split("?")[0].split("#")[0];
-
-    if (item.route === "/services") {
-      return currentUrl === "/services" || this.groupedServiceRoutes.some((route) => currentUrl === route);
-    }
 
     return item.exact === true ? currentUrl === item.route : currentUrl.startsWith(item.route);
   }

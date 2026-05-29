@@ -36,6 +36,8 @@
           *ngIf="!isImageUnavailable(leadImage); else leadImageUnavailable"
           [src]="leadImage.imageUrl"
           [alt]="leadImage.altText || leadImage.title"
+          loading="lazy"
+          decoding="async"
           (error)="markImageFailed(leadImage)"
         >
         <ng-template #leadImageUnavailable>
@@ -99,6 +101,8 @@
             *ngIf="!isImageUnavailable(image); else cardImageUnavailable"
             [src]="image.imageUrl"
             [alt]="image.altText || image.title"
+            loading="lazy"
+            decoding="async"
             (error)="markImageFailed(image)"
           >
           <ng-template #cardImageUnavailable>

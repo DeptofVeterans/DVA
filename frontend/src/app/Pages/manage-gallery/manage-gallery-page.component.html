@@ -122,7 +122,7 @@
     <div class="gallery-manage-grid" *ngIf="galleryImages.length">
       <article class="feature-card gallery-manage-card" *ngFor="let image of galleryImages; trackBy: trackByGalleryImage" appRevealOnScroll>
         <button class="gallery-manage-media" type="button" (click)="openImage(image)">
-          <img [src]="image.imageUrl" [alt]="image.altText || image.title">
+          <img [src]="image.imageUrl" [alt]="image.altText || image.title" loading="lazy" decoding="async">
         </button>
         <div class="gallery-manage-copy">
           <div class="workspace-row-top">

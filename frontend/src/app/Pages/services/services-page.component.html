@@ -2,15 +2,15 @@
   <section class="services-hero" appRevealOnScroll>
     <div class="services-hero__copy">
       <p class="eyebrow">Veteran services</p>
-      <h1>Veteran services arranged by the retirement roadmap.</h1>
+      <h1>Find the support you need, then start in the right place.</h1>
       <p>
-        Start with records, prepare benefits before ROD, handle identification and family support at the right time,
-        then continue into insurance, jobs, and welfare support after service.
+        Choose a service area below for records, benefits, Veteran ID cards, funeral support, insurance,
+        employment, or welfare assistance. Each section points you to the right form or guidance page.
       </p>
       <div class="button-row">
-        <a class="button button-primary" routerLink="/roadmap">View roadmap</a>
+        <a class="button button-primary" routerLink="/roadmap">See the retirement roadmap</a>
         <a class="button button-secondary" [routerLink]="auth.isAuthenticated ? '/dashboard' : '/signin'">
-          {{ auth.isAuthenticated ? "Open dashboard" : "Sign in to apply" }}
+          {{ auth.isAuthenticated ? "Open dashboard" : "Sign in for tracked requests" }}
         </a>
       </div>
     </div>

@@ -197,7 +197,7 @@ export class FuneralsPageComponent implements OnInit {
 
   openHeroImage(): void {
     this.imageLightbox.open({
-      src: "assets/images/funerals/funeral_flowers.jpeg",
+      src: "/assets/images/funerals/funeral_flowers.jpeg",
       title: "Funeral floral arrangement",
       alt: "Funeral floral arrangement"
     });
